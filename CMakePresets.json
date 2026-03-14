@@ -1,0 +1,39 @@
+{
+    "version": 3,
+    "cmakeMinimumRequired": {
+        "major": 3,
+        "minor": 20
+    },
+    "configurePresets": [
+        {
+            "name": "dbg-sabre-pilot-tests",
+            "displayName": "Debug - Sabre, Tests",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/build/dbg-sabre-pilot-tests",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug",
+                "SABRE_BUILD_TESTS": "ON"
+            }
+        },
+        {
+            "name": "rel-sabre-pilot-tests",
+            "displayName": "Release - Sabre, Tests",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/build/rel-sabre-pilot-tests",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release",
+                "SABRE_BUILD_TESTS": "ON"
+            }
+        },
+        {
+            "name": "rel-sabre-pilot",
+            "displayName": "Release - Sabre",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/build/rel-sabre-pilot",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release",
+                "SABRE_BUILD_TESTS": "OFF"
+            }
+        }
+    ]
+}
