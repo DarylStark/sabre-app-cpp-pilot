@@ -37,5 +37,6 @@ namespace sabre::impl::pilot
                       uint64_t sleepTime) const override;
         sabre::os::Service::UniquePtr
         createService(sabre::os::ServiceHandler fn) const override;
+        sabre::platform::Platform::UniquePtr createPlatform() const override;
     };
 } // namespace sabre::impl::pilot

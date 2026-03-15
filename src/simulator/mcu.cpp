@@ -3,7 +3,7 @@
 
 namespace sabre::impl::pilot
 {
-    Mcu::Mcu(DeviceConfig config, sabre::runtime::App::UniquePtr &&app)
+    Mcu::Mcu(DeviceConfig config, sabre::runtime::App<void>::UniquePtr &&app)
         : Device(config, std::move(app))
     {
     }

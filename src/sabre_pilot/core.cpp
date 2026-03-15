@@ -98,4 +98,10 @@ namespace sabre::impl::pilot
         // Implementation specific code to create a Service object
         return nullptr; // Placeholder
     }
+
+    sabre::platform::Platform::UniquePtr Factory::createPlatform() const
+    {
+        return nullptr;
+    }
+
 } // namespace sabre::impl::pilot

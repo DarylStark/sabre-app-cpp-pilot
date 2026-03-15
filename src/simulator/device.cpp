@@ -11,7 +11,8 @@ namespace sabre::impl::pilot
     {
     }
 
-    Device::Device(DeviceConfig config, sabre::runtime::App::UniquePtr &&app)
+    Device::Device(DeviceConfig config,
+                   sabre::runtime::App<void>::UniquePtr &&app)
         : _config(config), _app(std::move(app)), _gpios(config.gpioCount)
     {
         uint32_t gpio_index = 0;
@@ -34,8 +35,7 @@ namespace sabre::impl::pilot
 
     void Device::start()
     {
-        _app->setFactory(std::make_unique<sabre::impl::pilot::Factory>(this));
-        _app->start();
+        _app->run();
     }
 
     void Device::register_event_callback(DeviceEventType type,
