@@ -12,7 +12,7 @@
             "binaryDir": "${sourceDir}/build/dbg-sabre-pilot-tests",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Debug",
-                "SABRE_BUILD_TESTS": "ON"
+                "SABRE_PILOT_BUILD_TESTS": "ON"
             }
         },
         {
@@ -22,7 +22,7 @@
             "binaryDir": "${sourceDir}/build/rel-sabre-pilot-tests",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Release",
-                "SABRE_BUILD_TESTS": "ON"
+                "SABRE_PILOT_BUILD_TESTS": "ON"
             }
         },
         {
@@ -32,7 +32,7 @@
             "binaryDir": "${sourceDir}/build/rel-sabre-pilot",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Release",
-                "SABRE_BUILD_TESTS": "OFF"
+                "SABRE_PILOT_BUILD_TESTS": "OFF"
             }
         }
     ]

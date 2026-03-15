@@ -7,7 +7,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED on)
 set(CMAKE_EXPORT_COMPILE_COMMANDS=ON)
 set(CMAKE_CXX_CLANG_TIDY "clang-tidy")
 
-if(SABRE_BUILD_TESTS STREQUAL "ON")
+if(SABRE_PILOT_BUILD_TESTS STREQUAL "ON")
     message(STATUS "Enabling testing")
     enable_testing()
     message(STATUS "Enabling coverage flags")
