@@ -1,23 +1,30 @@
+#include "../sabre_pilot/core.hpp"
 #include "imgui_presenter/imgui_presenter.hpp"
 #include "mcu.hpp"
 #include "sabre/runtime/app.hpp"
 #include "simulator/device_connector.hpp"
 #include "simulator/simulator.hpp"
 #include <iostream>
+#include <sabre/core/resource_manager.hpp>
 #include <thread>
 
-class MyApp : public sabre::runtime::App
+using sabre::runtime::App;
+
+class MyApp : public App<void>
 {
 private:
     sabre::hal::Serial::UniquePtr _uart0;
     bool _stop = false;
 
 public:
-    MyApp() {}
-
-    void start() override
+    MyApp(sabre::core::ResourceManager &resourceManager)
+        : App<void>(resourceManager)
     {
-        _uart0 = _factory->createUartObject(0, 9600, 1, 2, 512);
+    }
+
+    void run() override
+    {
+        _uart0 = getFactory().createUartObject(0, 9600, 1, 2, 512);
         _uart0->initialize();
 
         while (true)
@@ -30,13 +37,18 @@ public:
     }
 };
 
-class MyGpsApp : public sabre::runtime::App
+class MyGpsApp : public App<void>
 {
 public:
-    void start() override
+    MyGpsApp(sabre::core::ResourceManager &resourceManager)
+        : App<void>(resourceManager)
+    {
+    }
+
+    void run() override
     {
         // Simulate GPS data output
-        auto uart1 = _factory->createUartObject(0, 9600, 0, 1, 512);
+        auto uart1 = getFactory().createUartObject(0, 9600, 1, 2, 512);
         uart1->initialize();
         while (true)
         {
@@ -61,10 +73,15 @@ int main()
 
     Simulator simulator;
 
+    sabre::impl::pilot::Factory fac1(nullptr);
+    sabre::core::ResourceManager rm1(fac1, {1, 2});
+    sabre::impl::pilot::Factory fac2(nullptr);
+    sabre::core::ResourceManager rm2(fac2, {1, 2});
+
     auto mcu =
-        simulator.add_mcu("ESP32-S3", config_mcu, std::make_unique<MyApp>());
+        simulator.add_mcu("ESP32-S3", config_mcu, std::make_unique<MyApp>(rm1));
     auto gps =
-        simulator.add_mcu("GPS", config_gps, std::make_unique<MyGpsApp>());
+        simulator.add_mcu("GPS", config_gps, std::make_unique<MyGpsApp>(rm2));
     UartConnector uart_connector(*gps, 0, *mcu, 0);
 
     simulator.start_device("ESP32-S3");
