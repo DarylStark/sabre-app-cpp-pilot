@@ -13,6 +13,8 @@ namespace sabre::impl::pilot
 
     public:
         Factory(sabre_pilot::Device *device);
+        ~Factory();
+
         sabre::hal::Serial::UniquePtr createUartObject(
             sabre::hal::UartNumber uartNumber, sabre::hal::BaudRate baudRate,
             sabre::hal::PinNumber txPin, sabre::hal::PinNumber rxPin,
@@ -38,5 +40,11 @@ namespace sabre::impl::pilot
         sabre::os::Service::UniquePtr
         createService(sabre::os::ServiceHandler fn) const override;
         sabre::platform::Platform::UniquePtr createPlatform() const override;
+        sabre::os::Queue::UniquePtr createQueue(std::size_t capacity,
+                                                std::size_t elementSize) const;
+        sabre::net::HttpServer::UniquePtr createHttpServer() const;
+        sabre::devices::RgbPixelStrip::UniquePtr
+        createRgbPixelStrip(sabre::hal::PinNumber pinNumber,
+                            sabre::devices::PixelIndex length) const;
     };
 } // namespace sabre::impl::pilot

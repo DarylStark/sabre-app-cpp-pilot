@@ -5,6 +5,8 @@ namespace sabre::impl::pilot
 {
     Factory::Factory(sabre_pilot::Device *device) : _device(device) {}
 
+    Factory::~Factory() {}
+
     sabre::hal::Serial::UniquePtr Factory::createUartObject(
         sabre::hal::UartNumber uartNumber, sabre::hal::BaudRate baudRate,
         sabre::hal::PinNumber txPin, sabre::hal::PinNumber rxPin,
@@ -77,6 +79,24 @@ namespace sabre::impl::pilot
     }
 
     sabre::platform::Platform::UniquePtr Factory::createPlatform() const
+    {
+        return nullptr;
+    }
+
+    sabre::os::Queue::UniquePtr
+    Factory::createQueue(std::size_t capacity, std::size_t elementSize) const
+    {
+        return nullptr;
+    }
+
+    sabre::net::HttpServer::UniquePtr Factory::createHttpServer() const
+    {
+        return nullptr;
+    }
+
+    sabre::devices::RgbPixelStrip::UniquePtr
+    Factory::createRgbPixelStrip(sabre::hal::PinNumber pinNumber,
+                                 sabre::devices::PixelIndex length) const
     {
         return nullptr;
     }
