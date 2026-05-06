@@ -7,6 +7,14 @@ set(CMAKE_CXX_STANDARD_REQUIRED on)
 set(CMAKE_EXPORT_COMPILE_COMMANDS=ON)
 set(CMAKE_CXX_CLANG_TIDY "clang-tidy")
 
+include(FetchContent)
+FetchContent_Declare(
+    sabre
+    GIT_REPOSITORY https://github.com/DarylStark/sabre-lib-cpp-sabre.git
+    GIT_TAG dev
+)
+FetchContent_MakeAvailable(sabre)
+
 if(SABRE_PILOT_BUILD_TESTS STREQUAL "ON")
     message(STATUS "Enabling testing")
     enable_testing()
