@@ -17,4 +17,6 @@ if(SABRE_PILOT_BUILD_TESTS STREQUAL "ON")
 endif()
 
 # Application source
-add_subdirectory(src)
+# add_subdirectory(src)
+add_subdirectory(src/)
+
