@@ -6,18 +6,8 @@
             "label": "Run tests with coverage",
             "command": "./generate-coverage.sh",
             "args": [
-                "build/dbg-sabre-tests"
+                "build/dbg-sabre-pilot-tests"
             ],
-            "options": {
-                "cwd": "${workspaceFolder}"
-            },
-            "group": "none",
-            "problemMatcher": []
-        },
-        {
-            "type": "shell",
-            "label": "Remove all ImGui configuration",
-            "command": "find -name imgui.ini -exec rm {} \\;",
             "options": {
                 "cwd": "${workspaceFolder}"
             },
