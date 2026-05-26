@@ -12,4 +12,10 @@ namespace sabre_pilot::exceptions
         : SabrePilotException(message)
     {
     }
+
+    UartControllerNotInitializedException::
+        UartControllerNotInitializedException(const char *message)
+        : SabrePilotException(message)
+    {
+    }
 } // namespace sabre_pilot::exceptions

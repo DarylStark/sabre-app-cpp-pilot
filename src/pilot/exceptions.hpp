@@ -15,4 +15,10 @@ namespace sabre_pilot::exceptions
     public:
         DeviceUartNotConfiguredException(const char *message);
     };
+
+    class UartControllerNotInitializedException : public SabrePilotException
+    {
+    public:
+        UartControllerNotInitializedException(const char *message);
+    };
 } // namespace sabre_pilot::exceptions

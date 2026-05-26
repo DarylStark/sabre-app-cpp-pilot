@@ -6,10 +6,11 @@ namespace sabre_pilot
     Device::Device(sabre::core::ResourceManagerConfig config) : _config(config)
     {
         if (config.upperboundUart)
-            _uartOuput = std::make_unique<UartBuffer[]>(config.upperboundUart);
+            _uartOuput =
+                std::make_unique<UartController[]>(config.upperboundUart);
     }
 
-    UartBuffer &Device::outputUart(size_t uartNumber)
+    UartController &Device::outputUart(size_t uartNumber)
     {
         if (uartNumber >= _config.upperboundUart)
             throw sabre_pilot::exceptions::DeviceUartNotConfiguredException(

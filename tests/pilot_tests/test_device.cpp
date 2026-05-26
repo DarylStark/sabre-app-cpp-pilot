@@ -25,3 +25,11 @@ TEST(Device, ExceptionOnRetrievingNonExistingUart)
     ASSERT_THROW(device.outputUart(1),
                  sabre_pilot::exceptions::DeviceUartNotConfiguredException);
 }
+
+TEST(Device, RetrievingConfig)
+{
+    sabre::core::ResourceManagerConfig config = {.upperboundUart = 990};
+    sabre_pilot::Device device(config);
+    const sabre::core::ResourceManagerConfig &retrievedConfig = device.config();
+    ASSERT_EQ(retrievedConfig.upperboundUart, config.upperboundUart);
+}
