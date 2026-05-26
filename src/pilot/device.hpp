@@ -13,9 +13,13 @@ namespace sabre_pilot
         std::unique_ptr<UartController[]> _uartOuput = nullptr;
 
     public:
+        using Ptr = Device *;
+        using SharedPtr = std::shared_ptr<Device>;
+        using UniquePtr = std::unique_ptr<Device>;
+
         Device(sabre::core::ResourceManagerConfig config);
 
-        UartController &outputUart(size_t uartNumber);
-        const sabre::core::ResourceManagerConfig &config() const;
+        UartController &getUartController(size_t uartNumber);
+        const sabre::core::ResourceManagerConfig &getConfig() const;
     };
 } // namespace sabre_pilot

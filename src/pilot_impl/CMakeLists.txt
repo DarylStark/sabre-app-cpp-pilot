@@ -7,4 +7,5 @@ target_include_directories(
     sabre_pilot_impl
     PUBLIC
         ${sabre_SOURCE_DIR}/src/sabre/
+        ../
 )

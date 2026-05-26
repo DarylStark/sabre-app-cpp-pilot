@@ -1,98 +1,99 @@
 #include <gtest/gtest.h>
+#include <pilot/device.hpp>
 #include <pilot_impl/core.hpp>
 
-TEST(Core, FactoryCreateUsbCdc)
+class CoreFactory : public ::testing::Test
 {
-    sabre::impl::pilot::Factory fac(nullptr);
-    ASSERT_EQ(fac.createUsbCdc(0, 100), nullptr);
+public:
+    CoreFactory()
+    {
+        sabre::core::ResourceManagerConfig config = {.maxGpios = 30,
+                                                     .upperboundUart = 3};
+        _device = std::make_unique<sabre_pilot::Device>(config);
+        _factory = std::make_unique<sabre::impl::pilot::Factory>(_device.get());
+    }
+
+protected:
+    sabre_pilot::Device::UniquePtr _device;
+    sabre::core::Factory::UniquePtr _factory;
+};
+
+TEST_F(CoreFactory, CreateUsbCdc)
+{
+    ASSERT_EQ(_factory->createUsbCdc(0, 100), nullptr);
 }
 
-TEST(Core, FactoryCreateUartObject)
+TEST_F(CoreFactory, CreateUartObject)
 {
-    sabre::impl::pilot::Factory fac(nullptr);
-    ASSERT_EQ(fac.createUartObject(0, 9600, 1, 2, 0), nullptr);
+    ASSERT_NE(_factory->createUartObject(0, 9600, 1, 2, 0), nullptr);
 }
 
-TEST(Core, FactoryCreateInputGpio)
+TEST_F(CoreFactory, CreateInputGpio)
 {
-    sabre::impl::pilot::Factory fac(nullptr);
-    ASSERT_EQ(fac.createInputGpio(1), nullptr);
+    ASSERT_EQ(_factory->createInputGpio(1), nullptr);
 }
 
-TEST(Core, FactoryCreateOutputGpio)
+TEST_F(CoreFactory, CreateOutputGpio)
 {
-    sabre::impl::pilot::Factory fac(nullptr);
-    ASSERT_EQ(fac.createOutputGpio(1), nullptr);
+    ASSERT_EQ(_factory->createOutputGpio(1), nullptr);
 }
 
-TEST(Core, FactoryCreateGpio)
+TEST_F(CoreFactory, CreateGpio)
 {
-    sabre::impl::pilot::Factory fac(nullptr);
-    ASSERT_EQ(fac.createGpio(1), nullptr);
+    ASSERT_EQ(_factory->createGpio(1), nullptr);
 }
 
-TEST(Core, FactoryCreateWifiStation)
+TEST_F(CoreFactory, CreateWifiStation)
 {
-    sabre::impl::pilot::Factory fac(nullptr);
-    ASSERT_EQ(fac.createWifiStation(), nullptr);
+    ASSERT_EQ(_factory->createWifiStation(), nullptr);
 }
 
-TEST(Core, FactoryCreateWifiSoftAp)
+TEST_F(CoreFactory, CreateWifiSoftAp)
 {
-    sabre::impl::pilot::Factory fac(nullptr);
-    ASSERT_EQ(fac.createWifiSoftAp(), nullptr);
+    ASSERT_EQ(_factory->createWifiSoftAp(), nullptr);
 }
 
-TEST(Core, FactoryCreateWallClock)
+TEST_F(CoreFactory, CreateWallClock)
 {
-    sabre::impl::pilot::Factory fac(nullptr);
-    ASSERT_EQ(fac.createWallClock(), nullptr);
+    ASSERT_EQ(_factory->createWallClock(), nullptr);
 }
 
-TEST(Core, FactoryCreateNtpClient)
+TEST_F(CoreFactory, CreateNtpClient)
 {
-    sabre::impl::pilot::Factory fac(nullptr);
-    ASSERT_EQ(fac.createNtpClient("ntp.test.org"), nullptr);
+    ASSERT_EQ(_factory->createNtpClient("ntp.test.org"), nullptr);
 }
 
-TEST(Core, FactoryCreateMqttClient)
+TEST_F(CoreFactory, CreateMqttClient)
 {
-    sabre::impl::pilot::Factory fac(nullptr);
-    ASSERT_EQ(fac.createMqttClient(), nullptr);
+    ASSERT_EQ(_factory->createMqttClient(), nullptr);
 }
 
-TEST(Core, FactoryCreateWaitFor)
+TEST_F(CoreFactory, CreateWaitFor)
 {
-    sabre::impl::pilot::Factory fac(nullptr);
-    ASSERT_EQ(fac.createWaitFor([]() { return true; }, 0, 10), nullptr);
+    ASSERT_EQ(_factory->createWaitFor([]() { return true; }, 0, 10), nullptr);
 }
 
-TEST(Core, FactoryCreateService)
+TEST_F(CoreFactory, CreateService)
 {
-    sabre::impl::pilot::Factory fac(nullptr);
-    ASSERT_EQ(fac.createService([]() {}), nullptr);
+    ASSERT_EQ(_factory->createService([]() {}), nullptr);
 }
 
-TEST(Core, FactoryCreatePlatform)
+TEST_F(CoreFactory, CreatePlatform)
 {
-    sabre::impl::pilot::Factory fac(nullptr);
-    ASSERT_EQ(fac.createPlatform(), nullptr);
+    ASSERT_EQ(_factory->createPlatform(), nullptr);
 }
 
-TEST(Core, FactoryCreateQueue)
+TEST_F(CoreFactory, CreateQueue)
 {
-    sabre::impl::pilot::Factory fac(nullptr);
-    ASSERT_EQ(fac.createQueue(1, 10), nullptr);
+    ASSERT_EQ(_factory->createQueue(1, 10), nullptr);
 }
 
-TEST(Core, FactoryCreateHttpServer)
+TEST_F(CoreFactory, CreateHttpServer)
 {
-    sabre::impl::pilot::Factory fac(nullptr);
-    ASSERT_EQ(fac.createHttpServer(), nullptr);
+    ASSERT_EQ(_factory->createHttpServer(), nullptr);
 }
 
-TEST(Core, FactoryCreateRgbPixelStrip)
+TEST_F(CoreFactory, CreateRgbPixelStrip)
 {
-    sabre::impl::pilot::Factory fac(nullptr);
-    ASSERT_EQ(fac.createRgbPixelStrip(0, 10), nullptr);
+    ASSERT_EQ(_factory->createRgbPixelStrip(0, 10), nullptr);
 }

@@ -1,4 +1,5 @@
 #include "core.hpp"
+#include "hal.hpp"
 #include <iostream>
 
 namespace sabre::impl::pilot
@@ -12,7 +13,7 @@ namespace sabre::impl::pilot
         sabre::hal::PinNumber txPin, sabre::hal::PinNumber rxPin,
         size_t bufferSize) const
     {
-        return nullptr;
+        return std::make_unique<sabre::impl::pilot::Uart>(_device, uartNumber);
     }
 
     sabre::hal::Serial::UniquePtr Factory::createUsbCdc(uint32_t index,

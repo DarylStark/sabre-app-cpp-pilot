@@ -19,10 +19,12 @@ namespace sabre_pilot
 
     public:
         void initialize(size_t inputBufferSize, size_t outputBufferSize);
+        void deinitialize();
+        bool isInitialized() const;
 
         void setOutputBufferCallback(UartControllerBufferCallback callback);
 
-        void write(const char data);
+        int write(const char data);
         void flush();
 
         const std::string &getOutputBuffer() const;

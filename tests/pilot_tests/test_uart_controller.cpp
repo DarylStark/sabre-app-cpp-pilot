@@ -2,83 +2,102 @@
 #include <pilot/exceptions.hpp>
 #include <pilot/uart_controller.hpp>
 
-TEST(UartBuffer, WriteOneByteToBuffer)
+class UartControllerTest : public ::testing::Test
 {
-    sabre_pilot::UartController buffer;
-    buffer.initialize(1, 4);
-    buffer.write('t');
-    ASSERT_EQ(buffer.getOutputBuffer(), "t");
+public:
+    UartControllerTest() {}
+
+protected:
+    sabre_pilot::UartController _buffer;
+};
+
+TEST_F(UartControllerTest, WriteOneByteToBuffer)
+{
+    _buffer.initialize(1, 4);
+    _buffer.write('t');
+    ASSERT_EQ(_buffer.getOutputBuffer(), "t");
 }
 
-TEST(UartBuffer, WriteTwoBytesToBuffer)
+TEST_F(UartControllerTest, WriteTwoBytesToBuffer)
 {
-    sabre_pilot::UartController buffer;
-    buffer.initialize(1, 4);
-    buffer.write('t');
-    buffer.write('e');
-    ASSERT_EQ(buffer.getOutputBuffer(), "te");
+    _buffer.initialize(1, 4);
+    _buffer.write('t');
+    _buffer.write('e');
+    ASSERT_EQ(_buffer.getOutputBuffer(), "te");
 }
 
-TEST(UartBuffer, WriteFourBytesToBuffer)
+TEST_F(UartControllerTest, WriteFourBytesToBuffer)
 {
-    sabre_pilot::UartController buffer;
-    buffer.initialize(1, 4);
-    buffer.write('t');
-    buffer.write('e');
-    buffer.write('s');
-    buffer.write('t');
-    ASSERT_EQ(buffer.getOutputBuffer(), "");
+    _buffer.initialize(1, 4);
+    _buffer.write('t');
+    _buffer.write('e');
+    _buffer.write('s');
+    _buffer.write('t');
+    ASSERT_EQ(_buffer.getOutputBuffer(), "");
 }
 
-TEST(UartBuffer, OverFlowBuffer)
+TEST_F(UartControllerTest, OverFlowBuffer)
 {
-    sabre_pilot::UartController buffer;
-    buffer.initialize(1, 4);
-    buffer.write('t');
-    buffer.write('e');
-    buffer.write('s');
-    buffer.write('t');
-    buffer.write('t');
-    buffer.write('e');
-    buffer.write('s');
-    ASSERT_EQ(buffer.getOutputBuffer(), "tes");
+    _buffer.initialize(1, 4);
+    _buffer.write('t');
+    _buffer.write('e');
+    _buffer.write('s');
+    _buffer.write('t');
+    _buffer.write('t');
+    _buffer.write('e');
+    _buffer.write('s');
+    ASSERT_EQ(_buffer.getOutputBuffer(), "tes");
 }
 
-TEST(UartBuffer, FlushBuffer)
+TEST_F(UartControllerTest, FlushBuffer)
 {
-    sabre_pilot::UartController buffer;
-    buffer.initialize(1, 4);
-    buffer.write('t');
-    buffer.flush();
-    ASSERT_EQ(buffer.getOutputBuffer(), "");
+    _buffer.initialize(1, 4);
+    _buffer.write('t');
+    _buffer.flush();
+    ASSERT_EQ(_buffer.getOutputBuffer(), "");
 }
 
-TEST(UartBuffer, OutputBufferCallbackCalledAutomatically)
+TEST_F(UartControllerTest, OutputBufferCallbackCalledAutomatically)
 {
-    sabre_pilot::UartController buffer;
-    buffer.initialize(1, 4);
+    _buffer.initialize(1, 4);
     std::string outputText;
-    buffer.setOutputBufferCallback([&outputText](char c)
-                                   { outputText.push_back(c); });
-    buffer.write('t');
-    buffer.write('e');
-    buffer.write('s');
-    buffer.write('t');
+    _buffer.setOutputBufferCallback([&outputText](char c)
+                                    { outputText.push_back(c); });
+    _buffer.write('t');
+    _buffer.write('e');
+    _buffer.write('s');
+    _buffer.write('t');
     ASSERT_EQ(outputText, "test");
 }
 
-TEST(UartBuffer, ExceptionOnWritingToUnitializedUart)
+TEST_F(UartControllerTest, ExceptionOnWritingToUnitializedUart)
 {
-    sabre_pilot::UartController buffer;
     ASSERT_THROW(
-        buffer.write('b'),
+        _buffer.write('b'),
         sabre_pilot::exceptions::UartControllerNotInitializedException);
 }
 
-TEST(UartBuffer, ExceptionOnFlushingUnitializedUart)
+TEST_F(UartControllerTest, ExceptionOnFlushingUnitializedUart)
 {
-    sabre_pilot::UartController buffer;
     ASSERT_THROW(
-        buffer.flush(),
+        _buffer.flush(),
         sabre_pilot::exceptions::UartControllerNotInitializedException);
+}
+
+TEST_F(UartControllerTest, IsNotInitializedAfterCreation)
+{
+    ASSERT_FALSE(_buffer.isInitialized());
+}
+
+TEST_F(UartControllerTest, Initialize)
+{
+    _buffer.initialize(1, 1);
+    ASSERT_TRUE(_buffer.isInitialized());
+}
+
+TEST_F(UartControllerTest, InitializeDeinitialize)
+{
+    _buffer.initialize(1, 1);
+    _buffer.deinitialize();
+    ASSERT_FALSE(_buffer.isInitialized());
 }

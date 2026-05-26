@@ -7,15 +7,20 @@ namespace sabre::impl::pilot
     {
     private:
         sabre_pilot::Device *_device;
-        bool _initialized;
+        size_t _uartIndex;
 
     public:
-        Uart(sabre_pilot::Device *device);
-        void initialize();
-        int writeByte(char data) const;
+        Uart(sabre_pilot::Device *device, size_t uartIndex);
+        void initialize() override;
+        int writeByte(char data) const override;
         std::string readBytes(size_t maxBytes,
-                              sabre::types::MsTime timeoutInMs);
-        void flush();
-        void deinitialize();
+                              sabre::types::MsTime timeoutInMs) override;
+        void flush() override;
+        void deinitialize() override;
+
+        bool isInitialized() const noexcept;
+
+    protected:
+        sabre_pilot::UartController &_getUartController() const;
     };
 }; // namespace sabre::impl::pilot

@@ -13,12 +13,25 @@ namespace sabre_pilot
         _initialized = true;
     }
 
-    void UartController::write(const char data)
+    void UartController::deinitialize()
+    {
+        _outputBuffer.clear();
+        _inputBuffer.clear();
+        _initialized = false;
+    }
+
+    bool UartController::isInitialized() const
+    {
+        return _initialized;
+    }
+
+    int UartController::write(const char data)
     {
         _raiseOnUnitialized();
         _outputBuffer.push_back(data);
         if (_outputBuffer.size() == _outputBufferSize)
             flush();
+        return 1;
     }
 
     void UartController::flush()
