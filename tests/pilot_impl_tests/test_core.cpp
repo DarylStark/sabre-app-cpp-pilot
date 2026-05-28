@@ -40,7 +40,7 @@ TEST_F(CoreFactory, CreateOutputGpio)
 
 TEST_F(CoreFactory, CreateGpio)
 {
-    ASSERT_EQ(_factory->createGpio(1), nullptr);
+    ASSERT_NE(_factory->createGpio(1), nullptr);
 }
 
 TEST_F(CoreFactory, CreateWifiStation)

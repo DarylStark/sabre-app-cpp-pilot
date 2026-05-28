@@ -56,4 +56,14 @@ namespace sabre::impl::pilot
     {
         return _device->getUartController(_uartIndex);
     }
+
+    Gpio::Gpio(sabre_pilot::Device *device, sabre::hal::PinNumber pinNumber)
+        : sabre::hal::Gpio(pinNumber), _device(device)
+    {
+        if (!_device)
+            throw DeviceNotConfiguredException(
+                "A valid pointer to a device is required!");
+    }
+
+    void Gpio::reset() {}
 } // namespace sabre::impl::pilot

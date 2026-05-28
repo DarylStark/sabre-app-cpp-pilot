@@ -23,4 +23,14 @@ namespace sabre::impl::pilot
     protected:
         sabre_pilot::UartController &_getUartController() const;
     };
+
+    class Gpio : public sabre::hal::Gpio
+    {
+    public:
+        Gpio(sabre_pilot::Device *device, sabre::hal::PinNumber pinNumber);
+        void reset();
+
+    private:
+        sabre_pilot::Device *_device;
+    };
 }; // namespace sabre::impl::pilot

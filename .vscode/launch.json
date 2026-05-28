@@ -5,13 +5,13 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Pilot - Build and debug",
+            "name": "Pilot Exec - Build and debug",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/build/dbg-sabre-pilot-tests/src/pilot/sabre_pilot_exec",
+            "program": "${workspaceFolder}/build/dbg-sabre-pilot-tests/src/pilot_exec/sabre_pilot_exec",
             "args": [],
             "stopAtEntry": false,
-            "cwd": "${workspaceFolder}/build/dbg-sabre-pilot-tests/src/pilot",
+            "cwd": "${workspaceFolder}/build/dbg-sabre-pilot-tests/src/pilot_exec",
             "externalConsole": false,
             "MIMode": "gdb",
             "setupCommands": [

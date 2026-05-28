@@ -98,3 +98,23 @@ TEST_F(HalUart, FlushDataBeforeInitialized)
         uart.flush(),
         sabre_pilot::exceptions::UartControllerNotInitializedException);
 }
+
+class HalGpio : public ::testing::Test
+{
+public:
+    HalGpio()
+    {
+        sabre::core::ResourceManagerConfig config = {.maxGpios = 30,
+                                                     .upperboundUart = 3};
+        _device = std::make_unique<sabre_pilot::Device>(config);
+    }
+
+protected:
+    std::unique_ptr<sabre_pilot::Device> _device;
+};
+
+TEST_F(HalGpio, CreateWithoutDevice)
+{
+    ASSERT_THROW(sabre::impl::pilot::Gpio gpio(nullptr, 1),
+                 sabre::impl::pilot::DeviceNotConfiguredException);
+}

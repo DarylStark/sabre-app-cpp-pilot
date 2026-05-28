@@ -37,7 +37,7 @@ namespace sabre::impl::pilot
     sabre::hal::Gpio::UniquePtr
     Factory::createGpio(sabre::hal::PinNumber pin) const
     {
-        return nullptr;
+        return std::make_unique<sabre::impl::pilot::Gpio>(_device, pin);
     }
 
     sabre::net::WifiStation::UniquePtr Factory::createWifiStation() const
