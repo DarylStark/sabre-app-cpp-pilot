@@ -52,9 +52,9 @@ jobs:
         run: sudo apt install cmake ninja-build
       - name: Build project
         run: |
-          cmake --preset dbg-sabre-tests
-          cmake --build build/dbg-sabre-tests
+          cmake --preset dbg-sabre-pilot-tests
+          cmake --build build/dbg-sabre-pilot-tests
       - name: Run tests
         run: |
-          cd build/dbg-sabre-tests
+          cd build/dbg-sabre-pilot-tests
           ctest
