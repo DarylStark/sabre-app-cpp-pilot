@@ -25,11 +25,13 @@ namespace sabre_pilot
         {
             my_device.getUartController(idx).setOutputBufferCallback(
                 [idx, &uartOutputBuffer](char b)
-                { uartOutputBuffer[idx].push_back(b); });
+                {
+                    uartOutputBuffer[idx].push_back(b);
+                    std::cout << "UART" << idx << " --> "
+                              << uartOutputBuffer[idx] << '\n';
+                });
         }
 
         sabre::runtime::RunApp<MyApp>(rm);
-
-        std::cout << "UART0 --> " << uartOutputBuffer[0] << '\n';
     }
 } // namespace sabre_pilot
