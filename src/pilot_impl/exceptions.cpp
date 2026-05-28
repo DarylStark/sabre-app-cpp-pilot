@@ -13,10 +13,25 @@ namespace sabre::impl::pilot
     {
     }
 
-    // InvalidUartIndex
-
     InvalidUartIndex::InvalidUartIndex(const char *message)
         : SabreImplPilotException(message)
+    {
+    }
+
+    SabrePilotException::SabrePilotException(const char *message)
+        : SabreImplPilotException(message)
+    {
+    }
+
+    DeviceUartNotConfiguredException::DeviceUartNotConfiguredException(
+        const char *message)
+        : SabrePilotException(message)
+    {
+    }
+
+    UartControllerNotInitializedException::
+        UartControllerNotInitializedException(const char *message)
+        : SabrePilotException(message)
     {
     }
 } // namespace sabre::impl::pilot

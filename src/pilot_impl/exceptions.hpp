@@ -21,4 +21,22 @@ namespace sabre::impl::pilot
     public:
         InvalidUartIndex(const char *message);
     };
+
+    class SabrePilotException : public SabreImplPilotException
+    {
+    public:
+        SabrePilotException(const char *message);
+    };
+
+    class DeviceUartNotConfiguredException : public SabrePilotException
+    {
+    public:
+        DeviceUartNotConfiguredException(const char *message);
+    };
+
+    class UartControllerNotInitializedException : public SabrePilotException
+    {
+    public:
+        UartControllerNotInitializedException(const char *message);
+    };
 } // namespace sabre::impl::pilot

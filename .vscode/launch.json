@@ -8,10 +8,10 @@
             "name": "Pilot Exec - Build and debug",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/build/dbg-sabre-pilot-tests/src/pilot_exec/sabre_pilot_exec",
+            "program": "${workspaceFolder}/build/dbg-sabre-pilot-tests/src/pilot/sabre_pilot",
             "args": [],
             "stopAtEntry": false,
-            "cwd": "${workspaceFolder}/build/dbg-sabre-pilot-tests/src/pilot_exec",
+            "cwd": "${workspaceFolder}/build/dbg-sabre-pilot-tests/src/pilot",
             "externalConsole": false,
             "MIMode": "gdb",
             "setupCommands": [

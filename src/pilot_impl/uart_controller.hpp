@@ -3,7 +3,7 @@
 #include <functional>
 #include <string>
 
-namespace sabre_pilot
+namespace sabre::impl::pilot
 {
     using UartControllerBufferCallback = std::function<void(char)>;
 
@@ -33,4 +33,4 @@ namespace sabre_pilot
         void _sendOutputBufferToCallback();
         void _raiseOnUnitialized() const;
     };
-} // namespace sabre_pilot
+} // namespace sabre::impl::pilot

@@ -1,7 +1,7 @@
 #include "device.hpp"
 #include "exceptions.hpp"
 
-namespace sabre_pilot
+namespace sabre::impl::pilot
 {
     Device::Device(sabre::core::ResourceManagerConfig config) : _config(config)
     {
@@ -13,8 +13,7 @@ namespace sabre_pilot
     UartController &Device::getUartController(size_t uartNumber)
     {
         if (uartNumber >= _config.upperboundUart)
-            throw sabre_pilot::exceptions::DeviceUartNotConfiguredException(
-                "Uart number too big");
+            throw DeviceUartNotConfiguredException("Uart number too big");
         return _uartOuput[uartNumber];
     }
 
@@ -22,4 +21,4 @@ namespace sabre_pilot
     {
         return _config;
     }
-} // namespace sabre_pilot
+} // namespace sabre::impl::pilot

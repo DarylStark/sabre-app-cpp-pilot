@@ -1,7 +1,7 @@
 #include "uart_controller.hpp"
 #include "exceptions.hpp"
 
-namespace sabre_pilot
+namespace sabre::impl::pilot
 {
     void UartController::initialize(size_t inputBufferSize,
                                     size_t outputBufferSize)
@@ -65,10 +65,9 @@ namespace sabre_pilot
     {
         if (!_initialized)
         {
-            throw sabre_pilot::exceptions::
-                UartControllerNotInitializedException(
-                    "Uart not yet initialized");
+            throw UartControllerNotInitializedException(
+                "Uart not yet initialized");
         }
     }
 
-} // namespace sabre_pilot
+} // namespace sabre::impl::pilot

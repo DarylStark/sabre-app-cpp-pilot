@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
-#include <pilot/device.hpp>
 #include <pilot_impl/core.hpp>
+#include <pilot_impl/device.hpp>
 
 class CoreFactory : public ::testing::Test
 {
@@ -9,12 +9,12 @@ public:
     {
         sabre::core::ResourceManagerConfig config = {.maxGpios = 30,
                                                      .upperboundUart = 3};
-        _device = std::make_unique<sabre_pilot::Device>(config);
+        _device = std::make_unique<sabre::impl::pilot::Device>(config);
         _factory = std::make_unique<sabre::impl::pilot::Factory>(_device.get());
     }
 
 protected:
-    sabre_pilot::Device::UniquePtr _device;
+    sabre::impl::pilot::Device::UniquePtr _device;
     sabre::core::Factory::UniquePtr _factory;
 };
 

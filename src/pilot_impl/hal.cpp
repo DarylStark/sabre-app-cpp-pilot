@@ -1,10 +1,9 @@
 #include "hal.hpp"
 #include "exceptions.hpp"
-#include <pilot/exceptions.hpp>
 
 namespace sabre::impl::pilot
 {
-    Uart::Uart(sabre_pilot::Device *device, size_t uartIndex)
+    Uart::Uart(Device *device, size_t uartIndex)
         : _device(device), _uartIndex(uartIndex)
     {
         if (!_device)
@@ -15,7 +14,7 @@ namespace sabre::impl::pilot
         {
             _device->getUartController(uartIndex);
         }
-        catch (sabre_pilot::exceptions::DeviceUartNotConfiguredException &e)
+        catch (DeviceUartNotConfiguredException &e)
         {
             throw InvalidUartIndex("Invalid Uart index.");
         }
@@ -52,12 +51,12 @@ namespace sabre::impl::pilot
         return _getUartController().isInitialized();
     }
 
-    sabre_pilot::UartController &Uart::_getUartController() const
+    UartController &Uart::_getUartController() const
     {
         return _device->getUartController(_uartIndex);
     }
 
-    Gpio::Gpio(sabre_pilot::Device *device, sabre::hal::PinNumber pinNumber)
+    Gpio::Gpio(Device *device, sabre::hal::PinNumber pinNumber)
         : sabre::hal::Gpio(pinNumber), _device(device)
     {
         if (!_device)

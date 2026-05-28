@@ -4,7 +4,7 @@
 
 namespace sabre::impl::pilot
 {
-    Factory::Factory(sabre_pilot::Device *device) : _device(device) {}
+    Factory::Factory(Device *device) : _device(device) {}
 
     Factory::~Factory() {}
 

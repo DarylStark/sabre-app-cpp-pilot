@@ -1,6 +1,6 @@
 #include <iostream>
-#include <pilot/device.hpp>
 #include <pilot_impl/core.hpp>
+#include <pilot_impl/device.hpp>
 #include <sabre/runtime/app.hpp>
 #include <sabre/runtime/run_app.hpp>
 #include <thread>
@@ -60,7 +60,7 @@ int main()
 {
     sabre::core::ResourceManagerConfig config = {.maxGpios = 26,
                                                  .upperboundUart = 3};
-    sabre_pilot::Device my_device(config);
+    sabre::impl::pilot::Device my_device(config);
     sabre::impl::pilot::Factory factory(&my_device);
     sabre::core::ResourceManager rm(factory, config);
 

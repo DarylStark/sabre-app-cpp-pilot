@@ -1,7 +1,6 @@
 #include <gtest/gtest.h>
 #include <memory>
-#include <pilot/device.hpp>
-#include <pilot/exceptions.hpp>
+#include <pilot_impl/device.hpp>
 #include <pilot_impl/exceptions.hpp>
 #include <pilot_impl/hal.hpp>
 
@@ -12,11 +11,11 @@ public:
     {
         sabre::core::ResourceManagerConfig config = {.maxGpios = 30,
                                                      .upperboundUart = 3};
-        _device = std::make_unique<sabre_pilot::Device>(config);
+        _device = std::make_unique<sabre::impl::pilot::Device>(config);
     }
 
 protected:
-    std::unique_ptr<sabre_pilot::Device> _device;
+    std::unique_ptr<sabre::impl::pilot::Device> _device;
 };
 
 TEST_F(HalUart, CreateWithoutDevice)
@@ -86,17 +85,15 @@ TEST_F(HalUart, WriteDataReturnValue)
 TEST_F(HalUart, WriteDataBeforeInitialized)
 {
     sabre::impl::pilot::Uart uart(_device.get(), 0);
-    ASSERT_THROW(
-        uart.writeByte('d'),
-        sabre_pilot::exceptions::UartControllerNotInitializedException);
+    ASSERT_THROW(uart.writeByte('d'),
+                 sabre::impl::pilot::UartControllerNotInitializedException);
 }
 
 TEST_F(HalUart, FlushDataBeforeInitialized)
 {
     sabre::impl::pilot::Uart uart(_device.get(), 0);
-    ASSERT_THROW(
-        uart.flush(),
-        sabre_pilot::exceptions::UartControllerNotInitializedException);
+    ASSERT_THROW(uart.flush(),
+                 sabre::impl::pilot::UartControllerNotInitializedException);
 }
 
 class HalGpio : public ::testing::Test
@@ -106,11 +103,11 @@ public:
     {
         sabre::core::ResourceManagerConfig config = {.maxGpios = 30,
                                                      .upperboundUart = 3};
-        _device = std::make_unique<sabre_pilot::Device>(config);
+        _device = std::make_unique<sabre::impl::pilot::Device>(config);
     }
 
 protected:
-    std::unique_ptr<sabre_pilot::Device> _device;
+    std::unique_ptr<sabre::impl::pilot::Device> _device;
 };
 
 TEST_F(HalGpio, CreateWithoutDevice)

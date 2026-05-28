@@ -4,7 +4,7 @@
 #include <sabre/core/resource_manager.hpp>
 #include <string>
 
-namespace sabre_pilot
+namespace sabre::impl::pilot
 {
     class Device
     {
@@ -22,4 +22,4 @@ namespace sabre_pilot
         UartController &getUartController(size_t uartNumber);
         const sabre::core::ResourceManagerConfig &getConfig() const;
     };
-} // namespace sabre_pilot
+} // namespace sabre::impl::pilot

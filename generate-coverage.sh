@@ -20,6 +20,7 @@ gcovr \
     --exclude-throw-branches \
     --root ${CURRENT_DIR} \
     --exclude '.*tests/.*' \
+    --exclude '.*pilot/.*' \
     --exclude '.*build/.*' \
     --exclude '.*_deps/.*' \
     --exclude '.*\.hpp$' \

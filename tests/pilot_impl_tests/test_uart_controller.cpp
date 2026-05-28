@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
-#include <pilot/exceptions.hpp>
-#include <pilot/uart_controller.hpp>
+#include <pilot_impl/exceptions.hpp>
+#include <pilot_impl/uart_controller.hpp>
 
 class UartControllerTest : public ::testing::Test
 {
@@ -8,7 +8,7 @@ public:
     UartControllerTest() {}
 
 protected:
-    sabre_pilot::UartController _buffer;
+    sabre::impl::pilot::UartController _buffer;
 };
 
 TEST_F(UartControllerTest, WriteOneByteToBuffer)
@@ -72,16 +72,14 @@ TEST_F(UartControllerTest, OutputBufferCallbackCalledAutomatically)
 
 TEST_F(UartControllerTest, ExceptionOnWritingToUnitializedUart)
 {
-    ASSERT_THROW(
-        _buffer.write('b'),
-        sabre_pilot::exceptions::UartControllerNotInitializedException);
+    ASSERT_THROW(_buffer.write('b'),
+                 sabre::impl::pilot::UartControllerNotInitializedException);
 }
 
 TEST_F(UartControllerTest, ExceptionOnFlushingUnitializedUart)
 {
-    ASSERT_THROW(
-        _buffer.flush(),
-        sabre_pilot::exceptions::UartControllerNotInitializedException);
+    ASSERT_THROW(_buffer.flush(),
+                 sabre::impl::pilot::UartControllerNotInitializedException);
 }
 
 TEST_F(UartControllerTest, IsNotInitializedAfterCreation)
