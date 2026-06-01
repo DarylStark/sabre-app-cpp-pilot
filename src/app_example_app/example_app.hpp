@@ -1,10 +1,7 @@
 #pragma once
 
-#include <iostream>
-#include <pilot_impl/core.hpp>
-#include <pilot_impl/device.hpp>
+#include <ostream>
 #include <sabre/runtime/app.hpp>
-#include <sabre/runtime/run_app.hpp>
 #include <thread>
 
 class MyApp : public sabre::runtime::App<void>

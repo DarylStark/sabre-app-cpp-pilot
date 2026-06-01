@@ -2,7 +2,7 @@
 #include <app_example_app/example_app.hpp>
 #include <iostream>
 #include <pilot_impl/core.hpp>
-#include <pilot_impl/device.hpp>
+#include <pilot_impl/mcu.hpp>
 #include <sabre/runtime/app.hpp>
 #include <sabre/runtime/run_app.hpp>
 #include <thread>
@@ -14,7 +14,7 @@ namespace sabre_pilot
         std::cout << "Sabre Pilot is starting ... \n";
         sabre::core::ResourceManagerConfig config = {.maxGpios = 26,
                                                      .upperboundUart = 3};
-        sabre::impl::pilot::Device my_device(config);
+        sabre::impl::pilot::Mcu my_device(config);
         sabre::impl::pilot::Factory factory(&my_device);
         sabre::core::ResourceManager rm(factory, config);
 

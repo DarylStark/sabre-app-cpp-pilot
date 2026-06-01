@@ -1,4 +1,4 @@
-#include "device.hpp"
+#include "mcu.hpp"
 #include <sabre/hal/serial.hpp>
 
 namespace sabre::impl::pilot
@@ -6,11 +6,11 @@ namespace sabre::impl::pilot
     class Uart : public sabre::hal::Serial
     {
     private:
-        Device *_device;
+        Mcu *_device;
         size_t _uartIndex;
 
     public:
-        Uart(Device *device, size_t uartIndex);
+        Uart(Mcu *device, size_t uartIndex);
         void initialize() override;
         int writeByte(char data) const override;
         std::string readBytes(size_t maxBytes,
@@ -27,10 +27,10 @@ namespace sabre::impl::pilot
     class Gpio : public sabre::hal::Gpio
     {
     public:
-        Gpio(Device *device, sabre::hal::PinNumber pinNumber);
+        Gpio(Mcu *device, sabre::hal::PinNumber pinNumber);
         void reset();
 
     private:
-        Device *_device;
+        Mcu *_device;
     };
 }; // namespace sabre::impl::pilot

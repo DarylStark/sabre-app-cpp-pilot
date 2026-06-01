@@ -1,8 +1,8 @@
 #include <gtest/gtest.h>
 #include <memory>
-#include <pilot_impl/device.hpp>
 #include <pilot_impl/exceptions.hpp>
 #include <pilot_impl/hal.hpp>
+#include <pilot_impl/mcu.hpp>
 
 class HalUart : public ::testing::Test
 {
@@ -11,11 +11,11 @@ public:
     {
         sabre::core::ResourceManagerConfig config = {.maxGpios = 30,
                                                      .upperboundUart = 3};
-        _device = std::make_unique<sabre::impl::pilot::Device>(config);
+        _device = std::make_unique<sabre::impl::pilot::Mcu>(config);
     }
 
 protected:
-    std::unique_ptr<sabre::impl::pilot::Device> _device;
+    std::unique_ptr<sabre::impl::pilot::Mcu> _device;
 };
 
 TEST_F(HalUart, CreateWithoutDevice)
@@ -103,11 +103,11 @@ public:
     {
         sabre::core::ResourceManagerConfig config = {.maxGpios = 30,
                                                      .upperboundUart = 3};
-        _device = std::make_unique<sabre::impl::pilot::Device>(config);
+        _device = std::make_unique<sabre::impl::pilot::Mcu>(config);
     }
 
 protected:
-    std::unique_ptr<sabre::impl::pilot::Device> _device;
+    std::unique_ptr<sabre::impl::pilot::Mcu> _device;
 };
 
 TEST_F(HalGpio, CreateWithoutDevice)

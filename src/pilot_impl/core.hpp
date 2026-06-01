@@ -1,6 +1,6 @@
 #pragma once
 
-#include "device.hpp"
+#include "mcu.hpp"
 #include <sabre/core/factory.hpp>
 #include <sabre/runtime/app.hpp>
 
@@ -9,10 +9,10 @@ namespace sabre::impl::pilot
     class Factory : public sabre::core::Factory
     {
     private:
-        Device *_device;
+        Mcu *_device;
 
     public:
-        Factory(Device *device);
+        Factory(Mcu *device);
         ~Factory();
 
         sabre::hal::Serial::UniquePtr createUartObject(

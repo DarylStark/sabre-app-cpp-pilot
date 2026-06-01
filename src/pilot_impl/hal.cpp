@@ -3,7 +3,7 @@
 
 namespace sabre::impl::pilot
 {
-    Uart::Uart(Device *device, size_t uartIndex)
+    Uart::Uart(Mcu *device, size_t uartIndex)
         : _device(device), _uartIndex(uartIndex)
     {
         if (!_device)
@@ -56,7 +56,7 @@ namespace sabre::impl::pilot
         return _device->getUartController(_uartIndex);
     }
 
-    Gpio::Gpio(Device *device, sabre::hal::PinNumber pinNumber)
+    Gpio::Gpio(Mcu *device, sabre::hal::PinNumber pinNumber)
         : sabre::hal::Gpio(pinNumber), _device(device)
     {
         if (!_device)
