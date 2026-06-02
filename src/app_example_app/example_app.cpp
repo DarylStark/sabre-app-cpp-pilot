@@ -36,7 +36,7 @@ void MyApp::run()
     uint32_t idx = 0;
     while (idx++ < 40)
     {
-        _uart0 << "." << std::flush;
+        _uart0 << "*" << std::flush;
         std::this_thread::sleep_for(std::chrono::milliseconds(25));
     }
     _uart0.flush();

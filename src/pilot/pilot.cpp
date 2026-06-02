@@ -1,5 +1,5 @@
 #include "pilot.hpp"
-#include <app_example_app/example_app.hpp>
+#include <dlfcn.h>
 #include <iostream>
 #include <pilot_impl/core.hpp>
 #include <pilot_impl/mcu.hpp>
@@ -9,6 +9,15 @@
 
 namespace sabre_pilot
 {
+    using StartAppFn = void (*)(sabre::core::ResourceManager &);
+
+    Pilot::Pilot()
+    {
+        _deviceConfig = std::make_unique<sabre::core::ResourceManagerConfig>(
+            sabre::core::ResourceManagerConfig{.maxGpios = 26,
+                                               .upperboundUart = 3});
+    }
+
     void Pilot::run()
     {
         std::cout << "Sabre Pilot is starting ... \n";
@@ -32,6 +41,25 @@ namespace sabre_pilot
                 });
         }
 
-        sabre::runtime::RunApp<MyApp>(rm);
+        // Import the shared library
+        void *handle =
+            dlopen("../app_example_app/libapp_example_app.so", RTLD_NOW);
+        if (handle == nullptr)
+        {
+            // TODO: Exception
+            return;
+        }
+        dlerror();
+        auto create_app =
+            reinterpret_cast<StartAppFn>(dlsym(handle, "startApp"));
+        if (create_app == nullptr)
+        {
+            // TODO: Exception
+            dlclose(handle);
+            return;
+        }
+
+        create_app(rm);
+        dlclose(handle);
     }
 } // namespace sabre_pilot
