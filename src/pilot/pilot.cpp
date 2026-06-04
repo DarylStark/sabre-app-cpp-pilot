@@ -1,4 +1,5 @@
 #include "pilot.hpp"
+#include "linux_dynamic_library.hpp"
 #include <dlfcn.h>
 #include <iostream>
 #include <pilot_impl/core.hpp>
@@ -41,25 +42,8 @@ namespace sabre_pilot
                 });
         }
 
-        // Import the shared library
-        void *handle =
-            dlopen("../app_example_app/libapp_example_app.so", RTLD_NOW);
-        if (handle == nullptr)
-        {
-            // TODO: Exception
-            return;
-        }
-        dlerror();
-        auto create_app =
-            reinterpret_cast<StartAppFn>(dlsym(handle, "startApp"));
-        if (create_app == nullptr)
-        {
-            // TODO: Exception
-            dlclose(handle);
-            return;
-        }
-
-        create_app(rm);
-        dlclose(handle);
+        LinuxDynamicLibrary app("../app_example_app/libapp_example_app.so");
+        app.load();
+        app.getEntryPoint("startApp")(rm);
     }
 } // namespace sabre_pilot
