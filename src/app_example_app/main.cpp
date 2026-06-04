@@ -3,8 +3,9 @@
 
 extern "C"
 {
-    void startApp(sabre::core::ResourceManager &resourceManager)
+    int startApp(sabre::core::ResourceManager &resourceManager)
     {
         sabre::runtime::RunApp<MyApp>(resourceManager);
+        return 0;
     }
 }

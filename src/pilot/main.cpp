@@ -1,4 +1,4 @@
-#include "pilot.hpp"
+#include <pilot_core/pilot.hpp>
 
 int main()
 {

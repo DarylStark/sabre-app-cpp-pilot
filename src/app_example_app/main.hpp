@@ -3,5 +3,5 @@
 
 extern "C"
 {
-    void startApp(sabre::core::ResourceManager &resourceManager);
+    int startApp(sabre::core::ResourceManager &resourceManager);
 }

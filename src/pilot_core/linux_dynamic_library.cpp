@@ -1,4 +1,5 @@
 #include "linux_dynamic_library.hpp"
+#include "exceptions.hpp"
 #include <dlfcn.h>
 #include <iostream>
 
@@ -17,11 +18,13 @@ namespace sabre_pilot
 
     void LinuxDynamicLibrary::load()
     {
-        if (_libHandle)
-            return;
-        _libHandle = dlopen(_getLibLocation().c_str(), RTLD_NOW);
-
-        // TODO: Exception when it went wrong
+        if (!_libHandle)
+        {
+            _libHandle = dlopen(_getLibLocation().c_str(), RTLD_NOW);
+            if (!_libHandle)
+                throw DynamicLibraryLoadingException(
+                    "Dynamic library could not be loaded");
+        }
 
         for (auto &[name, entry_point] : _entryPoints)
         {
@@ -31,7 +34,9 @@ namespace sabre_pilot
                     dlsym(_libHandle, name.c_str()));
                 entry_point = static_cast<LibraryEntryPoint>(ep);
 
-                // TODO: Exception when it went wrong
+                if (!entry_point)
+                    throw EntryPointNotInLibraryException(
+                        "Entry point not in library");
             }
         }
     }

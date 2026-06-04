@@ -7,9 +7,9 @@
 
 namespace sabre_pilot
 {
-    using LibraryEntryPointRaw = void (*)(sabre::core::ResourceManager &);
+    using LibraryEntryPointRaw = int (*)(sabre::core::ResourceManager &);
     using LibraryEntryPoint =
-        std::function<void(sabre::core::ResourceManager &)>;
+        std::function<int(sabre::core::ResourceManager &)>;
 
     class DynamicLibrary
     {
@@ -26,6 +26,7 @@ namespace sabre_pilot
         virtual ~DynamicLibrary() = default;
         virtual void load() = 0;
 
+        void addEntryPoint(const std::string &name);
         LibraryEntryPoint &getEntryPoint(const std::string &name);
     };
 } // namespace sabre_pilot
