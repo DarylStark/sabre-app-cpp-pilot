@@ -1,4 +1,5 @@
 #include "pilot.hpp"
+#include "device.hpp"
 #include "linux_dynamic_library.hpp"
 #include <dlfcn.h>
 #include <iostream>
@@ -10,40 +11,40 @@
 
 namespace sabre_pilot
 {
-    using StartAppFn = void (*)(sabre::core::ResourceManager &);
+    Pilot::Pilot(Project project) : _project(std::move(project)) {}
 
-    Pilot::Pilot()
+    void Pilot::_loadProject()
     {
-        _deviceConfig = std::make_unique<sabre::core::ResourceManagerConfig>(
-            sabre::core::ResourceManagerConfig{.maxGpios = 26,
-                                               .upperboundUart = 3});
+        for (const auto &device : _project.devices)
+        {
+            _devices[device.name] = std::make_unique<Device>(device.config);
+            if (_libraries.find(device.library) == _libraries.end())
+            {
+                _libraries[device.library] =
+                    std::make_unique<LinuxDynamicLibrary>(device.library);
+            }
+            _libraries[device.library]->addEntryPoint(device.entryPoint);
+            _libraries[device.library]->load();
+            _devices[device.name]->setFirmware(
+                _libraries[device.library]->getEntryPoint(device.entryPoint));
+        }
     }
 
     void Pilot::run()
     {
-        std::cout << "Sabre Pilot is starting ... \n";
-        sabre::core::ResourceManagerConfig config = {.maxGpios = 26,
-                                                     .upperboundUart = 3};
-        sabre::impl::pilot::Mcu my_device(config);
-        sabre::impl::pilot::Factory factory(&my_device);
-        sabre::core::ResourceManager rm(factory, config);
+        _loadProject();
 
-        std::string uartOutputBuffer[3];
-
-        // Configure the UART devices for the `device`
-        for (uint16_t idx = 0; idx < config.upperboundUart; idx++)
+        for (auto &[device_name, device] : _devices)
         {
-            my_device.getUartController(idx).setOutputBufferCallback(
-                [idx, &uartOutputBuffer](char b)
-                {
-                    uartOutputBuffer[idx].push_back(b);
-                    std::cout << "UART" << idx << " --> "
-                              << uartOutputBuffer[idx] << '\n';
-                });
+            std::cout << "Starting device " << device_name << "\n";
+            _firmwareThreads.push_back(std::make_unique<std::thread>(
+                [dev = device.get()] { dev->run(); }));
         }
 
-        LinuxDynamicLibrary app("../app_example_app/libapp_example_app.so");
-        app.load();
-        app.getEntryPoint("startApp")(rm);
+        // Join all threads
+        for (auto &firmwareThreads : _firmwareThreads)
+        {
+            firmwareThreads->join();
+        }
     }
 } // namespace sabre_pilot

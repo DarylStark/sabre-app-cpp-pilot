@@ -9,6 +9,11 @@ namespace sabre_pilot
     {
     }
 
+    void Device::setFirmware(LibraryEntryPoint firmware)
+    {
+        _firmware = std::move(firmware);
+    }
+
     void Device::run()
     {
         sabre::impl::pilot::Mcu my_device(_config);
@@ -24,9 +29,16 @@ namespace sabre_pilot
                 [idx, &uartOutputBuffer](char b)
                 {
                     uartOutputBuffer[idx].push_back(b);
-                    std::cout << "UART" << idx << " --> "
-                              << uartOutputBuffer[idx] << '\n';
+                    if (b == '\n')
+                    {
+                        std::cout << "UART" << idx << " --> "
+                                  << uartOutputBuffer[idx];
+                        uartOutputBuffer[idx] = "";
+                    }
                 });
         }
+
+        if (_firmware)
+            _firmware(rm);
     }
 } // namespace sabre_pilot

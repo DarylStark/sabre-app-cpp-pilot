@@ -1,8 +1,9 @@
 #include "example_app.hpp"
+#include <string>
 
-MyApp::MyApp(sabre::core::ResourceManager &resourceManager)
+MyApp::MyApp(sabre::core::ResourceManager &resourceManager, std::string name)
     : sabre::runtime::App<void>(resourceManager), _uart0(nullptr),
-      _uart1(nullptr), _uart2(nullptr)
+      _uart1(nullptr), _uart2(nullptr), _name(std::move(name))
 {
     _setupUarts();
 }
@@ -33,11 +34,9 @@ void MyApp::_setupUarts()
 
 void MyApp::run()
 {
-    uint32_t idx = 0;
-    while (idx++ < 40)
+    while (true)
     {
-        _uart0 << "*" << std::flush;
-        std::this_thread::sleep_for(std::chrono::milliseconds(25));
+        _uart0 << _name << " - Still running :)\n" << std::flush;
+        std::this_thread::sleep_for(std::chrono::milliseconds(250));
     }
-    _uart0.flush();
 }
