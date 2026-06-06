@@ -47,7 +47,10 @@ namespace sabre_pilot
         for (auto &[device_name, device] : _devices)
         {
             if (device._threadPtr)
+            {
                 device._threadPtr->join();
+                device._threadPtr.reset();
+            }
         }
     }
 } // namespace sabre_pilot
