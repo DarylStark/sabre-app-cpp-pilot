@@ -1,4 +1,3 @@
-#include "project.hpp"
 #include <iostream>
 #include <pilot_core/pilot.hpp>
 #include <toml++/toml.hpp>
