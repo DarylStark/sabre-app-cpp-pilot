@@ -14,4 +14,10 @@ extern "C"
         sabre::runtime::RunApp<MyApp>(resourceManager, "DEVICE-2");
         return 0;
     }
+
+    int startDev3(sabre::core::ResourceManager &resourceManager)
+    {
+        sabre::runtime::RunApp<MyApp>(resourceManager, "DEVICE-3");
+        return 0;
+    }
 }

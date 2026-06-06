@@ -9,7 +9,9 @@
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceFolder}/build/dbg-sabre-pilot-tests/src/pilot/sabre_pilot",
-            "args": [],
+            "args": [
+                "${workspaceFolder}/test_projects/test_project.toml"
+            ],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}/build/dbg-sabre-pilot-tests/src/pilot",
             "externalConsole": false,
