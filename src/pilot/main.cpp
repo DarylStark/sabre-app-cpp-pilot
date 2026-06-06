@@ -1,5 +1,5 @@
+#include "project.hpp"
 #include <pilot_core/pilot.hpp>
-#include <pilot_core/pilot_project.hpp>
 
 int main()
 {
@@ -15,7 +15,13 @@ int main()
         .library = "../app_example_app/libapp_example_app.so",
         .entryPoint = "startDev2"});
 
-    sabre_pilot::Pilot sabrePilot(project);
+    sabre_pilot::Pilot sabrePilot;
+
+    for (const auto &device : project.devices)
+    {
+        sabrePilot.addDevice(device.name, device.config, device.library,
+                             device.entryPoint);
+    }
 
     sabrePilot.run();
     return 0;

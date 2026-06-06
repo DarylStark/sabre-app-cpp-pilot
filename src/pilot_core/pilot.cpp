@@ -11,29 +11,28 @@
 
 namespace sabre_pilot
 {
-    Pilot::Pilot(Project project) : _project(std::move(project)) {}
+    Pilot::Pilot() {}
 
-    void Pilot::_loadProject()
+    void Pilot::addDevice(const std::string &name,
+                          const sabre::core::ResourceManagerConfig &config,
+                          const std::string &library,
+                          const std::string &entryPoint)
     {
-        for (const auto &device : _project.devices)
+        _devices[name] = std::make_unique<Device>(config);
+        if (_libraries.find(library) == _libraries.end())
         {
-            _devices[device.name] = std::make_unique<Device>(device.config);
-            if (_libraries.find(device.library) == _libraries.end())
-            {
-                _libraries[device.library] =
-                    std::make_unique<LinuxDynamicLibrary>(device.library);
-            }
-            _libraries[device.library]->addEntryPoint(device.entryPoint);
-            _libraries[device.library]->load();
-            _devices[device.name]->setFirmware(
-                _libraries[device.library]->getEntryPoint(device.entryPoint));
+            _libraries[library] =
+                std::make_unique<LinuxDynamicLibrary>(library);
         }
+
+        _libraries[library]->addEntryPoint(entryPoint);
+        _libraries[library]->load();
+        _devices[name]->setFirmware(
+            _libraries[library]->getEntryPoint(entryPoint));
     }
 
     void Pilot::run()
     {
-        _loadProject();
-
         for (auto &[device_name, device] : _devices)
         {
             std::cout << "Starting device " << device_name << "\n";
