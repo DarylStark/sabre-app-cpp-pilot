@@ -18,32 +18,36 @@ namespace sabre_pilot
                           const std::string &library,
                           const std::string &entryPoint)
     {
-        _devices[name] = std::make_unique<Device>(config);
-        if (_libraries.find(library) == _libraries.end())
-        {
-            _libraries[library] =
-                std::make_unique<LinuxDynamicLibrary>(library);
-        }
+        auto device = std::make_unique<Device>(config);
 
-        _libraries[library]->addEntryPoint(entryPoint);
-        _libraries[library]->load();
-        _devices[name]->setFirmware(
-            _libraries[library]->getEntryPoint(entryPoint));
+        _devices.insert_or_assign(name, PilotDevice{.name = name,
+                                                    .device = std::move(device),
+                                                    .library = library,
+                                                    .entryPoint = entryPoint});
+
+        auto [libraryIt, inserted] = _libraries.try_emplace(
+            library, std::make_unique<LinuxDynamicLibrary>(library));
+        libraryIt->second->addEntryPoint(entryPoint);
     }
 
     void Pilot::run()
     {
         for (auto &[device_name, device] : _devices)
         {
+            _libraries[device.library]->load();
+            device.device->setFirmware(
+                _libraries[device.library]->getEntryPoint(device.entryPoint));
+
             std::cout << "Starting device " << device_name << "\n";
-            _firmwareThreads.push_back(std::make_unique<std::thread>(
-                [dev = device.get()] { dev->run(); }));
+            device._threadPtr = std::make_unique<std::thread>(
+                [dev = device.device.get()] { dev->run(); });
         }
 
-        // Join all threads
-        for (auto &firmwareThreads : _firmwareThreads)
+        // Join all running threads
+        for (auto &[device_name, device] : _devices)
         {
-            firmwareThreads->join();
+            if (device._threadPtr)
+                device._threadPtr->join();
         }
     }
 } // namespace sabre_pilot

@@ -8,13 +8,21 @@
 
 namespace sabre_pilot
 {
+    struct PilotDevice
+    {
+        std::string name;
+        std::unique_ptr<Device> device;
+        std::string library;
+        std::string entryPoint;
+        std::unique_ptr<std::thread> _threadPtr = nullptr;
+    };
+
     class Pilot
     {
     private:
-        std::unordered_map<std::string, std::unique_ptr<Device>> _devices;
+        std::unordered_map<std::string, PilotDevice> _devices;
         std::unordered_map<std::string, std::unique_ptr<DynamicLibrary>>
             _libraries;
-        std::vector<std::unique_ptr<std::thread>> _firmwareThreads;
 
     public:
         Pilot();
