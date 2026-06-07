@@ -34,9 +34,12 @@ void MyApp::_setupUarts()
 
 void MyApp::run()
 {
+    _uart0 << "UART0 works!\n" << std::flush;
+    _uart1 << "UART1 works!\n" << std::flush;
+    _uart2 << "UART2 works!\n" << std::flush;
     while (true)
     {
         _uart0 << _name << " - Still running :)\n" << std::flush;
-        std::this_thread::sleep_for(std::chrono::milliseconds(250));
+        std::this_thread::sleep_for(std::chrono::milliseconds(2500));
     }
 }

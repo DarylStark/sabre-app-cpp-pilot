@@ -18,10 +18,14 @@ namespace sabre_pilot
         sabre::core::ResourceManagerConfig _config;
         sabre::impl::pilot::Mcu _mcu;
         sabre::impl::pilot::Factory _factory;
+        std::unique_ptr<std::string[]> _uartBuffers;
 
     public:
         Device(sabre::core::ResourceManagerConfig config);
         void setFirmware(LibraryEntryPoint firmware);
         void run();
+
+        const std::string &getUartBuffer(sabre::hal::UartNumber uartIdx) const;
+        sabre::hal::UartNumber getUartCount() const;
     };
 } // namespace sabre_pilot

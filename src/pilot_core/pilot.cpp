@@ -43,6 +43,22 @@ namespace sabre_pilot
                 [dev = device.device.get()] { dev->run(); });
         }
 
+        while (true)
+        {
+            for (auto &[device_name, device] : _devices)
+            {
+                for (sabre::hal::UartNumber idx = 0;
+                     idx < device.device->getUartCount(); idx++)
+                {
+                    std::cout << std::string(80, '-') << '\n';
+                    std::cout << "DEVICE " << device_name << ", UART " << idx
+                              << "\n";
+                    std::cout << std::string(80, '-') << '\n';
+                    std::cout << device.device->getUartBuffer(idx) << "\n";
+                }
+            }
+        }
+
         // Join all running threads
         for (auto &[device_name, device] : _devices)
         {
