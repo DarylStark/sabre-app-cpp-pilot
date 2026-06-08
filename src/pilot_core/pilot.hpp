@@ -17,12 +17,15 @@ namespace sabre_pilot
         std::unique_ptr<std::thread> _threadPtr = nullptr;
     };
 
+    using DeviceMap = std::unordered_map<std::string, PilotDevice>;
+    using LibraryMap =
+        std::unordered_map<std::string, std::unique_ptr<DynamicLibrary>>;
+
     class Pilot
     {
     private:
-        std::unordered_map<std::string, PilotDevice> _devices;
-        std::unordered_map<std::string, std::unique_ptr<DynamicLibrary>>
-            _libraries;
+        DeviceMap _devices;
+        LibraryMap _libraries;
 
     public:
         Pilot();
@@ -31,6 +34,9 @@ namespace sabre_pilot
                        const sabre::core::ResourceManagerConfig &config,
                        const std::string &library,
                        const std::string &entryPoint);
+
+        const LibraryMap &getLibraryMap() const;
+        const DeviceMap &getDeviceMap() const;
 
         void run();
     };

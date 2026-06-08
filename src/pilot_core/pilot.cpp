@@ -69,4 +69,14 @@ namespace sabre_pilot
             }
         }
     }
+
+    const LibraryMap &Pilot::getLibraryMap() const
+    {
+        return _libraries;
+    }
+
+    const DeviceMap &Pilot::getDeviceMap() const
+    {
+        return _devices;
+    }
 } // namespace sabre_pilot
