@@ -13,15 +13,10 @@ namespace sabre_pilot
         return _libLocation;
     }
 
-    void DynamicLibrary::addEntryPoint(const std::string &name)
-    {
-        _entryPoints[name] = nullptr;
-    }
-
     LibraryEntryPoint &DynamicLibrary::getEntryPoint(const std::string &name)
     {
         if (_entryPoints.find(name) == _entryPoints.end())
-            throw NonExistingEntryPointException("Entrypoint doesn't exist");
+            _loadEntryPoint(name);
         return _entryPoints.at(name);
     }
 } // namespace sabre_pilot

@@ -20,13 +20,13 @@ namespace sabre_pilot
         std::unordered_map<std::string, LibraryEntryPoint> _entryPoints;
 
         const std::string &_getLibLocation() const;
+        virtual void _loadEntryPoint(const std::string &entryPoint) = 0;
+        virtual void _loadLibrary() = 0;
 
     public:
         DynamicLibrary(const std::string &libLocation);
         virtual ~DynamicLibrary() = default;
-        virtual void load() = 0;
 
-        void addEntryPoint(const std::string &name);
         LibraryEntryPoint &getEntryPoint(const std::string &name);
     };
 } // namespace sabre_pilot

@@ -16,3 +16,4 @@ target_include_directories(
 gtest_discover_tests(sabre_pilot_tests)
 
 add_subdirectory(test_dynamic_lib_1)
+add_subdirectory(test_dynamic_lib_2)

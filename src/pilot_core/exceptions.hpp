@@ -10,12 +10,6 @@ namespace sabre_pilot
         SabrePilotException(const char *message);
     };
 
-    class NonExistingEntryPointException : public SabrePilotException
-    {
-    public:
-        NonExistingEntryPointException(const char *message);
-    };
-
     class DynamicLibraryLoadingException : public SabrePilotException
     {
     public:

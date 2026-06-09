@@ -27,17 +27,14 @@ namespace sabre_pilot
 
         auto [libraryIt, inserted] = _libraries.try_emplace(
             library, std::make_unique<LinuxDynamicLibrary>(library));
-        libraryIt->second->addEntryPoint(entryPoint);
+        _devices[name].device->setFirmware(
+            libraryIt->second->getEntryPoint(entryPoint));
     }
 
     void Pilot::run()
     {
         for (auto &[device_name, device] : _devices)
         {
-            _libraries[device.library]->load();
-            device.device->setFirmware(
-                _libraries[device.library]->getEntryPoint(device.entryPoint));
-
             std::cout << "Starting device " << device_name << "\n";
             device._threadPtr = std::make_unique<std::thread>(
                 [dev = device.device.get()] { dev->run(); });

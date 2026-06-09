@@ -7,12 +7,6 @@ namespace sabre_pilot
     {
     }
 
-    NonExistingEntryPointException::NonExistingEntryPointException(
-        const char *message)
-        : SabrePilotException(message)
-    {
-    }
-
     DynamicLibraryLoadingException::DynamicLibraryLoadingException(
         const char *message)
         : SabrePilotException(message)
