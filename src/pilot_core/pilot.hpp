@@ -38,6 +38,7 @@ namespace sabre_pilot
         const LibraryMap &getLibraryMap() const;
         const DeviceMap &getDeviceMap() const;
 
-        void run();
+        void runDevice(const std::string &deviceName);
+        void runAll();
     };
 } // namespace sabre_pilot

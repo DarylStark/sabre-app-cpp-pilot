@@ -31,13 +31,22 @@ namespace sabre_pilot
             libraryIt->second->getEntryPoint(entryPoint));
     }
 
-    void Pilot::run()
+    void Pilot::runDevice(const std::string &deviceName)
+    {
+        auto &device = _devices.at(deviceName);
+        if (device._threadPtr == nullptr)
+        {
+            std::cout << "Starting device " << deviceName << "\n";
+            device._threadPtr = std::make_unique<std::thread>(
+                [dev = device.device.get()] { dev->run(); });
+        }
+    }
+
+    void Pilot::runAll()
     {
         for (auto &[device_name, device] : _devices)
         {
-            std::cout << "Starting device " << device_name << "\n";
-            device._threadPtr = std::make_unique<std::thread>(
-                [dev = device.device.get()] { dev->run(); });
+            runDevice(device_name);
         }
 
         while (true)

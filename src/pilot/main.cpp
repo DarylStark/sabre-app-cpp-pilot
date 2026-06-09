@@ -67,6 +67,6 @@ int main(int argc, char *argv[])
         }
     }
 
-    sabrePilot.run();
+    sabrePilot.runAll();
     return 0;
 }
