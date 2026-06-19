@@ -1,5 +1,7 @@
 #include <iostream>
 #include <pilot_core/pilot.hpp>
+#include <pilot_ui_console/console.hpp>
+#include <pilot_ui_imgui/imgui.hpp>
 #include <toml++/toml.hpp>
 
 int main(int argc, char *argv[])
@@ -67,6 +69,11 @@ int main(int argc, char *argv[])
         }
     }
 
-    sabrePilot.runAll();
+    sabre_ui_console::ConsoleUI consoleUI(sabrePilot);
+    consoleUI.start();
+
+    // sabre_ui_imgui::ImGuiUI ui(sabrePilot);
+    // ui.start();
+
     return 0;
 }

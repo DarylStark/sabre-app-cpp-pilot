@@ -11,7 +11,7 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(tomlplusplus)
 
-target_link_libraries(sabre_pilot PUBLIC sabre_pilot_core tomlplusplus::tomlplusplus)
+target_link_libraries(sabre_pilot PUBLIC sabre_pilot_core sabre_pilot_ui_imgui sabre_pilot_ui_console tomlplusplus::tomlplusplus)
 
 target_include_directories(
     sabre_pilot
