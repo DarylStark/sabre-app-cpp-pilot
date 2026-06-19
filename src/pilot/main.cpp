@@ -69,11 +69,12 @@ int main(int argc, char *argv[])
         }
     }
 
-    sabre_ui_console::ConsoleUI consoleUI(sabrePilot);
-    consoleUI.start();
+    std::unique_ptr<sabre_pilot::UI> ui;
 
-    // sabre_ui_imgui::ImGuiUI ui(sabrePilot);
-    // ui.start();
+    // ui = std::make_unique<sabre_ui_console::ConsoleUI>(sabrePilot);
+    ui = std::make_unique<sabre_ui_imgui::ImGuiUI>(sabrePilot);
+
+    ui->start();
 
     return 0;
 }
