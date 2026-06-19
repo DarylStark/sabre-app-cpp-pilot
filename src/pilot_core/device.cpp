@@ -27,12 +27,6 @@ namespace sabre_pilot
         sabre::core::ResourceManager rm(_factory, _config);
         if (_firmware)
             _firmware(rm);
-
-        // Add newlines to the UART buffer
-        for (sabre::hal::UartNumber idx = 0; idx < getUartCount(); idx++)
-        {
-            _uartBuffers[idx].push_back('\n');
-        }
     }
 
     const std::string &
