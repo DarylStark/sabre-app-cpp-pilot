@@ -2,14 +2,14 @@
 #include <pilot_impl/exceptions.hpp>
 #include <pilot_impl/mcu.hpp>
 
-TEST(Device, CreateDeviceNoUart)
+TEST(Mcu, CreateDeviceNoUart)
 {
     // Should not throw an exception
     sabre::core::ResourceManagerConfig config = {.upperboundUart = 0};
     sabre::impl::pilot::Mcu device(config);
 }
 
-TEST(Device, RetrieveSameUartTwice)
+TEST(Mcu, RetrieveSameUartTwice)
 {
     sabre::core::ResourceManagerConfig config = {.upperboundUart = 1};
     sabre::impl::pilot::Mcu device(config);
@@ -18,7 +18,7 @@ TEST(Device, RetrieveSameUartTwice)
     ASSERT_EQ(&uart_1, &uart_2);
 }
 
-TEST(Device, ExceptionOnRetrievingNonExistingUart)
+TEST(Mcu, ExceptionOnRetrievingNonExistingUart)
 {
     sabre::core::ResourceManagerConfig config = {.upperboundUart = 1};
     sabre::impl::pilot::Mcu device(config);
@@ -26,7 +26,7 @@ TEST(Device, ExceptionOnRetrievingNonExistingUart)
                  sabre::impl::pilot::DeviceUartNotConfiguredException);
 }
 
-TEST(Device, RetrievingConfig)
+TEST(Mcu, RetrievingConfig)
 {
     sabre::core::ResourceManagerConfig config = {.upperboundUart = 990};
     sabre::impl::pilot::Mcu device(config);
