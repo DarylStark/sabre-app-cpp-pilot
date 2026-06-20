@@ -37,6 +37,8 @@ namespace sabre_ui_imgui
         glClear(GL_COLOR_BUFFER_BIT);
         ImGui_ImplGlfw_InitForOpenGL(_window, true);
         ImGui_ImplOpenGL3_Init("#version 130");
+
+        glfwSwapInterval(_vSync ? 1 : 0);
     }
 
     void ImGuiUI::_mainLoop()
@@ -58,7 +60,8 @@ namespace sabre_ui_imgui
             // Dialog windows
             _imguiDemoWindow();
             _imguiMetricsWindow();
-            _imguiAboutWindow();
+            _aboutWindow();
+            _settingsWindow();
 
             ImGui::Render();
             ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -91,6 +94,7 @@ namespace sabre_ui_imgui
     {
         if (ImGui::BeginMenu("File"))
         {
+            ImGui::MenuItem("Settings", nullptr, &_showSettingsWindow);
             if (ImGui::MenuItem("Exit"))
             {
                 glfwSetWindowShouldClose(_window, GLFW_TRUE);
@@ -113,25 +117,26 @@ namespace sabre_ui_imgui
     {
         if (ImGui::BeginMenu("UI debug"))
         {
-            ImGui::MenuItem("Dear UI Metrics", nullptr, &_showMetricsWindow);
-            ImGui::MenuItem("Dear ImGui Demo", nullptr, &_showDemoWindow);
+            ImGui::MenuItem("Dear UI Metrics", nullptr,
+                            &_showImGuiMetricsWindow);
+            ImGui::MenuItem("Dear ImGui Demo", nullptr, &_showImGuiDemoWindow);
             ImGui::EndMenu();
         }
     }
 
     void ImGuiUI::_imguiDemoWindow()
     {
-        if (_showDemoWindow)
-            ImGui::ShowDemoWindow(&_showDemoWindow);
+        if (_showImGuiDemoWindow)
+            ImGui::ShowDemoWindow(&_showImGuiDemoWindow);
     }
 
     void ImGuiUI::_imguiMetricsWindow()
     {
-        if (_showMetricsWindow)
-            ImGui::ShowMetricsWindow(&_showMetricsWindow);
+        if (_showImGuiMetricsWindow)
+            ImGui::ShowMetricsWindow(&_showImGuiMetricsWindow);
     }
 
-    void ImGuiUI::_imguiAboutWindow()
+    void ImGuiUI::_aboutWindow()
     {
         if (_showAboutWindow)
         {
@@ -139,6 +144,26 @@ namespace sabre_ui_imgui
             ImGui::Text("Sabre Pilot");
             ImGui::Text("Version 1.0.0"); // TODO: real version information
             ImGui::Text("By Daryl Stark");
+            ImGui::End();
+        }
+    }
+
+    void ImGuiUI::_settingsWindow()
+    {
+        if (_showSettingsWindow)
+        {
+            ImGui::Begin("Settings", &_showSettingsWindow);
+            if (ImGui::Checkbox("Enable vSync", &_vSync))
+            {
+                if (_vSync)
+                {
+                    glfwSwapInterval(1);
+                }
+                else
+                {
+                    glfwSwapInterval(0);
+                }
+            }
             ImGui::End();
         }
     }

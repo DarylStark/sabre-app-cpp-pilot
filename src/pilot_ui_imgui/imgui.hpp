@@ -8,10 +8,14 @@ namespace sabre_ui_imgui
     private:
         GLFWwindow *_window = nullptr;
 
-        // ImGui switches
+        // Dialog switches
+        bool _showImGuiDemoWindow = false;
+        bool _showImGuiMetricsWindow = false;
         bool _showAboutWindow = false;
-        bool _showDemoWindow = false;
-        bool _showMetricsWindow = false;
+        bool _showSettingsWindow = false;
+
+        // GUI configuration
+        bool _vSync = true;
 
         // Lifecycle
         void _createWindow();
@@ -25,10 +29,13 @@ namespace sabre_ui_imgui
         void _mainMenuHelp();
         void _mainMenuHelpDebug();
 
-        // Dialogs
+        // ImGui Dialogs
         void _imguiDemoWindow();
         void _imguiMetricsWindow();
-        void _imguiAboutWindow();
+
+        // Own diaglos
+        void _aboutWindow();
+        void _settingsWindow();
 
     public:
         ImGuiUI(sabre_pilot::Pilot &device);
