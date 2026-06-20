@@ -17,7 +17,7 @@ namespace sabre_ui_console
         {
             std::cout << "- " << name << " [" << device.library << ":"
                       << device.entryPoint << "]";
-            if (device._threadPtr && device._threadPtr->joinable())
+            if (device.threadPtr && device.threadPtr->joinable())
             {
                 std::cout << " (running)";
             }

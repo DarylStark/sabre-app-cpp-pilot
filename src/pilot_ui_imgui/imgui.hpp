@@ -3,6 +3,11 @@
 
 namespace sabre_ui_imgui
 {
+    struct DeviceSettings
+    {
+        bool isVisible = true;
+    };
+
     class ImGuiUI : public sabre_pilot::UI
     {
     private:
@@ -16,6 +21,9 @@ namespace sabre_ui_imgui
 
         // GUI configuration
         bool _vSync = true;
+
+        // Devices
+        std::unordered_map<std::string, DeviceSettings> _deviceSettings;
 
         // Lifecycle
         void _createWindow();
@@ -33,9 +41,12 @@ namespace sabre_ui_imgui
         void _imguiDemoWindow();
         void _imguiMetricsWindow();
 
-        // Own diaglos
+        // UI diaglos
         void _aboutWindow();
         void _settingsWindow();
+
+        // Device dialogs
+        void _deviceDialog(const std::string &deviceName);
 
     public:
         ImGuiUI(sabre_pilot::Pilot &device);

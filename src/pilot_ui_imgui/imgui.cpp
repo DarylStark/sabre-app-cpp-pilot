@@ -63,6 +63,12 @@ namespace sabre_ui_imgui
             _aboutWindow();
             _settingsWindow();
 
+            // Device windows
+            for (const auto &[deviceName, device] : _pilot.getDeviceMap())
+            {
+                _deviceDialog(deviceName);
+            }
+
             ImGui::Render();
             ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
             glfwSwapBuffers(_window);
@@ -168,14 +174,118 @@ namespace sabre_ui_imgui
         }
     }
 
+    void ImGuiUI::_deviceDialog(const std::string &deviceName)
+    {
+        auto &deviceSettings = _deviceSettings.at(deviceName);
+        if (deviceSettings.isVisible)
+        {
+            ImGui::Begin(deviceName.c_str(), &deviceSettings.isVisible);
+            if (_pilot.getDeviceMap().contains(deviceName))
+            {
+                auto &device = _pilot.getDeviceMap().at(deviceName);
+
+                if (ImGui::CollapsingHeader("Device information",
+                                            ImGuiTreeNodeFlags_DefaultOpen))
+                {
+
+                    if (ImGui::BeginTable("device_row", 2,
+                                          ImGuiTableFlags_SizingStretchProp))
+                    {
+                        ImGui::TableSetupColumn(
+                            "Info", ImGuiTableColumnFlags_WidthStretch);
+                        ImGui::TableSetupColumn(
+                            "Action", ImGuiTableColumnFlags_WidthFixed);
+                        ImGui::TableNextRow();
+
+                        ImGui::TableSetColumnIndex(0);
+                        ImGui::Text("Library: %s.%s", device.library.c_str(),
+                                    device.entryPoint.c_str());
+
+                        ImGui::TableSetColumnIndex(1);
+                        if (device.threadPtr == nullptr)
+                        {
+                            if (ImGui::ArrowButton("##start_device_play",
+                                                   ImGuiDir_Right))
+                            {
+                                _pilot.runDevice(deviceName);
+                            }
+                        }
+                        else
+                        {
+                            ImGui::Text("Running");
+                        }
+
+                        ImGui::EndTable();
+                    }
+                }
+
+                for (uint32_t idx = 0; idx < device.device->getUartCount();
+                     idx++)
+                {
+                    std::string title = "UART" + std::to_string(idx);
+                    if (ImGui::CollapsingHeader(title.c_str(),
+                                                ImGuiTreeNodeFlags_DefaultOpen))
+                    {
+                        std::string child_id =
+                            "UARTOutputChild" + std::to_string(idx);
+                        ImGui::BeginChild(child_id.c_str(), ImVec2(0, 250),
+                                          true,
+                                          ImGuiWindowFlags_HorizontalScrollbar);
+                        ImGui::TextWrapped(
+                            "%s", device.device->getUartBuffer(idx).c_str());
+                        if (ImGui::GetScrollY() >= ImGui::GetScrollMaxY())
+                            ImGui::SetScrollHereY(1.0f);
+                        ImGui::EndChild();
+
+                        float buttonWidth =
+                            ImGui::CalcTextSize("Clear buffer").x +
+                            ImGui::GetStyle().FramePadding.x * 2.0f;
+                        ImGui::SetCursorPosX(ImGui::GetCursorPosX() +
+                                             ImGui::GetContentRegionAvail().x -
+                                             buttonWidth);
+                        std::string buttonTextAndId =
+                            "Clear buffer##uart_" + std::to_string(idx);
+                        if (ImGui::Button(buttonTextAndId.c_str()))
+                        {
+                            device.device->clearUartBuffer(idx);
+                        }
+                    }
+                }
+            }
+            else
+            {
+                ImGui::Text("Device not found in the pilot.");
+            }
+            ImGui::End();
+        }
+    }
+
     void ImGuiUI::start()
     {
         std::cout << "Starting ImGui UI...\n";
         std::flush(std::cout);
 
+        for (const auto &[name, device] : _pilot.getDeviceMap())
+        {
+            _deviceSettings[name] = DeviceSettings();
+        }
+
         _createWindow();
         _createImGuiContext();
         _mainLoop();
         _cleanup();
+
+        // TODO: Obviously, this shouldn't be here. So this crap needs to be
+        //       fixed. But for now, this is a quick and dirty way to make sure
+        //       that all the device threads are detached before the program
+        //       exits. Otherwise, the program will crash when the threads are
+        //       still running and the program exits.
+        for (const auto &[name, device] : _pilot.getDeviceMap())
+        {
+            if (device.threadPtr)
+            {
+                device.threadPtr->detach();
+            }
+        }
     }
 } // namespace sabre_ui_imgui

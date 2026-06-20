@@ -34,10 +34,10 @@ namespace sabre_pilot
     void Pilot::runDevice(const std::string &deviceName)
     {
         auto &device = _devices.at(deviceName);
-        if (device._threadPtr == nullptr)
+        if (device.threadPtr == nullptr)
         {
             std::cout << "Starting device " << deviceName << "\n";
-            device._threadPtr = std::make_unique<std::thread>(
+            device.threadPtr = std::make_unique<std::thread>(
                 [dev = device.device.get()] { dev->run(); });
         }
     }
@@ -68,10 +68,10 @@ namespace sabre_pilot
         // Join all running threads
         for (auto &[device_name, device] : _devices)
         {
-            if (device._threadPtr)
+            if (device.threadPtr)
             {
-                device._threadPtr->join();
-                device._threadPtr.reset();
+                device.threadPtr->join();
+                device.threadPtr.reset();
             }
         }
     }

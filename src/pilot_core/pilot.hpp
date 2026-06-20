@@ -14,7 +14,7 @@ namespace sabre_pilot
         std::unique_ptr<Device> device;
         std::string library;
         std::string entryPoint;
-        std::unique_ptr<std::thread> _threadPtr = nullptr;
+        std::unique_ptr<std::thread> threadPtr = nullptr;
     };
 
     using DeviceMap = std::unordered_map<std::string, PilotDevice>;

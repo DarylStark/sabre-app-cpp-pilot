@@ -26,6 +26,7 @@ namespace sabre_pilot
         void run();
 
         const std::string &getUartBuffer(sabre::hal::UartNumber uartIdx) const;
+        void clearUartBuffer(sabre::hal::UartNumber uartIdx);
         sabre::hal::UartNumber getUartCount() const;
     };
 } // namespace sabre_pilot

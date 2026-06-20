@@ -35,6 +35,11 @@ namespace sabre_pilot
         return _uartBuffers[uartIdx];
     }
 
+    void Device::clearUartBuffer(sabre::hal::UartNumber uartIdx)
+    {
+        _uartBuffers[uartIdx].clear();
+    }
+
     sabre::hal::UartNumber Device::getUartCount() const
     {
         return _config.upperboundUart;
