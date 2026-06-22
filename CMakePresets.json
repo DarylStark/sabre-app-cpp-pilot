@@ -12,7 +12,8 @@
             "binaryDir": "${sourceDir}/build/dbg-sabre-pilot-tests",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Debug",
-                "SABRE_PILOT_BUILD_TESTS": "ON"
+                "SABRE_PILOT_BUILD_TESTS": "ON",
+                "CMAKE_TOOLCHAIN_FILE": "${sourceDir}/build/Debug/generators/conan_toolchain.cmake"
             }
         },
         {
