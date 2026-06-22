@@ -1,9 +1,9 @@
 {
     "name": "Sabre",
-    "image": "dast1986/slough-dev-dc-cpp:1.0.5",
+    "image": "dast1986/slough-dev-dc-cpp:1.0.6",
     "remoteEnv": {
         "PROMPTNAME": "Sabre",
         "LIBGL_ALWAYS_SOFTWARE": "1"
     },
-    "postCreateCommand": "sudo apt update && sudo apt install -y libglfw3-dev ninja-build"
+    "postCreateCommand": "sudo apt update && sudo apt install -y libglfw3-dev"
 }
