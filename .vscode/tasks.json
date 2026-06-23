@@ -12,6 +12,44 @@
                 "cwd": "${workspaceFolder}"
             },
             "group": "none",
+            "problemMatcher": [],
+        },
+        {
+            "type": "shell",
+            "label": "Install Conan dependencies (Debug)",
+            "command": "conan",
+            "args": [
+                "install",
+                ".",
+                "-of",
+                ".conan",
+                "-s",
+                "build_type=Debug",
+                "--build=missing"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "group": "none",
+            "problemMatcher": []
+        },
+        {
+            "type": "shell",
+            "label": "Install Conan dependencies (Release)",
+            "command": "conan",
+            "args": [
+                "install",
+                ".",
+                "-of",
+                ".conan",
+                "-s",
+                "build_type=Release",
+                "--build=missing"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "group": "none",
             "problemMatcher": []
         }
     ]
