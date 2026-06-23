@@ -54,7 +54,9 @@ jobs:
         uses: conan-io/setup-conan@v1
       - name: Build project
         run: |
-          conan install . -of .conan -s build_type=Release --build=missing
+          conan install . -of .conan -s build_type=Release --build=missing \
+            -c tools.system.package_manager:mode=install \
+            -c tools.system.package_manager:sudo=True
           cmake --preset rel-core_impl-with_tests
           cmake --build build/rel-core_impl-with_tests
       - name: Run tests
