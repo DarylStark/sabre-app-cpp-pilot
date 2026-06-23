@@ -6,7 +6,26 @@
             "label": "Run tests with coverage",
             "command": "./generate-coverage.sh",
             "args": [
-                "build/dbg-sabre-tests"
+                "build/dbg-all-with_tests"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "group": "none",
+            "problemMatcher": [],
+        },
+        {
+            "type": "shell",
+            "label": "Install Conan dependencies (Debug)",
+            "command": "conan",
+            "args": [
+                "install",
+                ".",
+                "-of",
+                ".conan",
+                "-s",
+                "build_type=Debug",
+                "--build=missing"
             ],
             "options": {
                 "cwd": "${workspaceFolder}"
@@ -16,8 +35,17 @@
         },
         {
             "type": "shell",
-            "label": "Remove all ImGui configuration",
-            "command": "find -name imgui.ini -exec rm {} \\;",
+            "label": "Install Conan dependencies (Release)",
+            "command": "conan",
+            "args": [
+                "install",
+                ".",
+                "-of",
+                ".conan",
+                "-s",
+                "build_type=Release",
+                "--build=missing"
+            ],
             "options": {
                 "cwd": "${workspaceFolder}"
             },
