@@ -6,35 +6,58 @@
     },
     "configurePresets": [
         {
-            "name": "dbg-sabre-pilot-tests",
-            "displayName": "Debug - Sabre, Tests",
+            "name": "dbg-all-with_tests",
+            "displayName": "Debug - All - With tests",
             "generator": "Ninja",
-            "binaryDir": "${sourceDir}/build/dbg-sabre-pilot-tests",
+            "binaryDir": "${sourceDir}/build/dbg-all-with_tests",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Debug",
+                "SABRE_PILOT_BUILD_PILOT_EXEC": "ON",
+                "SABRE_PILOT_BUILD_UI_LIBRARIES": "ON",
+                "SABRE_PILOT_BUILD_EXAMPLE_APPS": "ON",
                 "SABRE_PILOT_BUILD_TESTS": "ON",
                 "CMAKE_TOOLCHAIN_FILE": "${sourceDir}/.conan/build/Debug/generators/conan_toolchain.cmake"
             }
         },
         {
-            "name": "rel-sabre-pilot-tests",
-            "displayName": "Release - Sabre, Tests",
+            "name": "rel-all-with_tests",
+            "displayName": "Release - All - With tests",
             "generator": "Ninja",
-            "binaryDir": "${sourceDir}/build/rel-sabre-pilot-tests",
+            "binaryDir": "${sourceDir}/build/rel-all-with_tests",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Release",
+                "SABRE_PILOT_BUILD_PILOT_EXEC": "ON",
+                "SABRE_PILOT_BUILD_UI_LIBRARIES": "ON",
+                "SABRE_PILOT_BUILD_EXAMPLE_APPS": "ON",
                 "SABRE_PILOT_BUILD_TESTS": "ON",
                 "CMAKE_TOOLCHAIN_FILE": "${sourceDir}/.conan/build/Release/generators/conan_toolchain.cmake"
             }
         },
         {
-            "name": "rel-sabre-pilot",
-            "displayName": "Release - Sabre",
+            "name": "rel-pilot_core_impl-with_tests",
+            "displayName": "Release - Pilot, Core and Implementation - With tests",
             "generator": "Ninja",
-            "binaryDir": "${sourceDir}/build/rel-sabre-pilot",
+            "binaryDir": "${sourceDir}/build/rel-pilot_core_impl-with_tests",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Release",
-                "SABRE_PILOT_BUILD_TESTS": "OFF",
+                "SABRE_PILOT_BUILD_PILOT_EXEC": "ON",
+                "SABRE_PILOT_BUILD_UI_LIBRARIES": "OFF",
+                "SABRE_PILOT_BUILD_EXAMPLE_APPS": "OFF",
+                "SABRE_PILOT_BUILD_TESTS": "ON",
+                "CMAKE_TOOLCHAIN_FILE": "${sourceDir}/.conan/build/Release/generators/conan_toolchain.cmake"
+            }
+        },
+        {
+            "name": "rel-core_impl-with_tests",
+            "displayName": "Release - Core and Implementation - With tests",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/build/rel-core_impl-with_tests",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release",
+                "SABRE_PILOT_BUILD_PILOT_EXEC": "OFF",
+                "SABRE_PILOT_BUILD_UI_LIBRARIES": "OFF",
+                "SABRE_PILOT_BUILD_EXAMPLE_APPS": "OFF",
+                "SABRE_PILOT_BUILD_TESTS": "ON",
                 "CMAKE_TOOLCHAIN_FILE": "${sourceDir}/.conan/build/Release/generators/conan_toolchain.cmake"
             }
         }

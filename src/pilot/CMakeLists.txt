@@ -1,17 +1,20 @@
-# Pilot application
+find_package(tomlplusplus REQUIRED)
+
 file(GLOB_RECURSE SABRE_PILOT_EXEC_SOURCES CONFIGURE_DEPENDS *.cpp)
 add_executable(sabre_pilot ${SABRE_PILOT_EXEC_SOURCES})
 
-# TOML++
-include(FetchContent)
-FetchContent_Declare(
-    tomlplusplus
-    GIT_REPOSITORY https://github.com/marzer/tomlplusplus.git
-    GIT_TAG v3.4.0
+target_link_libraries(
+    sabre_pilot
+    PUBLIC
+        sabre_pilot_core
+        sabre_pilot_ui_console
+        tomlplusplus::tomlplusplus
 )
-FetchContent_MakeAvailable(tomlplusplus)
 
-target_link_libraries(sabre_pilot PUBLIC sabre_pilot_core sabre_pilot_ui_imgui sabre_pilot_ui_console tomlplusplus::tomlplusplus)
+set_target_properties(sabre_pilot
+    PROPERTIES
+        POSITION_INDEPENDENT_CODE ON
+)
 
 target_include_directories(
     sabre_pilot

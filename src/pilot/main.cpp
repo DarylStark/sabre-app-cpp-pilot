@@ -1,7 +1,7 @@
+#include <dlfcn.h>
 #include <iostream>
 #include <pilot_core/pilot.hpp>
 #include <pilot_ui_console/console.hpp>
-#include <pilot_ui_imgui/imgui.hpp>
 #include <toml++/toml.hpp>
 
 int main(int argc, char *argv[])
@@ -69,12 +69,13 @@ int main(int argc, char *argv[])
         }
     }
 
-    std::unique_ptr<sabre_pilot::UI> ui;
-
-    // ui = std::make_unique<sabre_ui_console::ConsoleUI>(sabrePilot);
-    ui = std::make_unique<sabre_ui_imgui::ImGuiUI>(sabrePilot);
-
-    ui->start();
+    // Load the ImGUI GUI.
+    // TODO: Do this via a command line switch
+    void *handle =
+        dlopen("../pilot_ui_imgui/libsabre_pilot_ui_imgui.so", RTLD_NOW);
+    auto ep = reinterpret_cast<void (*)(sabre_pilot::Pilot &)>(
+        dlsym(handle, "startUI"));
+    ep(sabrePilot);
 
     return 0;
 }

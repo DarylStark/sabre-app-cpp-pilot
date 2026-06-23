@@ -1,4 +1,3 @@
-# GLFW (installed via Conan)
 find_package(glfw3 REQUIRED)
 find_package(imgui REQUIRED)
 
@@ -10,14 +9,25 @@ endif()
 
 file(GLOB_RECURSE SABRE_PILOT_UI_IMGUI_SOURCES CONFIGURE_DEPENDS *.cpp)
 add_library(
-    sabre_pilot_ui_imgui STATIC
+    sabre_pilot_ui_imgui SHARED
         ${SABRE_PILOT_UI_IMGUI_SOURCES}
         "${IMGUI_SOURCE_FOLDER}/res/bindings/imgui_impl_glfw.cpp"
         "${IMGUI_SOURCE_FOLDER}/res/bindings/imgui_impl_opengl3.cpp"
 )
 
-set_target_properties(sabre_pilot_ui_imgui PROPERTIES CXX_CLANG_TIDY "")
-target_link_libraries(sabre_pilot_ui_imgui PUBLIC sabre_pilot_core imgui::imgui glfw OpenGL)
+set_target_properties(sabre_pilot_ui_imgui
+    PROPERTIES
+        CXX_CLANG_TIDY ""
+        POSITION_INDEPENDENT_CODE ON
+)
+
+target_link_libraries(sabre_pilot_ui_imgui
+    PUBLIC
+        sabre_pilot_core
+        imgui::imgui
+        glfw
+        OpenGL
+)
 
 target_include_directories(
     sabre_pilot_ui_imgui
