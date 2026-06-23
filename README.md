@@ -7,7 +7,7 @@ Readme will follow later.
 1.  Install Conan dependencies:
 
     ```bash
-    conan install . -s build_type=Debug --build=missing
+    conan install . -of build/dbg-sabre-pilot-tests -s build_type=Debug --build=missing
     ```
 
 2.  Normal CMake stuff.
