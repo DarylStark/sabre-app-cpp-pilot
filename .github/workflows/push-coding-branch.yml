@@ -50,11 +50,14 @@ jobs:
       - uses: actions/checkout@v6
       - name: Install build tools
         run: sudo apt install cmake ninja-build
+      - name: Install Conan
+        uses: conan-io/setup-conan@v1
       - name: Build project
         run: |
-          cmake --preset dbg-sabre-pilot-tests
-          cmake --build build/dbg-sabre-pilot-tests
+          conan install . -of .conan -s build_type=Release --build=missing
+          cmake --preset rel-core_impl-with_tests
+          cmake --build build/rel-core_impl-with_tests
       - name: Run tests
         run: |
-          cd build/dbg-sabre-pilot-tests
+          cd build/rel-core_impl-with_tests
           ctest

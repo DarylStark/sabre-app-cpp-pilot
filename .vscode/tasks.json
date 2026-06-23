@@ -6,7 +6,7 @@
             "label": "Run tests with coverage",
             "command": "./generate-coverage.sh",
             "args": [
-                "build/dbg-sabre-pilot-tests"
+                "build/dbg-all-with_tests"
             ],
             "options": {
                 "cwd": "${workspaceFolder}"
