@@ -47,7 +47,7 @@ jobs:
     permissions:
       contents: read
     env:
-      CONAN_SKIPS: "glfw"
+      CONAN_SKIPS: "glfw imgui"
     steps:
       - uses: actions/checkout@v6
       - name: Install build tools
