@@ -8,6 +8,7 @@ class SabreAppPilotConan(ConanFile):
     requires = (
         "glfw/3.4",
         "imgui/1.92.8-docking",
+        "gtest/1.17.0"
     )
 
     default_options = {
