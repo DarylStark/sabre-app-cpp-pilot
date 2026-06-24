@@ -10,8 +10,20 @@ jobs:
       contents: read
     steps:
       - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
+
+      - name: Add LLVM repo
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y wget gnupg lsb-release
+          wget -qO - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo gpg --dearmor -o /usr/share/keyrings/llvm.gpg
+          echo "deb [signed-by=/usr/share/keyrings/llvm.gpg] http://apt.llvm.org/noble/ llvm-toolchain-noble main" | sudo tee /etc/apt/sources.list.d/llvm.list
+          sudo apt-get update
+
       - name: Install clang-format
-        run: sudo apt install clang-format
+        run: |
+          sudo apt-get install -y clang-format-22
+          clang-format-22 --version
       - name: Check code formatting
         run: |
           # Find all C++ source files in src and tests directories
@@ -27,9 +39,9 @@ jobs:
           # Check formatting for each file
           format_errors=0
           for file in $files; do
-            if ! clang-format --dry-run -Werror "$file" >/dev/null 2>&1; then
+            if ! clang-format-22 --dry-run -Werror "$file" >/dev/null 2>&1; then
               echo "Error: $file is not formatted correctly"
-              echo "Please run: clang-format -i $file"
+              echo "Please run: clang-format-22 -i $file"
               format_errors=$((format_errors + 1))
             fi
           done
