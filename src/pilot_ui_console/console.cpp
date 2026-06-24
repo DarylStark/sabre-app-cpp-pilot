@@ -15,7 +15,16 @@ namespace sabre_ui_console
         std::cout << "Available devices:\n";
         for (const auto &[name, device] : _pilot.getDeviceMap())
         {
-            std::cout << "- " << name << "\n";
+            std::cout << "- " << name << " [" << device.library << ":"
+                      << device.entryPoint << "]";
+            if (device.threadPtr && device.threadPtr->joinable())
+            {
+                std::cout << " (running)";
+            }
+            else
+            {
+                std::cout << " (stopped)";
+            }
             std::cout << "\n";
         }
     }
@@ -32,12 +41,12 @@ namespace sabre_ui_console
         const auto &device = deviceMap.at(deviceName);
         std::cout << "UART Buffers for device: " << deviceName << "\n";
         for (sabre::hal::UartNumber uartIdx = 0;
-             uartIdx < device->getUartCount(); ++uartIdx)
+             uartIdx < device.device->getUartCount(); ++uartIdx)
         {
             std::cout << std::string(80, '-') << "\n";
             std::cout << "UART " << uartIdx << "\n";
             std::cout << std::string(80, '-') << "\n";
-            std::cout << device->getUartBuffer(uartIdx) << "\n";
+            std::cout << device.device->getUartBuffer(uartIdx) << "\n";
         }
         std::cout << std::string(80, '-') << "\n";
     }
@@ -58,7 +67,7 @@ namespace sabre_ui_console
                 if (_pilot.getDeviceMap().find(deviceName) !=
                     _pilot.getDeviceMap().end())
                 {
-                    _pilot.startDevice(deviceName);
+                    _pilot.runDevice(deviceName);
                 }
                 else
                 {

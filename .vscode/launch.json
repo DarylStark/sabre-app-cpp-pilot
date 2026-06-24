@@ -49,29 +49,6 @@
             ],
             "preLaunchTask": "CMake: build",
             "miDebuggerPath": "/usr/bin/gdb",
-        },
-        {
-            "name": "Pilot Runner - Debug with Example App",
-            "type": "cppdbg",
-            "request": "launch",
-            "program": "${workspaceFolder}/build/dbg-all-with_tests/src/pilot_runner/sabre_pilot_runner",
-            "args": [
-                "${workspaceFolder}/build/dbg-all-with_tests/src/app_example_app/libapp_example_app.so",
-                "startDev1"
-            ],
-            "stopAtEntry": false,
-            "cwd": "${workspaceFolder}/build/dbg-all-with_tests/src/pilot_runner",
-            "externalConsole": false,
-            "MIMode": "gdb",
-            "setupCommands": [
-                {
-                    "description": "Enable pretty-printing for gdb",
-                    "text": "-enable-pretty-printing",
-                    "ignoreFailures": true
-                }
-            ],
-            "preLaunchTask": "CMake: build",
-            "miDebuggerPath": "/usr/bin/gdb",
         }
     ]
 }

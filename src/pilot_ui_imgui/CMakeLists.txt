@@ -34,5 +34,4 @@ target_include_directories(
     PUBLIC
         ${IMGUI_SOURCE_FOLDER}/res/bindings
         ${sabre_SOURCE_DIR}/src/sabre/
-        ../
 )
