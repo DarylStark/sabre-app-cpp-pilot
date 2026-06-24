@@ -6,6 +6,9 @@ namespace sabre_pilot
 {
     class UI
     {
+    public:
+        using UniquePtr = std::unique_ptr<UI>;
+
     protected:
         Pilot &_pilot;
 
