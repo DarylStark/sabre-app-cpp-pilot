@@ -5,7 +5,7 @@
 #include <string>
 #include <unordered_map>
 
-namespace sabre_pilot
+namespace sabre_pilot_runner_core
 {
     using LibraryEntryPointRaw = int (*)(sabre::core::ResourceManager &);
     using LibraryEntryPoint =
@@ -13,6 +13,9 @@ namespace sabre_pilot
 
     class DynamicLibrary
     {
+    public:
+        using UniquePtr = std::unique_ptr<DynamicLibrary>;
+
     private:
         const std::string _libLocation;
 
@@ -29,4 +32,4 @@ namespace sabre_pilot
 
         LibraryEntryPoint &getEntryPoint(const std::string &name);
     };
-} // namespace sabre_pilot
+} // namespace sabre_pilot_runner_core

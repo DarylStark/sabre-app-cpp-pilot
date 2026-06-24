@@ -3,7 +3,7 @@
 #include <dlfcn.h>
 #include <iostream>
 
-namespace sabre_pilot
+namespace sabre_pilot_runner_core
 {
     LinuxDynamicLibrary::LinuxDynamicLibrary(const std::string &libLocation)
         : DynamicLibrary(libLocation)
@@ -33,8 +33,10 @@ namespace sabre_pilot
             return;
         _libHandle = dlopen(_getLibLocation().c_str(), RTLD_NOW);
         if (!_libHandle)
+        {
             throw DynamicLibraryLoadingException(
                 "Dynamic library could not be loaded");
+        }
     }
 
     void LinuxDynamicLibrary::_closeLibrary()
@@ -42,4 +44,4 @@ namespace sabre_pilot
         if (_libHandle)
             dlclose(_libHandle);
     }
-} // namespace sabre_pilot
+} // namespace sabre_pilot_runner_core
