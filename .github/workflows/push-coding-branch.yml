@@ -37,7 +37,7 @@ jobs:
           # Check formatting for each file
           format_errors=0
           for file in $files; do
-            if ! clang-format-21 --dry-run -Werror "$file" >/dev/null 2>&1; then
+            if ! clang-format-22 --dry-run -Werror "$file" >/dev/null 2>&1; then
               echo "Error: $file is not formatted correctly"
               echo "Please run: clang-format-22 -i $file"
               format_errors=$((format_errors + 1))
