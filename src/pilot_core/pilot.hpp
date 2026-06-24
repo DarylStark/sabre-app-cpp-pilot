@@ -1,17 +1,31 @@
 #pragma once
 
 #include "device.hpp"
+#include "dynamic_library.hpp"
+#include <sabre/core/resource_manager.hpp>
 #include <thread>
 #include <unordered_map>
 
 namespace sabre_pilot
 {
-    using DeviceMap = std::unordered_map<std::string, std::unique_ptr<Device>>;
+    struct PilotDevice
+    {
+        std::string name;
+        std::unique_ptr<Device> device;
+        std::string library;
+        std::string entryPoint;
+        std::unique_ptr<std::thread> threadPtr = nullptr;
+    };
+
+    using DeviceMap = std::unordered_map<std::string, PilotDevice>;
+    using LibraryMap =
+        std::unordered_map<std::string, std::unique_ptr<DynamicLibrary>>;
 
     class Pilot
     {
     private:
         DeviceMap _devices;
+        LibraryMap _libraries;
 
     public:
         Pilot();
@@ -21,8 +35,10 @@ namespace sabre_pilot
                        const std::string &library,
                        const std::string &entryPoint);
 
+        const LibraryMap &getLibraryMap() const;
         const DeviceMap &getDeviceMap() const;
 
-        void startDevice(const std::string &deviceName);
+        void runDevice(const std::string &deviceName);
+        void runAll();
     };
 } // namespace sabre_pilot

@@ -6,4 +6,16 @@ namespace sabre_pilot
         : std::runtime_error(message)
     {
     }
+
+    DynamicLibraryLoadingException::DynamicLibraryLoadingException(
+        const char *message)
+        : SabrePilotException(message)
+    {
+    }
+
+    EntryPointNotInLibraryException::EntryPointNotInLibraryException(
+        const char *message)
+        : SabrePilotException(message)
+    {
+    }
 } // namespace sabre_pilot

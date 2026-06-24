@@ -69,11 +69,13 @@ bool parseProjectTomlFile(const std::string &filename,
 
 int main(int argc, char *argv[])
 {
-    CLI::App app{"Sabre Pilot"};
+    CLI::App app{"App description"};
     argv = app.ensure_utf8(argv);
 
     std::string ui_lib = "";
-    app.add_option("--ui-lib", ui_lib, "The UI library to use");
+    app.add_option(
+        "--ui-lib", ui_lib,
+        "The UI library to use (default: \"libsabre_pilot_ui_console.so\")");
 
     std::string project_file;
     app.add_option("project_file", project_file, "Path to a project TOML file");

@@ -1,7 +1,0 @@
-#pragma once
-
-namespace sabre_pilot::config
-{
-    inline constexpr const char *runnerExec =
-        "@SABRE_PILOT_CORE_RUNNER_EXECUTABLE@";
-}
