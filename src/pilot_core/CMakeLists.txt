@@ -8,9 +8,15 @@ set_target_properties(sabre_pilot_core
         POSITION_INDEPENDENT_CODE ON
 )
 
+configure_file(
+    ${CMAKE_CURRENT_SOURCE_DIR}/core_config.hpp.in
+    ${CMAKE_CURRENT_BINARY_DIR}/core_config.hpp
+    @ONLY
+)
+
 target_include_directories(
     sabre_pilot_core
     PUBLIC
         ${sabre_SOURCE_DIR}/src/sabre/
-        ../
+        ${CMAKE_CURRENT_BINARY_DIR}
 )
