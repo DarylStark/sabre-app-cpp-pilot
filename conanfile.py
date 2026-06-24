@@ -18,7 +18,8 @@ class SabreAppPilotConan(ConanFile):
             "glfw/3.4",
             "imgui/1.92.8-docking",
             "gtest/1.17.0",
-            "tomlplusplus/3.4.0"
+            "tomlplusplus/3.4.0",
+            "cli11/2.6.2"
         )
         
         for requirement in requires:
