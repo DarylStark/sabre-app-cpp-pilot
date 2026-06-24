@@ -27,6 +27,7 @@ gcovr \
     --exclude '.*googletest.*' \
     --exclude '.*pilot_exec.*' \
     --exclude '.*pilot_ui_.*' \
+    --exclude '.*pilot_runner/.*' \
     --exclude '.*app_example_app.*' \
     --html="${COVERAGE_HTML_INDEX}" --html-details -o "$COVERAGE_HTML_DETAILS" \
     --xml -o "$COVERAGE_XML" \

@@ -33,8 +33,10 @@ namespace sabre_pilot_runner_core
             return;
         _libHandle = dlopen(_getLibLocation().c_str(), RTLD_NOW);
         if (!_libHandle)
+        {
             throw DynamicLibraryLoadingException(
                 "Dynamic library could not be loaded");
+        }
     }
 
     void LinuxDynamicLibrary::_closeLibrary()

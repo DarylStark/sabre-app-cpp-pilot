@@ -6,7 +6,6 @@ add_executable(sabre_pilot_runner ${SABRE_PILOT_RUNNER_SOURCES})
 target_link_libraries(
     sabre_pilot_runner
     PUBLIC
-        sabre
         sabre_pilot_runner_core
         CLI11::CLI11
 )

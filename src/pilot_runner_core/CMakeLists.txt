@@ -12,4 +12,5 @@ target_include_directories(
     sabre_pilot_runner_core
     PUBLIC
         ${sabre_SOURCE_DIR}/src/sabre/
+        ../
 )

@@ -1,8 +1,7 @@
 #include <gtest/gtest.h>
-#include <pilot_core/dynamic_library.hpp>
-#include <pilot_core/exceptions.hpp>
+#include <pilot_runner_core/dynamic_library.hpp>
 
-class MockDynamicLoader : public sabre_pilot::DynamicLibrary
+class MockDynamicLoader : public sabre_pilot_runner_core::DynamicLibrary
 {
 private:
     void _loadEntryPoint(const std::string &entryPoint) override {}
@@ -10,7 +9,7 @@ private:
 
 public:
     MockDynamicLoader(const std::string &libLocation)
-        : sabre_pilot::DynamicLibrary(libLocation)
+        : sabre_pilot_runner_core::DynamicLibrary(libLocation)
     {
     }
 };

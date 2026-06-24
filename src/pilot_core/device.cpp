@@ -1,32 +1,22 @@
 #include "device.hpp"
 #include <iostream>
-#include <pilot_impl/core.hpp>
 
 namespace sabre_pilot
 {
-    Device::Device(sabre::core::ResourceManagerConfig config)
-        : _config(config), _mcu(_config), _factory(&_mcu)
+    Device::Device(DeviceConfig config) : _config(std::move(config))
     {
-        _uartBuffers = std::make_unique<std::string[]>(config.upperboundUart);
-
-        // Configure the UART devices for the `device`
-        for (uint16_t idx = 0; idx < _config.upperboundUart; idx++)
-        {
-            _mcu.getUartController(idx).setOutputBufferCallback(
-                [this, idx](char b) { this->_uartBuffers[idx].push_back(b); });
-        }
+        _uartBuffers = std::make_unique<std::string[]>(
+            _config.deviceConfig.upperboundUart);
     }
 
-    void Device::setFirmware(LibraryEntryPoint firmware)
+    void Device::start()
     {
-        _firmware = std::move(firmware);
+        // TODO: Implement (issue 13)
     }
 
-    void Device::run()
+    void Device::stop()
     {
-        sabre::core::ResourceManager rm(_factory, _config);
-        if (_firmware)
-            _firmware(rm);
+        // TODO: Implement (issue 13)
     }
 
     const std::string &
@@ -42,6 +32,6 @@ namespace sabre_pilot
 
     sabre::hal::UartNumber Device::getUartCount() const
     {
-        return _config.upperboundUart;
+        return _config.deviceConfig.upperboundUart;
     }
 } // namespace sabre_pilot
