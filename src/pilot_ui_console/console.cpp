@@ -77,7 +77,9 @@ namespace sabre_ui_console
         std::cout << "Starting Console UI...\n";
 
         // --- Linux way of handeling CTRL+C --- //
-        struct sigaction sa{};
+        struct sigaction sa
+        {
+        };
         sa.sa_handler = handle_sigint;
         sigemptyset(&sa.sa_mask);
         sa.sa_flags = 0;
