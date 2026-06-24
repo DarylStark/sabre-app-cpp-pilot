@@ -1,16 +1,21 @@
+#include "mock_subprocess_strategy.hpp"
 #include <gtest/gtest.h>
 #include <pilot_core/pilot.hpp>
 
 TEST(PilotTests, Construct)
 {
-    sabre_pilot::Pilot pilot;
+    MockSubprocessStrategy mockStrategy;
+
+    sabre_pilot::Pilot pilot(mockStrategy, "");
     const auto &devices = pilot.getDeviceMap();
     ASSERT_EQ(devices.size(), 0);
 }
 
 TEST(PilotTests, AddOneDevice)
 {
-    sabre_pilot::Pilot pilot;
+    MockSubprocessStrategy mockStrategy;
+
+    sabre_pilot::Pilot pilot(mockStrategy, "");
     const auto &devices = pilot.getDeviceMap();
 
     sabre::core::ResourceManagerConfig config = {.maxGpios = 1,
@@ -24,7 +29,9 @@ TEST(PilotTests, AddOneDevice)
 
 TEST(PilotTests, AddTwoDevices)
 {
-    sabre_pilot::Pilot pilot;
+    MockSubprocessStrategy mockStrategy;
+
+    sabre_pilot::Pilot pilot(mockStrategy, "");
     const auto &devices = pilot.getDeviceMap();
 
     sabre::core::ResourceManagerConfig config = {.maxGpios = 1,

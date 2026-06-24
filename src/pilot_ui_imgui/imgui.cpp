@@ -6,7 +6,7 @@
 
 namespace sabre_ui_imgui
 {
-    ImGuiUI::ImGuiUI(sabre_pilot::Pilot &device) : sabre_pilot::UI(device) {}
+    ImGuiUI::ImGuiUI(sabre_pilot::Pilot &pilot) : sabre_pilot::UI(pilot) {}
 
     ImGuiUI::~ImGuiUI() {}
 
@@ -188,11 +188,13 @@ namespace sabre_ui_imgui
                                             ImGuiTreeNodeFlags_DefaultOpen))
                 {
 
-                    if (ImGui::BeginTable("device_row", 2,
+                    if (ImGui::BeginTable("device_row", 3,
                                           ImGuiTableFlags_SizingStretchProp))
                     {
                         ImGui::TableSetupColumn(
                             "Info", ImGuiTableColumnFlags_WidthStretch);
+                        ImGui::TableSetupColumn(
+                            "State", ImGuiTableColumnFlags_WidthFixed);
                         ImGui::TableSetupColumn(
                             "Action", ImGuiTableColumnFlags_WidthFixed);
                         ImGui::TableNextRow();
@@ -200,7 +202,66 @@ namespace sabre_ui_imgui
                         ImGui::TableSetColumnIndex(0);
                         ImGui::Text(deviceName.c_str());
 
-                        ImGui::Text("Status unknown");
+                        ImGui::TableSetColumnIndex(1);
+
+                        std::string state = "Status unknown";
+                        switch (device->getState())
+                        {
+                        case sabre_pilot::DeviceState::Error:
+                            state = "Error";
+                            break;
+                        case sabre_pilot::DeviceState::Running:
+                            state = "Running PID: " +
+                                    std::to_string(device->getPid());
+                            break;
+                        case sabre_pilot::DeviceState::Starting:
+                            state = "Starting PID: " +
+                                    std::to_string(device->getPid());
+                            break;
+                        case sabre_pilot::DeviceState::Stopped:
+                            state = "Stopped";
+                            break;
+                        case sabre_pilot::DeviceState::Stopping:
+                            state = "Stopping";
+                            break;
+                        }
+
+                        ImGui::Text(state.c_str());
+
+                        ImGui::TableSetColumnIndex(2);
+
+                        bool isStartable = device->getState() ==
+                                           sabre_pilot::DeviceState::Stopped;
+                        bool isStoppable = device->getState() ==
+                                           sabre_pilot::DeviceState::Running;
+
+                        if (!isStartable)
+                        {
+                            ImGui::BeginDisabled();
+                        }
+                        if (ImGui::Button("Start"))
+                        {
+                            _pilot.startDevice(deviceName);
+                        }
+                        if (!isStartable)
+                        {
+                            ImGui::EndDisabled();
+                        }
+
+                        ImGui::SameLine();
+
+                        if (!isStoppable)
+                        {
+                            ImGui::BeginDisabled();
+                        }
+                        if (ImGui::Button("Stop"))
+                        {
+                            _pilot.stopDevice(deviceName);
+                        }
+                        if (!isStoppable)
+                        {
+                            ImGui::EndDisabled();
+                        }
 
                         ImGui::EndTable();
                     }

@@ -9,7 +9,7 @@ namespace sabre_ui_console
         void _printUartBuffers(const std::string &deviceName) const;
 
     public:
-        ConsoleUI(sabre_pilot::Pilot &device);
+        ConsoleUI(sabre_pilot::Pilot &pilot);
         ~ConsoleUI() override;
 
         void start() override;

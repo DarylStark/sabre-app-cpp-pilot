@@ -9,9 +9,19 @@ jobs:
     permissions:
       contents: read
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v7
+
+      - name: Add LLVM repo
+        run: |
+          wget -nv https://apt.llvm.org/llvm.sh
+          chmod +x llvm.sh && \
+          sudo ./llvm.sh 22
+
       - name: Install clang-format
-        run: sudo apt install clang-format
+        run: |
+          sudo apt-get install -y --no-install-recommends clang-format-22
+          clang-format-22 --version
+
       - name: Check code formatting
         run: |
           # Find all C++ source files in src and tests directories
@@ -27,9 +37,9 @@ jobs:
           # Check formatting for each file
           format_errors=0
           for file in $files; do
-            if ! clang-format --dry-run -Werror "$file" >/dev/null 2>&1; then
+            if ! clang-format-22 --dry-run -Werror "$file" >/dev/null 2>&1; then
               echo "Error: $file is not formatted correctly"
-              echo "Please run: clang-format -i $file"
+              echo "Please run: clang-format-22 -i $file"
               format_errors=$((format_errors + 1))
             fi
           done
@@ -49,7 +59,7 @@ jobs:
     env:
       CONAN_SKIPS: "glfw imgui cli11"
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - name: Install build tools
         run: sudo apt install cmake ninja-build
       - name: Install Conan

@@ -12,9 +12,12 @@ namespace sabre_pilot
     {
     private:
         DeviceMap _devices;
+        const SubprocessStrategy &_subprocessStrategy;
+        const std::string _runnerExec;
 
     public:
-        Pilot();
+        Pilot(const SubprocessStrategy &subprocessStrategy,
+              const std::string &runnerExec);
 
         void addDevice(const std::string &name,
                        const sabre::core::ResourceManagerConfig &config,
@@ -24,5 +27,6 @@ namespace sabre_pilot
         const DeviceMap &getDeviceMap() const;
 
         void startDevice(const std::string &deviceName);
+        void stopDevice(const std::string &deviceName);
     };
 } // namespace sabre_pilot

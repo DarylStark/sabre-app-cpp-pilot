@@ -1,5 +1,6 @@
 #pragma once
 
+#include "subprocess_strategy.hpp"
 #include <functional>
 #include <memory>
 #include <sabre/core/resource_manager.hpp>
@@ -13,19 +14,37 @@ namespace sabre_pilot
         std::string firmwareEntryPoint;
     };
 
+    enum class DeviceState
+    {
+        Error,
+        Running,
+        Starting,
+        Stopped,
+        Stopping
+    };
+
     class Device
     {
     private:
         std::unique_ptr<std::string[]> _uartBuffers;
         DeviceConfig _config;
+        const SubprocessStrategy &_subprocessStrategy;
+        const std::string &_runnerExec;
+        uint32_t _firmwarePid = 0;
+        DeviceState _state = DeviceState::Stopped;
 
     public:
-        Device(DeviceConfig config);
+        Device(DeviceConfig config,
+               const SubprocessStrategy &subprocessStrategy,
+               const std::string &runnerExec);
+        ~Device();
         void start();
         void stop();
 
         const std::string &getUartBuffer(sabre::hal::UartNumber uartIdx) const;
         void clearUartBuffer(sabre::hal::UartNumber uartIdx);
         sabre::hal::UartNumber getUartCount() const;
+        const DeviceState getState() const;
+        const uint32_t getPid() const;
     };
 } // namespace sabre_pilot
