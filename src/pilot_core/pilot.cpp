@@ -1,10 +1,6 @@
 #include "pilot.hpp"
 #include "device.hpp"
-#include "linux_dynamic_library.hpp"
-#include <dlfcn.h>
 #include <iostream>
-#include <pilot_impl/core.hpp>
-#include <pilot_impl/mcu.hpp>
 #include <sabre/runtime/app.hpp>
 #include <sabre/runtime/run_app.hpp>
 #include <thread>
@@ -18,67 +14,29 @@ namespace sabre_pilot
                           const std::string &library,
                           const std::string &entryPoint)
     {
-        auto device = std::make_unique<Device>(config);
+        if (_devices.find(name) != _devices.end())
+        {
+            // TODO: Proper exception
+            std::cerr << "Device " << name << " already exists.\n";
+            return;
+        }
 
-        _devices.insert_or_assign(name, PilotDevice{.name = name,
-                                                    .device = std::move(device),
-                                                    .library = library,
-                                                    .entryPoint = entryPoint});
-
-        auto [libraryIt, inserted] = _libraries.try_emplace(
-            library, std::make_unique<LinuxDynamicLibrary>(library));
-        _devices[name].device->setFirmware(
-            libraryIt->second->getEntryPoint(entryPoint));
+        DeviceConfig deviceConfig{config, library, entryPoint};
+        _devices[name] = std::make_unique<Device>(deviceConfig);
     }
 
-    void Pilot::runDevice(const std::string &deviceName)
+    void Pilot::startDevice(const std::string &deviceName)
     {
-        auto &device = _devices.at(deviceName);
-        if (device.threadPtr == nullptr)
+        auto it = _devices.find(deviceName);
+        if (it == _devices.end())
         {
-            std::cout << "Starting device " << deviceName << "\n";
-            device.threadPtr = std::make_unique<std::thread>(
-                [dev = device.device.get()] { dev->run(); });
-        }
-    }
-
-    void Pilot::runAll()
-    {
-        for (auto &[device_name, device] : _devices)
-        {
-            runDevice(device_name);
+            // TODO: Proper exception
+            std::cerr << "Device " << deviceName << " not found.\n";
+            return;
         }
 
-        while (true)
-        {
-            for (auto &[device_name, device] : _devices)
-            {
-                for (sabre::hal::UartNumber idx = 0;
-                     idx < device.device->getUartCount(); idx++)
-                {
-                    std::cout << std::string(80, '-') << '\n';
-                    std::cout << "DEVICE " << device_name << ", UART " << idx
-                              << "\n";
-                    std::cout << std::string(80, '-') << '\n';
-                    std::cout << device.device->getUartBuffer(idx) << "\n";
-                }
-            }
-        }
-
-        // Join all running threads
-        for (auto &[device_name, device] : _devices)
-        {
-            if (device.threadPtr)
-            {
-                device.threadPtr->join();
-                device.threadPtr.reset();
-            }
-        }
-    }
-
-    const LibraryMap &Pilot::getLibraryMap() const
-    {
-        return _libraries;
+        auto &device = it->second;
+        device->start();
     }
 
     const DeviceMap &Pilot::getDeviceMap() const

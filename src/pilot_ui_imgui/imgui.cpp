@@ -198,29 +198,15 @@ namespace sabre_ui_imgui
                         ImGui::TableNextRow();
 
                         ImGui::TableSetColumnIndex(0);
-                        ImGui::Text("Library: %s.%s", device.library.c_str(),
-                                    device.entryPoint.c_str());
+                        ImGui::Text(deviceName.c_str());
 
-                        ImGui::TableSetColumnIndex(1);
-                        if (device.threadPtr == nullptr)
-                        {
-                            if (ImGui::ArrowButton("##start_device_play",
-                                                   ImGuiDir_Right))
-                            {
-                                _pilot.runDevice(deviceName);
-                            }
-                        }
-                        else
-                        {
-                            ImGui::Text("Running");
-                        }
+                        ImGui::Text("Status unknown");
 
                         ImGui::EndTable();
                     }
                 }
 
-                for (uint32_t idx = 0; idx < device.device->getUartCount();
-                     idx++)
+                for (uint32_t idx = 0; idx < device->getUartCount(); idx++)
                 {
                     std::string title = "UART" + std::to_string(idx);
                     if (ImGui::CollapsingHeader(title.c_str(),
@@ -231,8 +217,8 @@ namespace sabre_ui_imgui
                         ImGui::BeginChild(child_id.c_str(), ImVec2(0, 250),
                                           true,
                                           ImGuiWindowFlags_HorizontalScrollbar);
-                        ImGui::TextWrapped(
-                            "%s", device.device->getUartBuffer(idx).c_str());
+                        ImGui::TextWrapped("%s",
+                                           device->getUartBuffer(idx).c_str());
                         if (ImGui::GetScrollY() >= ImGui::GetScrollMaxY())
                             ImGui::SetScrollHereY(1.0f);
                         ImGui::EndChild();
@@ -247,7 +233,7 @@ namespace sabre_ui_imgui
                             "Clear buffer##uart_" + std::to_string(idx);
                         if (ImGui::Button(buttonTextAndId.c_str()))
                         {
-                            device.device->clearUartBuffer(idx);
+                            device->clearUartBuffer(idx);
                         }
                     }
                 }
@@ -274,18 +260,5 @@ namespace sabre_ui_imgui
         _createImGuiContext();
         _mainLoop();
         _cleanup();
-
-        // TODO: Obviously, this shouldn't be here. So this crap needs to be
-        //       fixed. But for now, this is a quick and dirty way to make sure
-        //       that all the device threads are detached before the program
-        //       exits. Otherwise, the program will crash when the threads are
-        //       still running and the program exits.
-        for (const auto &[name, device] : _pilot.getDeviceMap())
-        {
-            if (device.threadPtr)
-            {
-                device.threadPtr->detach();
-            }
-        }
     }
 } // namespace sabre_ui_imgui
