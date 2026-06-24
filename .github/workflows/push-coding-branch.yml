@@ -10,36 +10,39 @@ jobs:
       contents: read
     steps:
       - uses: actions/checkout@v2
-      - name: Install clang-format
-        run: sudo apt install clang-format
-      - name: Check code formatting
-        run: |
-          # Find all C++ source files in src and tests directories
-          files=$(find src tests -type f \( -name "*.cpp" -o -name "*.h" \
-            -o -name "*.hpp" -o -name "*.c" -o -name "*.cc" \) \
-            2>/dev/null || true)
+      - uses: RafikFarhad/clang-format-github-action@v6
+        with:
+          sources: "src/**/*.hpp,src/**/*.cpp,tests/**/*.hpp,tests/**/*.cpp"
+      # - name: Install clang-format
+      #   run: sudo apt install clang-format
+      # - name: Check code formatting
+      #   run: |
+      #     # Find all C++ source files in src and tests directories
+      #     files=$(find src tests -type f \( -name "*.cpp" -o -name "*.h" \
+      #       -o -name "*.hpp" -o -name "*.c" -o -name "*.cc" \) \
+      #       2>/dev/null || true)
 
-          if [ -z "$files" ]; then
-            echo "No C++ source files found in src or tests directories"
-            exit 0
-          fi
+      #     if [ -z "$files" ]; then
+      #       echo "No C++ source files found in src or tests directories"
+      #       exit 0
+      #     fi
 
-          # Check formatting for each file
-          format_errors=0
-          for file in $files; do
-            if ! clang-format --dry-run -Werror "$file" >/dev/null 2>&1; then
-              echo "Error: $file is not formatted correctly"
-              echo "Please run: clang-format -i $file"
-              format_errors=$((format_errors + 1))
-            fi
-          done
+      #     # Check formatting for each file
+      #     format_errors=0
+      #     for file in $files; do
+      #       if ! clang-format --dry-run -Werror "$file" >/dev/null 2>&1; then
+      #         echo "Error: $file is not formatted correctly"
+      #         echo "Please run: clang-format -i $file"
+      #         format_errors=$((format_errors + 1))
+      #       fi
+      #     done
 
-          if [ $format_errors -gt 0 ]; then
-            echo "Found $format_errors file(s) with formatting issues"
-            exit 1
-          fi
+      #     if [ $format_errors -gt 0 ]; then
+      #       echo "Found $format_errors file(s) with formatting issues"
+      #       exit 1
+      #     fi
 
-          echo "All files are formatted correctly!"
+      #     echo "All files are formatted correctly!"
 
   unit-testing:
     name: Unit Testing
