@@ -1,6 +1,8 @@
+#include "config.hpp"
 #include <CLI/CLI.hpp>
 #include <dlfcn.h>
 #include <iostream>
+#include <pilot_core/linux_subprocess_strategy.hpp>
 #include <pilot_core/pilot.hpp>
 #include <pilot_ui_console/console.hpp>
 #include <toml++/toml.hpp>
@@ -75,12 +77,16 @@ int main(int argc, char *argv[])
     std::string ui_lib = "";
     app.add_option("--ui-lib", ui_lib, "The UI library to use");
 
+    std::string runnerExec = sabre_pilot::config::runnerExec;
+    app.add_option("--runner-exec", runnerExec, "The executable runner");
+
     std::string project_file;
     app.add_option("project_file", project_file, "Path to a project TOML file");
 
     CLI11_PARSE(app, argc, argv);
 
-    sabre_pilot::Pilot sabrePilot;
+    sabre_pilot::LinuxSubprocessStrategy strategy;
+    sabre_pilot::Pilot sabrePilot(strategy, runnerExec);
 
     if (!project_file.empty())
     {

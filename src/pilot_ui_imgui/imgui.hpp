@@ -49,7 +49,7 @@ namespace sabre_ui_imgui
         void _deviceDialog(const std::string &deviceName);
 
     public:
-        ImGuiUI(sabre_pilot::Pilot &device);
+        ImGuiUI(sabre_pilot::Pilot &pilot);
         ~ImGuiUI() override;
 
         void start() override;
