@@ -1,7 +1,7 @@
-#include "linux_dynamic_library.hpp"
 #include <CLI/CLI.hpp>
 #include <iostream>
 #include <pilot_impl/core.hpp>
+#include <pilot_runner_core/linux_dynamic_library.hpp>
 
 int main(int argc, char *argv[])
 {
@@ -25,8 +25,8 @@ int main(int argc, char *argv[])
     sabre::impl::pilot::Factory fac(nullptr);
     sabre::core::ResourceManager rm(fac, config);
 
-    sabre_pilot_runner::DynamicLibrary::UniquePtr firmware =
-        std::make_unique<sabre_pilot_runner::LinuxDynamicLibrary>(
+    sabre_pilot_runner_core::DynamicLibrary::UniquePtr firmware =
+        std::make_unique<sabre_pilot_runner_core::LinuxDynamicLibrary>(
             firmware_file);
     firmware->getEntryPoint(entry_point)(rm);
 

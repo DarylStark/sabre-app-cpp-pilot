@@ -2,7 +2,7 @@
 
 #include <stdexcept>
 
-namespace sabre_pilot_runner
+namespace sabre_pilot_runner_core
 {
     class SabrePilotRunnerException : public std::runtime_error
     {
@@ -21,4 +21,4 @@ namespace sabre_pilot_runner
     public:
         EntryPointNotInLibraryException(const char *message);
     };
-}; // namespace sabre_pilot_runner
+}; // namespace sabre_pilot_runner_core

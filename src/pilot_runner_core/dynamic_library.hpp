@@ -5,7 +5,7 @@
 #include <string>
 #include <unordered_map>
 
-namespace sabre_pilot_runner
+namespace sabre_pilot_runner_core
 {
     using LibraryEntryPointRaw = int (*)(sabre::core::ResourceManager &);
     using LibraryEntryPoint =
@@ -32,4 +32,4 @@ namespace sabre_pilot_runner
 
         LibraryEntryPoint &getEntryPoint(const std::string &name);
     };
-} // namespace sabre_pilot_runner
+} // namespace sabre_pilot_runner_core

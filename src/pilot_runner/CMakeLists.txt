@@ -7,7 +7,7 @@ target_link_libraries(
     sabre_pilot_runner
     PUBLIC
         sabre
-        sabre_pilot_impl
+        sabre_pilot_runner_core
         CLI11::CLI11
 )
 
@@ -15,6 +15,7 @@ target_include_directories(
     sabre_pilot_runner
     PUBLIC
         ${sabre_SOURCE_DIR}/src/sabre/
+        ../
 )
 
 set_target_properties(sabre_pilot_runner

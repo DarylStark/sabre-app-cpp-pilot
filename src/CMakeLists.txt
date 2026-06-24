@@ -1,5 +1,6 @@
 add_subdirectory("pilot_impl")
 add_subdirectory("pilot_core")
+add_subdirectory("pilot_runner_core")
 
 if(SABRE_PILOT_BUILD_PILOT_EXEC)
     add_subdirectory("pilot")

@@ -3,7 +3,7 @@
 #include "dynamic_library.hpp"
 #include <string>
 
-namespace sabre_pilot_runner
+namespace sabre_pilot_runner_core
 {
     class LinuxDynamicLibrary : public DynamicLibrary
     {
@@ -20,4 +20,4 @@ namespace sabre_pilot_runner
         LinuxDynamicLibrary(const std::string &libLocation);
         ~LinuxDynamicLibrary();
     };
-} // namespace sabre_pilot_runner
+} // namespace sabre_pilot_runner_core
