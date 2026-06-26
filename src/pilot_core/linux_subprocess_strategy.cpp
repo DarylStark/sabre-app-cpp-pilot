@@ -7,6 +7,7 @@
 #include <stdexcept>
 #include <string>
 #include <sys/types.h>
+#include <sys/wait.h>
 #include <unistd.h>
 
 extern char **environ;
@@ -48,5 +49,12 @@ namespace sabre_pilot
             throw std::runtime_error("kill(SIGTERM) failed: " +
                                      std::string(std::strerror(errno)));
         }
+    }
+
+    bool LinuxSubprocessStrategy::isRunning(uint32_t pid) const
+    {
+        int exitStatus = 0;
+        auto result = waitpid(pid, &exitStatus, WNOHANG);
+        return result == 0;
     }
 } // namespace sabre_pilot

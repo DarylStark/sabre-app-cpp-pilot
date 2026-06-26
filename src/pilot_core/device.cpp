@@ -65,4 +65,19 @@ namespace sabre_pilot
     {
         return _firmwarePid;
     }
+
+    void Device::updateState()
+    {
+        if (_firmwarePid == 0)
+            return;
+        if (_subprocessStrategy.isRunning(_firmwarePid))
+        {
+            _state = DeviceState::Running;
+        }
+        else
+        {
+            _firmwarePid = 0;
+            _state = DeviceState::Stopped;
+        }
+    }
 } // namespace sabre_pilot

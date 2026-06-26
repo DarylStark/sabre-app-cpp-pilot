@@ -63,4 +63,26 @@ namespace sabre_pilot
     {
         return _devices;
     }
+
+    void Pilot::_processMonitorThreadFn()
+    {
+        using namespace std::chrono_literals;
+
+        std::cout << "Starting Process Monitor\n";
+        while (true)
+        {
+            for (auto &[_, device] : this->_devices)
+            {
+                device->updateState();
+            }
+            std::this_thread::sleep_for(100ms); // TODO: make this configurable.
+        }
+    }
+
+    void Pilot::start()
+    {
+        auto threadLambda = [this]() { this->_processMonitorThreadFn(); };
+        _processMonitorThread = std::make_unique<std::thread>(threadLambda);
+        _processMonitorThread->detach();
+    }
 } // namespace sabre_pilot

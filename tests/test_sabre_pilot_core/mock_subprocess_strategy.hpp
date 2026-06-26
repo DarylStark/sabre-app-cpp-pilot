@@ -12,4 +12,9 @@ public:
     }
 
     void stop(uint32_t pid) const override {}
+
+    bool isRunning(uint32_t pid) const override
+    {
+        return true;
+    }
 };
