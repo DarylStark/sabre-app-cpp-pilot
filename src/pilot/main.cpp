@@ -108,6 +108,8 @@ int main(int argc, char *argv[])
         ui = ep(sabrePilot);
     }
 
+    sabrePilot.start();
+
     ui->start();
 
     return 0;

@@ -15,6 +15,10 @@ namespace sabre_pilot
         const SubprocessStrategy &_subprocessStrategy;
         const std::string _runnerExec;
 
+        std::unique_ptr<std::thread> _processMonitorThread = nullptr;
+
+        void _processMonitorThreadFn();
+
     public:
         Pilot(const SubprocessStrategy &subprocessStrategy,
               const std::string &runnerExec);
@@ -28,5 +32,7 @@ namespace sabre_pilot
 
         void startDevice(const std::string &deviceName);
         void stopDevice(const std::string &deviceName);
+
+        void start();
     };
 } // namespace sabre_pilot

@@ -46,5 +46,7 @@ namespace sabre_pilot
         sabre::hal::UartNumber getUartCount() const;
         const DeviceState getState() const;
         const uint32_t getPid() const;
+
+        void updateState();
     };
 } // namespace sabre_pilot

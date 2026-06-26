@@ -13,5 +13,6 @@ namespace sabre_pilot
         virtual uint32_t start(const std::string &program,
                                std::vector<std::string> args) const = 0;
         virtual void stop(uint32_t pid) const = 0;
+        virtual bool isRunning(uint32_t pid) const = 0;
     };
 } // namespace sabre_pilot
