@@ -1,6 +1,7 @@
 #pragma once
 
 #include "device.hpp"
+#include "ipc_server.hpp"
 #include <thread>
 #include <unordered_map>
 
@@ -15,7 +16,9 @@ namespace sabre_pilot
         const SubprocessStrategy &_subprocessStrategy;
         const std::string _runnerExec;
 
+        std::unique_ptr<IpcServer> _ipcServer;
         std::unique_ptr<std::thread> _processMonitorThread = nullptr;
+        std::unique_ptr<std::thread> _ipcServerThread = nullptr;
 
         void _processMonitorThreadFn();
 

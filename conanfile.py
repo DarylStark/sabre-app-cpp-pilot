@@ -19,7 +19,8 @@ class SabreAppPilotConan(ConanFile):
             "imgui/1.92.8-docking",
             "gtest/1.17.0",
             "tomlplusplus/3.4.0",
-            "cli11/2.6.2"
+            "cli11/2.6.2",
+            "asio/1.38.0"
         )
         
         for requirement in requires:
