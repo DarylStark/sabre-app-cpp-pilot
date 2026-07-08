@@ -37,16 +37,27 @@ int main(int argc, char *argv[])
 
     using namespace std::chrono_literals;
 
-    sabre_pilot_runner_core::TcpIpcClient client(tcp_server_ip,
-                                                 tcp_server_port);
-    client.connect();
-    client.sendData("Hallo!\n");
+    std::shared_ptr<sabre_pilot_runner_core::IpcClient> client =
+        std::make_shared<sabre_pilot_runner_core::TcpIpcClient>(
+            tcp_server_ip, tcp_server_port);
+    client->setup();
+    std::thread ipcThread([client]() { client->start(); });
+
+    if (!client->waitForConnection())
+    {
+        std::cerr << "Error connecting to IPC server\n";
+        client->stop();
+        ipcThread.join();
+        return 0;
+    }
+
+    std::this_thread::sleep_for(1s);
+    client->sendData("Hallo!\n");
+    std::cout << "Send data\n";
 
     std::this_thread::sleep_for(5s);
-
-    client.disconnect();
-
-    std::this_thread::sleep_for(30s);
+    client->stop();
+    ipcThread.join();
 
     return 0;
 
