@@ -48,9 +48,39 @@ namespace sabre_pilot
         _disconnectHandler = std::move(handler);
     }
 
-    void TcpSession::setReceiveHandler(ReceiveHandler handler)
+    bool TcpSession::_stopOnError(const std::error_code &ec)
     {
-        _receiveHandler = std::move(handler);
+        if (ec)
+        {
+            std::cerr << "Red error: " << ec.message() << '\n';
+            stop();
+            return true;
+        }
+        return false;
+    }
+
+    void TcpSession::_callbackAsyncReadSome(const std::error_code &ec,
+                                            std::size_t bytesTransferred)
+    {
+        if (_stopOnError(ec))
+        {
+            return;
+        }
+
+        if (bytesTransferred > _readBuffer.size())
+        {
+            throw std::runtime_error("bytesTransferred exceeds read "
+                                     "buffer size");
+        }
+
+        std::vector<std::uint8_t> data(
+            _readBuffer.begin(),
+            _readBuffer.begin() +
+                static_cast<std::ptrdiff_t>(bytesTransferred));
+
+        // TODO: Send to protocol parser
+
+        _readSome();
     }
 
     void TcpSession::_readSome()
@@ -61,32 +91,23 @@ namespace sabre_pilot
             asio::buffer(_readBuffer),
             [this, self](const std::error_code &ec,
                          std::size_t bytesTransferred)
-            {
-                if (ec)
-                {
-                    std::cerr << "Red error: " << ec.message() << '\n';
-                    stop();
-                    return;
-                }
+            { _callbackAsyncReadSome(ec, bytesTransferred); });
+    }
 
-                if (bytesTransferred > _readBuffer.size())
-                {
-                    throw std::runtime_error("bytesTransferred exceeds read "
-                                             "buffer size");
-                }
+    void TcpSession::_callbackAsyncWrite(const std::error_code &ec,
+                                         std::size_t size)
+    {
+        if (_stopOnError(ec))
+        {
+            return;
+        }
 
-                std::vector<std::uint8_t> data(
-                    _readBuffer.begin(),
-                    _readBuffer.begin() +
-                        static_cast<std::ptrdiff_t>(bytesTransferred));
+        _writeQueue.pop_front();
 
-                if (_receiveHandler)
-                {
-                    _receiveHandler(self, data);
-                }
-
-                _readSome();
-            });
+        if (!_writeQueue.empty())
+        {
+            _writeNext();
+        }
     }
 
     void TcpSession::_writeNext()
@@ -98,24 +119,10 @@ namespace sabre_pilot
 
         auto self = shared_from_this();
 
-        asio::async_write(_socket, asio::buffer(_writeQueue.front()),
-                          [this, self](const std::error_code &ec, std::size_t)
-                          {
-                              if (ec)
-                              {
-                                  std::cerr << "Write error: " << ec.message()
-                                            << '\n';
-                                  stop();
-                                  return;
-                              }
-
-                              _writeQueue.pop_front();
-
-                              if (!_writeQueue.empty())
-                              {
-                                  _writeNext();
-                              }
-                          });
+        asio::async_write(
+            _socket, asio::buffer(_writeQueue.front()),
+            [this, self](const std::error_code &ec, std::size_t size)
+            { _callbackAsyncWrite(ec, size); });
     }
 
     void TcpSession::_handleDisconnect()

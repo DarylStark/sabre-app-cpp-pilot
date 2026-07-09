@@ -19,6 +19,9 @@ namespace sabre_pilot
 
         uint16_t _port;
 
+        void _callbackAsyncAccept(const std::error_code &ec,
+                                  asio::ip::tcp::socket socket);
+
     public:
         explicit TcpIpcServer(uint16_t port);
         void setup() override;

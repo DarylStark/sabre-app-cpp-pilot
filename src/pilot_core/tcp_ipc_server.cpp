@@ -12,39 +12,36 @@ namespace sabre_pilot
     {
     }
 
+    void TcpIpcServer::_callbackAsyncAccept(const std::error_code &ec,
+                                            asio::ip::tcp::socket socket)
+    {
+        if (!ec)
+        {
+            std::cout << "New connection has been made!\n";
+            std::cout << "Origin: " << socket.remote_endpoint() << '\n';
+
+            auto session = std::make_shared<TcpSession>(std::move(socket));
+
+            session->setDisconnectHandler(
+                [this](const std::shared_ptr<TcpSession> &sessionToRemove)
+                { _removeSession(sessionToRemove); });
+
+            _sessions.push_back(session);
+            session->start();
+        }
+        else
+        {
+            std::cerr << "Accept error: " << ec.message() << '\n';
+        }
+
+        this->_configureAcceptCallback();
+    }
+
     void TcpIpcServer::_configureAcceptCallback()
     {
         _acceptor.async_accept(
             [this](std::error_code ec, tcp::socket socket)
-            {
-                if (!ec)
-                {
-                    std::cout << "New connection has been made!\n";
-                    std::cout << "Origin: " << socket.remote_endpoint() << '\n';
-
-                    auto session =
-                        std::make_shared<TcpSession>(std::move(socket));
-
-                    session->setDisconnectHandler(
-                        [this](
-                            const std::shared_ptr<TcpSession> &sessionToRemove)
-                        { _removeSession(sessionToRemove); });
-
-                    session->setReceiveHandler(
-                        [this](const std::shared_ptr<TcpSession> &session,
-                               const std::vector<std::uint8_t> &data)
-                        { _handleMessage(session, data); });
-
-                    _sessions.push_back(session);
-                    session->start();
-                }
-                else
-                {
-                    std::cerr << "Accept error: " << ec.message() << '\n';
-                }
-
-                this->_configureAcceptCallback();
-            });
+            { _callbackAsyncAccept(ec, std::move(socket)); });
     }
 
     void TcpIpcServer::setup()

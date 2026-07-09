@@ -16,21 +16,24 @@ namespace sabre_pilot
     private:
         using DisconnectHandler =
             std::function<void(std::shared_ptr<TcpSession>)>;
-        using ReceiveHandler = std::function<void(
-            std::shared_ptr<TcpSession>, const std::vector<std::uint8_t> &)>;
 
         asio::ip::tcp::socket _socket;
         std::array<std::uint8_t, 4096> _readBuffer{};
         std::deque<std::vector<std::uint8_t>> _writeQueue;
 
         DisconnectHandler _disconnectHandler;
-        ReceiveHandler _receiveHandler;
 
         bool _stopped = false;
 
         void _readSome();
         void _writeNext();
         void _handleDisconnect();
+
+        bool _stopOnError(const std::error_code &ec);
+
+        void _callbackAsyncReadSome(const std::error_code &ec,
+                                    std::size_t bytesTransferred);
+        void _callbackAsyncWrite(const std::error_code &ec, std::size_t size);
 
     public:
         explicit TcpSession(asio::ip::tcp::socket socket);
@@ -42,6 +45,5 @@ namespace sabre_pilot
         void send(std::string_view text);
 
         void setDisconnectHandler(DisconnectHandler handler);
-        void setReceiveHandler(ReceiveHandler handler);
     };
 } // namespace sabre_pilot
