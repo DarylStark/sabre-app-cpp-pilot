@@ -1,8 +1,8 @@
 #include <CLI/CLI.hpp>
 #include <pilot_impl/core.hpp>
+#include <pilot_ipc_tcp/tcp_ipc_client.hpp>
 #include <pilot_runner_core/start_firmware.hpp>
 #include <string>
-#include <tcp_ipc/tcp_ipc_client.hpp>
 #include <thread>
 
 int main(int argc, char *argv[])
