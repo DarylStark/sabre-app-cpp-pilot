@@ -10,8 +10,6 @@ namespace sabre_pilot
     private:
         void _configureAcceptCallback();
         void _removeSession(const std::shared_ptr<TcpSession> &session);
-        void _handleMessage(const std::shared_ptr<TcpSession> &session,
-                            const std::vector<std::uint8_t> &data);
 
         asio::io_context _io_context;
         asio::ip::tcp::acceptor _acceptor;

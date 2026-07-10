@@ -52,8 +52,8 @@ int main(int argc, char *argv[])
     }
 
     std::this_thread::sleep_for(1s);
-    client->sendData("Hallo!\n");
-    std::cout << "Send data\n";
+    client->sendData("Hallo!");
+    std::cout << "MAIN: Send data\n";
 
     std::this_thread::sleep_for(5s);
     client->stop();

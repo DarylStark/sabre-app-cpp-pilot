@@ -29,6 +29,12 @@ namespace sabre_pilot_runner_core
         void _writeNext();
         void _startRead();
 
+        void _callbackAsyncReadSome(const std::error_code &ec,
+                                    std::size_t bytesTransferred);
+        void _callbackAsyncResolve(
+            const std::error_code &ec,
+            const asio::ip::tcp::resolver::results_type &endpoints);
+
     public:
         TcpIpcClient(const std::string &serverIp, uint16_t serverPort);
 

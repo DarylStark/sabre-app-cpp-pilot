@@ -9,7 +9,8 @@ namespace sabre_pilot
 
     void TcpSession::start()
     {
-        std::cout << "Session started: " << _socket.remote_endpoint() << '\n';
+        std::cout << "SESSION: Session started: " << _socket.remote_endpoint()
+                  << '\n';
         _readSome();
     }
 
@@ -52,7 +53,7 @@ namespace sabre_pilot
     {
         if (ec)
         {
-            std::cerr << "Red error: " << ec.message() << '\n';
+            std::cerr << "SESSION: Read error: " << ec.message() << '\n';
             stop();
             return true;
         }
@@ -79,6 +80,12 @@ namespace sabre_pilot
                 static_cast<std::ptrdiff_t>(bytesTransferred));
 
         // TODO: Send to protocol parser
+        std::string receivedData(data.begin(), data.end());
+        std::cout << "SESSION: Received data: " << receivedData;
+
+        // TODO: Remove, just here for troubleshooting and understanding
+        // Send data back
+        this->send("Received your data: " + receivedData + "\n");
 
         _readSome();
     }

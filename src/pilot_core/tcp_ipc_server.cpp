@@ -17,8 +17,8 @@ namespace sabre_pilot
     {
         if (!ec)
         {
-            std::cout << "New connection has been made!\n";
-            std::cout << "Origin: " << socket.remote_endpoint() << '\n';
+            std::cout << "SERVER: New connection has been made!\n";
+            std::cout << "SERVER: Origin: " << socket.remote_endpoint() << '\n';
 
             auto session = std::make_shared<TcpSession>(std::move(socket));
 
@@ -46,29 +46,30 @@ namespace sabre_pilot
 
     void TcpIpcServer::setup()
     {
-        std::cout << "Setting up TCP IPC server on port " << _port << '\n';
+        std::cout << "SERVER: Setting up TCP IPC server on port " << _port
+                  << '\n';
         _configureAcceptCallback();
     }
 
     void TcpIpcServer::start()
     {
-        std::cout << "Running TcpIpcServer on port " << _port << '\n';
+        std::cout << "SERVER: Running TcpIpcServer on port " << _port << '\n';
         _io_context.run();
     }
 
     void TcpIpcServer::stop()
     {
-        std::cout << "Stopping sessions for TcpIpcServer\n";
+        std::cout << "SERVER: Stopping sessions for TcpIpcServer\n";
         for (auto &session : _sessions)
         {
             session->stop();
         }
         _sessions.clear();
 
-        std::cout << "Stopping TcpIpcServer\n";
+        std::cout << "SERVER: Stopping TcpIpcServer\n";
         _io_context.stop();
 
-        std::cout << "TcpIpcServer stopped\n";
+        std::cout << "SERVER: TcpIpcServer stopped\n";
     }
 
     void TcpIpcServer::broadcast(std::string_view text)
@@ -83,19 +84,7 @@ namespace sabre_pilot
     TcpIpcServer::_removeSession(const std::shared_ptr<TcpSession> &session)
     {
         std::erase(_sessions, session);
-        std::cout << "Session removed. Active sessions: " << _sessions.size()
-                  << '\n';
-    }
-
-    void
-    TcpIpcServer::_handleMessage(const std::shared_ptr<TcpSession> &session,
-                                 const std::vector<std::uint8_t> &data)
-    {
-        std::string text(data.begin(), data.end());
-        std::cout << "Received:\n\n" << text << "\n\n";
-        std::cout << "This was " << data.size() << " bytes\n\n";
-
-        // Example response
-        session->send("ACK: " + text);
+        std::cout << "SERVER: Session removed. Active sessions: "
+                  << _sessions.size() << '\n';
     }
 } // namespace sabre_pilot
