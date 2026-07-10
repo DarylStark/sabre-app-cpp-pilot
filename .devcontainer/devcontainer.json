@@ -1,6 +1,6 @@
 {
     "name": "Sabre",
-    "image": "dast1986/slough-dev-dc-cpp:1.0.7",
+    "image": "dast1986/slough-dev-dc-cpp:1.0.8",
     "remoteEnv": {
         "PROMPTNAME": "Sabre",
         "LIBGL_ALWAYS_SOFTWARE": "1"

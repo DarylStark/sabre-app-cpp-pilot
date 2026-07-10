@@ -21,7 +21,8 @@ namespace sabre_pilot
     void Device::start()
     {
         _firmwarePid = _subprocessStrategy.start(
-            _runnerExec, {_config.firmwarePath, _config.firmwareEntryPoint});
+            _runnerExec, {_config.firmwarePath, "--firmware-entry-point",
+                          _config.firmwareEntryPoint});
         if (!_firmwarePid)
         {
             _state = DeviceState::Error;

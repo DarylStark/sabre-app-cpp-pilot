@@ -2,6 +2,7 @@
 #include "device.hpp"
 #include "subprocess_strategy.hpp"
 #include <iostream>
+#include <pilot_ipc_tcp/tcp_ipc_server.hpp>
 #include <sabre/runtime/app.hpp>
 #include <sabre/runtime/run_app.hpp>
 #include <thread>
@@ -84,5 +85,13 @@ namespace sabre_pilot
         auto threadLambda = [this]() { this->_processMonitorThreadFn(); };
         _processMonitorThread = std::make_unique<std::thread>(threadLambda);
         _processMonitorThread->detach();
+
+        // IPC server
+        // TODO: Make the specific concrete IPC server configurable
+        _ipcServer = std::make_unique<TcpIpcServer>(8998);
+        _ipcServer->setup();
+        _ipcServerThread = std::make_unique<std::thread>(
+            [this]() { this->_ipcServer->start(); });
+        _ipcServerThread->detach();
     }
 } // namespace sabre_pilot
