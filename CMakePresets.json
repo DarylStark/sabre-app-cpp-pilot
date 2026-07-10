@@ -66,6 +66,7 @@
                 "SABRE_PILOT_BUILD_UI_LIBRARIES": "OFF",
                 "SABRE_PILOT_BUILD_EXAMPLE_APPS": "OFF",
                 "SABRE_PILOT_BUILD_TESTS": "ON",
+                "SABRE_PILOT_BUILD_IPC_LIBRARIES": "ON",
                 "CMAKE_TOOLCHAIN_FILE": "${sourceDir}/.conan/build/Release/generators/conan_toolchain.cmake"
             }
         }
