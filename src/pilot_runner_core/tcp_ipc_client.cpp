@@ -157,7 +157,6 @@ namespace sabre_pilot_runner_core
         std::cout << "CLIENT: This was " << data.size() << " bytes\n";
 
         _startRead();
-        di
     }
 
     void TcpIpcClient::_startRead()
