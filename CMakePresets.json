@@ -17,6 +17,7 @@
                 "SABRE_PILOT_BUILD_UI_LIBRARIES": "ON",
                 "SABRE_PILOT_BUILD_EXAMPLE_APPS": "ON",
                 "SABRE_PILOT_BUILD_TESTS": "ON",
+                "SABRE_PILOT_BUILD_IPC_LIBRARIES": "ON",
                 "SABRE_PILOT_CORE_RUNNER_EXECUTABLE": "${sourceDir}/build/dbg-all-with_tests/src/pilot_runner/sabre_pilot_runner",
                 "CMAKE_TOOLCHAIN_FILE": "${sourceDir}/.conan/build/Debug/generators/conan_toolchain.cmake"
             }

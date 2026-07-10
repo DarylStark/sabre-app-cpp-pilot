@@ -12,10 +12,13 @@ target_link_libraries(
     sabre_pilot_core
     PUBLIC
         asio::asio
+    PRIVATE
+        sabre_ipc_tcp
 )
 
 target_include_directories(
     sabre_pilot_core
     PUBLIC
         ${sabre_SOURCE_DIR}/src/sabre/
+        ../
 )

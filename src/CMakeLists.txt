@@ -18,3 +18,7 @@ if(SABRE_PILOT_BUILD_UI_LIBRARIES)
     add_subdirectory("pilot_ui_imgui")
     add_subdirectory("pilot_ui_console")
 endif()
+
+if(SABRE_PILOT_BUILD_IPC_LIBRARIES)
+    add_subdirectory("tcp_ipc")
+endif()

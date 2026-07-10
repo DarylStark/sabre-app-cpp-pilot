@@ -1,10 +1,10 @@
 #include "pilot.hpp"
 #include "device.hpp"
 #include "subprocess_strategy.hpp"
-#include "tcp_ipc_server.hpp"
 #include <iostream>
 #include <sabre/runtime/app.hpp>
 #include <sabre/runtime/run_app.hpp>
+#include <tcp_ipc/tcp_ipc_server.hpp>
 #include <thread>
 
 namespace sabre_pilot

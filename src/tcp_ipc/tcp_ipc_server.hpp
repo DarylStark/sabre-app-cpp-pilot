@@ -1,6 +1,6 @@
-#include "ipc_server.hpp"
 #include "tcp_session.hpp"
 #include <asio.hpp>
+#include <pilot_core/ipc_server.hpp>
 #include <vector>
 
 namespace sabre_pilot
