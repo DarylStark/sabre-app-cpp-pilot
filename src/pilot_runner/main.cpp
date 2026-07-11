@@ -51,11 +51,9 @@ int main(int argc, char *argv[])
         return 0;
     }
 
-    std::this_thread::sleep_for(1s);
     client->sendData("Hallo!");
     std::cout << "MAIN: Send data\n";
 
-    std::this_thread::sleep_for(5s);
     client->stop();
     ipcThread.join();
 

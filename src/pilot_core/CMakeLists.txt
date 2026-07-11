@@ -14,6 +14,7 @@ target_link_libraries(
         asio::asio
     PRIVATE
         sabre_pilot_ipc_tcp
+        sabre_pilot_ipc_protocol
 )
 
 target_include_directories(

@@ -21,4 +21,5 @@ endif()
 
 if(SABRE_PILOT_BUILD_IPC_LIBRARIES)
     add_subdirectory("pilot_ipc_tcp")
+    add_subdirectory("pilot_ipc_protocol")
 endif()
