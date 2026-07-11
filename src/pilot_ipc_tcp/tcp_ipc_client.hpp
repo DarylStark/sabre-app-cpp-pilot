@@ -2,7 +2,7 @@
 #include <cstdint>
 #include <deque>
 #include <memory>
-#include <pilot_runner_core/ipc_client.hpp>
+#include <pilot_ipc_server/ipc_client.hpp>
 #include <string>
 
 namespace sabre_pilot_runner_core
