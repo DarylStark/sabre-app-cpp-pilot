@@ -5,7 +5,11 @@ namespace sabre_pilot
 {
     using asio::ip::tcp;
 
-    TcpSession::TcpSession(tcp::socket socket) : _socket(std::move(socket)) {}
+    TcpSession::TcpSession(tcp::socket socket,
+                           std::shared_ptr<IpcProtocol> protocol)
+        : _socket(std::move(socket)), _protocol(std::move(protocol))
+    {
+    }
 
     void TcpSession::start()
     {
@@ -79,13 +83,8 @@ namespace sabre_pilot
             _readBuffer.begin() +
                 static_cast<std::ptrdiff_t>(bytesTransferred));
 
-        // TODO: Send to protocol parser
-        std::string receivedData(data.begin(), data.end());
-        std::cout << "SESSION: Received data: " << receivedData;
-
-        // TODO: Remove, just here for troubleshooting and understanding
-        // Send data back
-        this->send("Received your data: " + receivedData + "\n");
+        // Send to protocol
+        _protocol->addData(data);
 
         _readSome();
     }

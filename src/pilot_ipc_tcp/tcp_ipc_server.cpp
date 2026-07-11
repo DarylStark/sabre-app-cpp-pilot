@@ -6,8 +6,10 @@ namespace sabre_pilot
 {
     using asio::ip::tcp;
 
-    TcpIpcServer::TcpIpcServer(uint16_t port)
-        : _acceptor(_io_context, asio::ip::tcp::endpoint(tcp::v4(), port)),
+    TcpIpcServer::TcpIpcServer(uint16_t port,
+                               std::shared_ptr<IpcProtocol> protocol)
+        : IpcServer(std::move(protocol)),
+          _acceptor(_io_context, asio::ip::tcp::endpoint(tcp::v4(), port)),
           _port(port)
     {
     }
@@ -20,7 +22,8 @@ namespace sabre_pilot
             std::cout << "SERVER: New connection has been made!\n";
             std::cout << "SERVER: Origin: " << socket.remote_endpoint() << '\n';
 
-            auto session = std::make_shared<TcpSession>(std::move(socket));
+            auto session =
+                std::make_shared<TcpSession>(std::move(socket), _protocol);
 
             session->setDisconnectHandler(
                 [this](const std::shared_ptr<TcpSession> &sessionToRemove)

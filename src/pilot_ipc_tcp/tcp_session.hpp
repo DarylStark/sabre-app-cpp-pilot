@@ -5,6 +5,7 @@
 #include <deque>
 #include <functional>
 #include <memory>
+#include <pilot_ipc_server/ipc_protocol.hpp>
 #include <string>
 #include <vector>
 
@@ -23,6 +24,8 @@ namespace sabre_pilot
 
         DisconnectHandler _disconnectHandler;
 
+        std::shared_ptr<IpcProtocol> _protocol;
+
         bool _stopped = false;
 
         void _readSome();
@@ -36,7 +39,8 @@ namespace sabre_pilot
         void _callbackAsyncWrite(const std::error_code &ec, std::size_t size);
 
     public:
-        explicit TcpSession(asio::ip::tcp::socket socket);
+        explicit TcpSession(asio::ip::tcp::socket socket,
+                            std::shared_ptr<IpcProtocol> protocol);
 
         void start();
         void stop();

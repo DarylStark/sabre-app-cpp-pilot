@@ -20,6 +20,8 @@ if(SABRE_PILOT_BUILD_UI_LIBRARIES)
 endif()
 
 if(SABRE_PILOT_BUILD_IPC_LIBRARIES)
+    add_subdirectory("pilot_ipc_server")
     add_subdirectory("pilot_ipc_tcp")
     add_subdirectory("pilot_ipc_protocol")
+    add_subdirectory("pilot_ipc_protocol_v1")
 endif()

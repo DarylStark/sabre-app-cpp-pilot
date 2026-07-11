@@ -13,8 +13,10 @@ target_link_libraries(
     PUBLIC
         asio::asio
     PRIVATE
+        sabre_pilot_ipc_server
         sabre_pilot_ipc_tcp
         sabre_pilot_ipc_protocol
+        sabre_pilot_ipc_protocol_v1
 )
 
 target_include_directories(

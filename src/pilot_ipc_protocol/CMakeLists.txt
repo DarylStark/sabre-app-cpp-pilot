@@ -6,3 +6,8 @@ target_include_directories(
     PUBLIC
         ../
 )
+
+set_target_properties(sabre_pilot_ipc_protocol
+    PROPERTIES
+        POSITION_INDEPENDENT_CODE ON
+)

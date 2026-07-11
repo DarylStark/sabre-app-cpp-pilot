@@ -1,9 +1,9 @@
 #include "pilot.hpp"
 #include "device.hpp"
-#include "ipc_protocol.hpp"
 #include "subprocess_strategy.hpp"
 #include <iostream>
-#include <pilot_ipc_protocol/pilot_ipc_protocol.hpp>
+#include <pilot_ipc_protocol_v1/ipc_protocol.hpp>
+#include <pilot_ipc_server/ipc_protocol.hpp>
 #include <pilot_ipc_tcp/tcp_ipc_server.hpp>
 #include <sabre/runtime/app.hpp>
 #include <sabre/runtime/run_app.hpp>
@@ -90,10 +90,11 @@ namespace sabre_pilot
 
         // IPC server
         std::shared_ptr<IpcProtocol> protocol =
-            std::make_shared<sabre_pilot::ipc::PilotIpcProtocol>();
+            std::make_shared<sabre_pilot::ipc::PilotIpcProtocol_v1>(
+                _commandQueue);
 
         // TODO: Make the specific concrete IPC server configurable
-        _ipcServer = std::make_unique<TcpIpcServer>(8998);
+        _ipcServer = std::make_unique<TcpIpcServer>(8998, protocol);
         _ipcServer->setup();
         _ipcServerThread = std::make_unique<std::thread>(
             [this]() { this->_ipcServer->start(); });

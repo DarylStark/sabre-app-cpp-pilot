@@ -3,7 +3,7 @@ find_package(asio REQUIRED)
 file(GLOB_RECURSE SABRE_TCP_IPC_SOURCES CONFIGURE_DEPENDS *.cpp)
 add_library(sabre_pilot_ipc_tcp STATIC ${SABRE_TCP_IPC_SOURCES})
 
-target_link_libraries(sabre_pilot_ipc_tcp PUBLIC asio::asio)
+target_link_libraries(sabre_pilot_ipc_tcp PUBLIC asio::asio sabre_pilot_ipc_protocol sabre_pilot_ipc_server)
 
 set_target_properties(sabre_pilot_ipc_tcp
     PROPERTIES

@@ -1,6 +1,7 @@
 #include "tcp_session.hpp"
 #include <asio.hpp>
-#include <pilot_core/ipc_server.hpp>
+#include <pilot_ipc_protocol/ipc_command.hpp>
+#include <pilot_ipc_server/ipc_server.hpp>
 #include <vector>
 
 namespace sabre_pilot
@@ -21,7 +22,8 @@ namespace sabre_pilot
                                   asio::ip::tcp::socket socket);
 
     public:
-        explicit TcpIpcServer(uint16_t port);
+        explicit TcpIpcServer(uint16_t port,
+                              std::shared_ptr<IpcProtocol> protocol);
         void setup() override;
         void start() override;
         void stop() override;
