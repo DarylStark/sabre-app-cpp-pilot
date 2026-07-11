@@ -3,7 +3,7 @@
 namespace sabre_pilot::ipc
 {
     PilotIpcProtocol::PilotIpcProtocol(
-        std::queue<std::unique_ptr<sabre_pilot::ipc::IpcCommand>> &queue)
+        std::queue<std::shared_ptr<sabre_pilot::ipc::IpcMessage>> &queue)
         : _queue(queue)
     {
     }

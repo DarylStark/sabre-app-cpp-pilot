@@ -51,7 +51,7 @@ int main(int argc, char *argv[])
         return 0;
     }
 
-    client->sendData("Hallo!");
+    client->sendData({'\01', '\01', '\00', '\00'});
     std::cout << "MAIN: Send data\n";
 
     client->stop();

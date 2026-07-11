@@ -2,7 +2,7 @@
 
 #include "device.hpp"
 #include <memory>
-#include <pilot_ipc_protocol/ipc_command.hpp>
+#include <pilot_ipc_protocol/ipc_message.hpp>
 #include <pilot_ipc_server/ipc_server.hpp>
 #include <queue>
 #include <thread>
@@ -18,7 +18,7 @@ namespace sabre_pilot
         DeviceMap _devices;
         const SubprocessStrategy &_subprocessStrategy;
         const std::string _runnerExec;
-        std::queue<std::unique_ptr<sabre_pilot::ipc::IpcCommand>> _commandQueue;
+        std::queue<std::shared_ptr<sabre_pilot::ipc::IpcMessage>> _commandQueue;
 
         std::unique_ptr<IpcServer> _ipcServer;
         std::unique_ptr<std::thread> _processMonitorThread = nullptr;

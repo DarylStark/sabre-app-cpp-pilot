@@ -1,6 +1,6 @@
 #include "tcp_session.hpp"
 #include <asio.hpp>
-#include <pilot_ipc_protocol/ipc_command.hpp>
+#include <pilot_ipc_protocol/ipc_message.hpp>
 #include <pilot_ipc_server/ipc_server.hpp>
 #include <vector>
 
