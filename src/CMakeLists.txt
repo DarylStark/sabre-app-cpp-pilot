@@ -20,8 +20,9 @@ if(SABRE_PILOT_BUILD_UI_LIBRARIES)
 endif()
 
 if(SABRE_PILOT_BUILD_IPC_LIBRARIES)
-    add_subdirectory("pilot_ipc_server")
-    add_subdirectory("pilot_ipc_tcp")
-    add_subdirectory("pilot_ipc_protocol")
-    add_subdirectory("pilot_ipc_protocol_v1")
+    add_subdirectory("pilot_ipc_server")        # TODO: Remoe
+    add_subdirectory("pilot_ipc_tcp")           # TODO: Remoe
+    add_subdirectory("pilot_ipc_protocol")      # TODO: Remoe
+    add_subdirectory("pilot_ipc_protocol_v1")   # TODO: Remoe
+    add_subdirectory("ipc")
 endif()
