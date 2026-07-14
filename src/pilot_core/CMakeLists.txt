@@ -17,6 +17,7 @@ target_link_libraries(
         sabre_pilot_ipc_tcp
         sabre_pilot_ipc_protocol
         sabre_pilot_ipc_protocol_v1
+        wuphf
 )
 
 target_include_directories(

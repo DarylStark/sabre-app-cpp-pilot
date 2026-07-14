@@ -24,5 +24,5 @@ if(SABRE_PILOT_BUILD_IPC_LIBRARIES)
     add_subdirectory("pilot_ipc_tcp")           # TODO: Remoe
     add_subdirectory("pilot_ipc_protocol")      # TODO: Remoe
     add_subdirectory("pilot_ipc_protocol_v1")   # TODO: Remoe
-    add_subdirectory("ipc")
+    add_subdirectory("wuphf")
 endif()

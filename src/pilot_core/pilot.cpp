@@ -2,12 +2,12 @@
 #include "device.hpp"
 #include "subprocess_strategy.hpp"
 #include <iostream>
-#include <pilot_ipc_protocol_v1/ipc_protocol.hpp>
-#include <pilot_ipc_server/ipc_protocol.hpp>
-#include <pilot_ipc_tcp/tcp_ipc_server.hpp>
+#include <ipc/tcp/server.hpp>
+#include <memory>
 #include <sabre/runtime/app.hpp>
 #include <sabre/runtime/run_app.hpp>
 #include <thread>
+#include <wuphf/wuphf.hpp>
 
 namespace sabre_pilot
 {
@@ -84,20 +84,24 @@ namespace sabre_pilot
 
     void Pilot::start()
     {
+        using ::ipc::TcpIpcServer;
+        using sabre_pilot::ipc::Wuphf;
+        using sabre_pilot::ipc::WuphfMessage;
+
+        // Start process monitor
         auto threadLambda = [this]() { this->_processMonitorThreadFn(); };
         _processMonitorThread = std::make_unique<std::thread>(threadLambda);
         _processMonitorThread->detach();
 
         // IPC server
-        std::shared_ptr<IpcProtocol> protocol =
-            std::make_shared<sabre_pilot::ipc::PilotIpcProtocol_v1>(
-                _commandQueue);
+        std::shared_ptr<Wuphf> protocol = std::make_shared<Wuphf>();
 
-        // TODO: Make the specific concrete IPC server configurable
-        _ipcServer = std::make_unique<TcpIpcServer>(8998, protocol);
+        // // TODO: Make the specific concrete IPC server configurable
+        _ipcServer =
+            std::make_unique<TcpIpcServer<WuphfMessage>>(protocol, 8998);
         _ipcServer->setup();
         _ipcServerThread = std::make_unique<std::thread>(
-            [this]() { this->_ipcServer->start(); });
+            [this]() { this->_ipcServer->run(); });
         _ipcServerThread->detach();
     }
 } // namespace sabre_pilot

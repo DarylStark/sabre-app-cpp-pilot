@@ -1,3 +1,0 @@
-file(GLOB_RECURSE IPC_SOURCES CONFIGURE_DEPENDS *.cpp)
-add_library(ipc STATIC ${IPC_SOURCES})
-
