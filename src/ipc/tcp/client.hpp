@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../ipc/client.hpp"
 #include "protocol.hpp"
+#include <ipc/client.hpp>
 
 namespace ipc
 {
