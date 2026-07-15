@@ -11,9 +11,9 @@ set_target_properties(sabre_pilot_core
 target_link_libraries(
     sabre_pilot_core
     PRIVATE
-        sabre_pilot_ipc_server
-        sabre_pilot_ipc_protocol
-        sabre_pilot_ipc_protocol_v1
+        # sabre_pilot_ipc_server
+        # sabre_pilot_ipc_protocol
+        # sabre_pilot_ipc_protocol_v1
         wuphf
     PUBLIC
         ipc_tcp

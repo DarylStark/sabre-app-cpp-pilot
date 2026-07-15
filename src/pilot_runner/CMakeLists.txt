@@ -5,9 +5,11 @@ add_executable(sabre_pilot_runner ${SABRE_PILOT_RUNNER_SOURCES})
 
 target_link_libraries(
     sabre_pilot_runner
-    PUBLIC
+    PRIVATE
         sabre_pilot_runner_core
-        sabre_pilot_ipc_tcp
+    PUBLIC
+        ipc_tcp
+        wuphf
         CLI11::CLI11
 )
 

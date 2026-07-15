@@ -1,9 +1,11 @@
 #include <CLI/CLI.hpp>
+#include <ipc/tcp/client.hpp>
 #include <pilot_impl/core.hpp>
-#include <pilot_ipc_tcp/tcp_ipc_client.hpp>
 #include <pilot_runner_core/start_firmware.hpp>
 #include <string>
 #include <thread>
+#include <wuphf/wuphf.hpp>
+#include <wuphf/wuphf_message.hpp>
 
 int main(int argc, char *argv[])
 {
@@ -36,12 +38,18 @@ int main(int argc, char *argv[])
     CLI11_PARSE(app, argc, argv);
 
     using namespace std::chrono_literals;
+    using ::ipc::TcpIpcClient;
+    using sabre_pilot::ipc::Wuphf;
+    using sabre_pilot::ipc::WuphfMessage;
 
-    std::shared_ptr<sabre_pilot_runner_core::IpcClient> client =
-        std::make_shared<sabre_pilot_runner_core::TcpIpcClient>(
-            tcp_server_ip, tcp_server_port);
+    // Protocol
+    std::shared_ptr<Wuphf> protocol = std::make_shared<Wuphf>();
+
+    std::shared_ptr<ipc::IpcClient<WuphfMessage>> client =
+        std::make_shared<TcpIpcClient<WuphfMessage>>(protocol, tcp_server_ip,
+                                                     tcp_server_port);
     client->setup();
-    std::thread ipcThread([client]() { client->start(); });
+    std::thread ipcThread([client]() { client->run(); });
 
     if (!client->waitForConnection())
     {
