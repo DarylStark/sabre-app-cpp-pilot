@@ -71,8 +71,8 @@ namespace ipc
             std::cout << "SERVER: New connection has been made!\n";
             std::cout << "SERVER: Origin: " << socket.remote_endpoint() << '\n';
 
-            auto session =
-                std::make_shared<Session>(std::move(socket), this->_protocol);
+            auto session = std::make_shared<Session>(std::move(socket),
+                                                     this->_protocol->clone());
 
             session->setDisconnectHandler(
                 [this](const std::shared_ptr<Session> &sessionToRemove)

@@ -29,7 +29,7 @@ namespace ipc
 
         DisconnectHandler _disconnectHandler;
 
-        std::shared_ptr<Protocol> _protocol;
+        std::unique_ptr<Protocol> _protocol;
 
         bool _stopped = false;
 
@@ -45,7 +45,7 @@ namespace ipc
 
     public:
         explicit TcpIpcSession(asio::ip::tcp::socket socket,
-                               std::shared_ptr<Protocol> protocol);
+                               std::unique_ptr<Protocol> protocol);
 
         void start();
         void stop();
@@ -58,7 +58,7 @@ namespace ipc
 
     template <typename MessageType>
     TcpIpcSession<MessageType>::TcpIpcSession(
-        asio::ip::tcp::socket socket, std::shared_ptr<Protocol> protocol)
+        asio::ip::tcp::socket socket, std::unique_ptr<Protocol> protocol)
         : _socket(std::move(socket)), _protocol(std::move(protocol))
     {
     }
