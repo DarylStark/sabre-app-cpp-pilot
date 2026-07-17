@@ -1,6 +1,7 @@
 #pragma once
 
 #include "device.hpp"
+#include <ipc/ipc/queue.hpp>
 #include <ipc/ipc/server.hpp>
 #include <memory>
 #include <queue>
@@ -23,6 +24,8 @@ namespace sabre_pilot
             _ipcServer;
         std::unique_ptr<std::thread> _processMonitorThread = nullptr;
         std::unique_ptr<std::thread> _ipcServerThread = nullptr;
+
+        ::ipc::Queue<ipc::WuphfMessage> _ipc_queue;
 
         void _processMonitorThreadFn();
 

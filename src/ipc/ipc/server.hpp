@@ -1,6 +1,7 @@
 #pragma once
 
 #include "protocol.hpp"
+#include "queue.hpp"
 #include <memory>
 
 namespace ipc
@@ -10,10 +11,12 @@ namespace ipc
     {
     protected:
         std::shared_ptr<IpcProtocol<MessageType>> _protocol;
+        Queue<MessageType> &_queue;
 
     public:
-        IpcServer(std::shared_ptr<IpcProtocol<MessageType>> protocol)
-            : _protocol(protocol)
+        IpcServer(std::shared_ptr<IpcProtocol<MessageType>> protocol,
+                  Queue<MessageType> &queue)
+            : _protocol(protocol), _queue(queue)
         {
         }
 

@@ -4,6 +4,7 @@
 #include <asio.hpp>
 #include <iostream> // TODO: Remove
 #include <ipc/protocol.hpp>
+#include <ipc/queue.hpp>
 #include <ipc/server.hpp>
 #include <memory>
 #include <thread> // TODO: Remove
@@ -17,6 +18,7 @@ namespace ipc
         using Session = TcpIpcSession<MessageType>;
         using Protocol = IpcProtocol<MessageType>;
         using IpcServer<MessageType>::_protocol;
+        using IpcServer<MessageType>::_queue;
 
     private:
         uint16_t _port;
@@ -30,7 +32,8 @@ namespace ipc
                                   asio::ip::tcp::socket socket);
 
     public:
-        TcpIpcServer(std::shared_ptr<Protocol> protocol, uint16_t port);
+        TcpIpcServer(std::shared_ptr<Protocol> protocol,
+                     Queue<MessageType> &queue, uint16_t port);
         void setup() override;
         void run() override;
         void stop() override;
@@ -38,8 +41,9 @@ namespace ipc
 
     template <typename MessageType>
     TcpIpcServer<MessageType>::TcpIpcServer(std::shared_ptr<Protocol> protocol,
+                                            Queue<MessageType> &queue,
                                             uint16_t port)
-        : IpcServer<MessageType>(protocol), _port(port),
+        : IpcServer<MessageType>(protocol, queue), _port(port),
           _acceptor(_io_context,
                     asio::ip::tcp::endpoint(asio::ip::tcp::v4(), port))
     {
@@ -71,8 +75,8 @@ namespace ipc
             std::cout << "SERVER: New connection has been made!\n";
             std::cout << "SERVER: Origin: " << socket.remote_endpoint() << '\n';
 
-            auto session = std::make_shared<Session>(std::move(socket),
-                                                     this->_protocol->clone());
+            auto session = std::make_shared<Session>(
+                std::move(socket), this->_protocol->clone(), _queue);
 
             session->setDisconnectHandler(
                 [this](const std::shared_ptr<Session> &sessionToRemove)

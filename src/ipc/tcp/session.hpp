@@ -5,6 +5,7 @@
 #include <deque>
 #include <functional>
 #include <ipc/protocol.hpp>
+#include <ipc/queue.hpp>
 #include <memory>
 #include <string>
 #include <vector>
@@ -30,6 +31,7 @@ namespace ipc
         DisconnectHandler _disconnectHandler;
 
         std::unique_ptr<Protocol> _protocol;
+        Queue<MessageType> &_queue;
 
         bool _stopped = false;
 
@@ -44,8 +46,9 @@ namespace ipc
         void _callbackAsyncWrite(const std::error_code &ec, std::size_t size);
 
     public:
-        explicit TcpIpcSession(asio::ip::tcp::socket socket,
-                               std::unique_ptr<Protocol> protocol);
+        TcpIpcSession(asio::ip::tcp::socket socket,
+                      std::unique_ptr<Protocol> protocol,
+                      Queue<MessageType> &queue);
 
         void start();
         void stop();
@@ -58,8 +61,10 @@ namespace ipc
 
     template <typename MessageType>
     TcpIpcSession<MessageType>::TcpIpcSession(
-        asio::ip::tcp::socket socket, std::unique_ptr<Protocol> protocol)
-        : _socket(std::move(socket)), _protocol(std::move(protocol))
+        asio::ip::tcp::socket socket, std::unique_ptr<Protocol> protocol,
+        Queue<MessageType> &queue)
+        : _socket(std::move(socket)), _protocol(std::move(protocol)),
+          _queue(queue)
     {
     }
 
@@ -146,6 +151,12 @@ namespace ipc
         // TODO: Parse with the given protocol. After that, add it to the
         // queue.
         std::cout << "Received data: " << data.size() << " bytes\n";
+        auto newMessage = _protocol->parseBytes(data);
+
+        if (newMessage)
+        {
+            _queue.push(*newMessage);
+        }
 
         _readSome();
     }

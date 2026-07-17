@@ -96,9 +96,30 @@ namespace sabre_pilot
         // IPC server
         std::shared_ptr<Wuphf> protocol = std::make_shared<Wuphf>();
 
-        // // TODO: Make the specific concrete IPC server configurable
-        _ipcServer =
-            std::make_unique<TcpIpcServer<WuphfMessage>>(protocol, 8998);
+        // Run a thread checking the IPC queue
+        std::thread ipcThread(
+            [this]()
+            {
+                bool keepRunning = true;
+                while (keepRunning)
+                {
+                    auto item = _ipc_queue.pop();
+                    if (item)
+                    {
+                        std::cout << "Received message for " << item->dstMcu
+                                  << "\n";
+                    }
+                    else
+                    {
+                        keepRunning = false;
+                    }
+                }
+            });
+        ipcThread.detach();
+
+        // TODO: Make the specific concrete IPC server configurable
+        _ipcServer = std::make_unique<TcpIpcServer<WuphfMessage>>(
+            protocol, _ipc_queue, 8998);
         _ipcServer->setup();
         _ipcServerThread = std::make_unique<std::thread>(
             [this]() { this->_ipcServer->run(); });
