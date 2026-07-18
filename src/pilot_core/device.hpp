@@ -44,6 +44,8 @@ namespace sabre_pilot
         const std::string &getUartBuffer(sabre::hal::UartNumber uartIdx) const;
         void clearUartBuffer(sabre::hal::UartNumber uartIdx);
         sabre::hal::UartNumber getUartCount() const;
+        void appendToUArt(sabre::hal::UartNumber uartIdx,
+                          const std::string &data);
         const DeviceState getState() const;
         const uint32_t getPid() const;
 

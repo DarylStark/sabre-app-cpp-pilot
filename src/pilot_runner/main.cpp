@@ -60,8 +60,14 @@ int main(int argc, char *argv[])
         return 0;
     }
 
-    client->sendData({'\01', '\01', '\00', '\00'});
-    std::cout << "MAIN: Send data\n";
+    // Send Client Hello (Client ID 11)
+    client->sendData({0x00, 0x01, 0x00, 0x04, 0x00, 0x00, 0x00, 0x0b});
+
+    // Send Uart Append on UART 0
+    client->sendData(
+        {0x01, 0x01, 0x00, 0x08, 0x00, 0x00, 's', 'a', 'b', 'r', 'e', '\n'});
+
+    std::this_thread::sleep_for(1s);
 
     client->stop();
     ipcThread.join();

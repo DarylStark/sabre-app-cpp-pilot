@@ -148,14 +148,18 @@ namespace ipc
             _readBuffer.begin() +
                 static_cast<std::ptrdiff_t>(bytesTransferred));
 
-        // TODO: Parse with the given protocol. After that, add it to the
-        // queue.
-        std::cout << "Received data: " << data.size() << " bytes\n";
-        auto newMessage = _protocol->parseBytes(data);
-
-        if (newMessage)
+        // TODO: Make sure this "loop" happends in the protocol, not here. In
+        // the protocol, it should keep processing the internal buffer untill it
+        // has a valid packet.
+        while (true)
         {
+            std::cout << "Received data: " << data.size() << " bytes\n";
+            auto newMessage = _protocol->parseBytes(data);
+            if (!newMessage)
+                break;
+
             _queue.push(std::move(*newMessage));
+            data.clear();
         }
 
         _readSome();

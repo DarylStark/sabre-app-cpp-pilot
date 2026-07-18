@@ -19,7 +19,31 @@ namespace sabre_pilot::ipc
         uint32_t id = _readU32_be(4);
         _mcuId = id;
 
-        return std::make_unique<WuphfCommand>(id);
+        // Clear the data from the buffer
+        _buffer.erase(_buffer.begin(), _buffer.begin() + 8);
+
+        return std::make_unique<ClientHello>(id);
+    }
+
+    std::optional<WuphfCommand::UniquePtr> Wuphf::_parseUartAppend()
+    {
+        if (!_mcuId)
+            return std::nullopt;
+
+        uint16_t length = _readU16_be(2);
+        uint16_t dataLength = length - 2;
+
+        if (_buffer.size() < 4 + length)
+        {
+            return std::nullopt;
+        }
+
+        uint16_t uartId = _readU16_be(4);
+        std::string data(_buffer.begin() + 6, _buffer.begin() + 6 + dataLength);
+
+        _buffer.erase(_buffer.begin(), _buffer.begin() + 4 + length);
+
+        return std::make_unique<UartAppend>(_mcuId, uartId, data);
     }
 
     std::uint16_t Wuphf::_readU16_be(std::size_t offset) const
@@ -69,13 +93,17 @@ namespace sabre_pilot::ipc
             return std::nullopt;
         }
 
-        if (type == 0x01)
+        if (type == 0x0001)
         {
             return _parseClientHello();
         }
 
-        if (_mcuId == 0)
-            return std::nullopt;
-        return std::make_unique<WuphfCommand>(_mcuId);
+        if (type == 0x0101)
+        {
+            return _parseUartAppend();
+        }
+
+        // Not a valid command
+        return std::nullopt;
     }
 } // namespace sabre_pilot::ipc

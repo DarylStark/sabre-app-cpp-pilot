@@ -57,6 +57,13 @@ namespace sabre_pilot
         return _config.deviceConfig.upperboundUart;
     }
 
+    void Device::appendToUArt(sabre::hal::UartNumber uartIdx,
+                              const std::string &data)
+    {
+        std::string &buffer = _uartBuffers[uartIdx];
+        buffer.append(data);
+    }
+
     const DeviceState Device::getState() const
     {
         return _state;

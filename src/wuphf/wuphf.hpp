@@ -19,12 +19,14 @@ namespace sabre_pilot::ipc
         std::vector<uint8_t> _buffer;
 
         std::optional<WuphfCommand::UniquePtr> _parseClientHello();
+        std::optional<WuphfCommand::UniquePtr> _parseUartAppend();
 
         std::uint16_t _readU16_be(std::size_t offset) const;
         std::uint32_t _readU32_be(std::size_t offset) const;
 
     public:
         ::ipc::IpcProtocol<WuphfCommand::UniquePtr>::UniquePtr clone();
+
         std::optional<WuphfCommand::UniquePtr>
         parseBytes(std::vector<uint8_t> &bytes);
     };

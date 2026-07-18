@@ -103,11 +103,15 @@ namespace sabre_pilot
                 bool keepRunning = true;
                 while (keepRunning)
                 {
-                    auto item = _ipc_queue.pop();
+                    std::optional<WuphfCommand::UniquePtr> item =
+                        _ipc_queue.pop();
                     if (item)
                     {
-                        std::cout << "Received message for "
-                                  << (*item)->getDestinationMcuId() << "\n";
+                        WuphfCommand::UniquePtr command = std::move(*item);
+
+                        // TOOD: find the real device based on the ID.
+                        Device &device = *(_devices.at("Device 01"));
+                        command->executeForDevice(device);
                     }
                     else
                     {
