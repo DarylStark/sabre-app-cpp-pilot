@@ -43,11 +43,11 @@ int main(int argc, char *argv[])
     using sabre_pilot::ipc::WuphfCommand;
 
     // Protocol
-    std::shared_ptr<ipc::IpcProtocol<std::unique_ptr<WuphfCommand>>> protocol =
+    ipc::IpcProtocol<WuphfCommand::UniquePtr>::SharedPtr protocol =
         std::make_shared<Wuphf>();
 
-    std::shared_ptr<ipc::IpcClient<std::unique_ptr<WuphfCommand>>> client =
-        std::make_shared<TcpIpcClient<std::unique_ptr<WuphfCommand>>>(
+    ipc::IpcClient<WuphfCommand::UniquePtr>::SharedPtr client =
+        std::make_shared<TcpIpcClient<WuphfCommand::UniquePtr>>(
             protocol, tcp_server_ip, tcp_server_port);
     client->setup();
     std::thread ipcThread([client]() { client->run(); });

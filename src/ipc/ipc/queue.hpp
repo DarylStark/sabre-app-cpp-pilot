@@ -11,6 +11,11 @@ namespace ipc
     template <typename MessageType>
     class Queue
     {
+    public:
+        using Ptr = Queue<MessageType> *;
+        using SharedPtr = std::shared_ptr<Queue<MessageType>>;
+        using UniquePtr = std::unique_ptr<Queue<MessageType>>;
+
     private:
         std::mutex _mutex;
         std::queue<MessageType> _queue;

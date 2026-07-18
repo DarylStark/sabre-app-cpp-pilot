@@ -11,6 +11,11 @@ namespace ipc
     class IpcProtocol
     {
     public:
+        using Ptr = IpcProtocol<MessageType> *;
+        using SharedPtr = std::shared_ptr<IpcProtocol<MessageType>>;
+        using UniquePtr = std::unique_ptr<IpcProtocol<MessageType>>;
+
+    public:
         virtual ~IpcProtocol() = default;
         virtual std::unique_ptr<IpcProtocol<MessageType>> clone() = 0;
         virtual std::optional<MessageType>

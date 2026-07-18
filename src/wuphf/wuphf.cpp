@@ -2,13 +2,12 @@
 
 namespace sabre_pilot::ipc
 {
-    std::unique_ptr<::ipc::IpcProtocol<std::unique_ptr<WuphfCommand>>>
-    Wuphf::clone()
+    ::ipc::IpcProtocol<WuphfCommand::UniquePtr>::UniquePtr Wuphf::clone()
     {
         return std::make_unique<Wuphf>();
     }
 
-    std::optional<std::unique_ptr<WuphfCommand>> Wuphf::_parseClientHello()
+    std::optional<WuphfCommand::UniquePtr> Wuphf::_parseClientHello()
     {
         uint16_t length = _readU16_be(2);
 
@@ -49,7 +48,7 @@ namespace sabre_pilot::ipc
                static_cast<uint32_t>(_buffer[offset + 3]);
     }
 
-    std::optional<std::unique_ptr<WuphfCommand>>
+    std::optional<WuphfCommand::UniquePtr>
     Wuphf::parseBytes(std::vector<uint8_t> &bytes)
     {
         _buffer.insert(_buffer.end(), bytes.begin(), bytes.end());

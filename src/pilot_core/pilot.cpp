@@ -94,7 +94,7 @@ namespace sabre_pilot
         _processMonitorThread->detach();
 
         // IPC server
-        std::shared_ptr<Wuphf> protocol = std::make_shared<Wuphf>();
+        Wuphf::SharedPtr protocol = std::make_shared<Wuphf>();
 
         // Run a thread checking the IPC queue
         std::thread ipcThread(
@@ -118,9 +118,8 @@ namespace sabre_pilot
         ipcThread.detach();
 
         // TODO: Make the specific concrete IPC server configurable
-        _ipcServer =
-            std::make_unique<TcpIpcServer<std::unique_ptr<WuphfCommand>>>(
-                protocol, _ipc_queue, 8998);
+        _ipcServer = std::make_unique<TcpIpcServer<WuphfCommand::UniquePtr>>(
+            protocol, _ipc_queue, 8998);
         _ipcServer->setup();
         _ipcServerThread = std::make_unique<std::thread>(
             [this]() { this->_ipcServer->run(); });

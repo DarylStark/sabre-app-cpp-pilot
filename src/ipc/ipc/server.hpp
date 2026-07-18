@@ -9,6 +9,11 @@ namespace ipc
     template <typename MessageType>
     class IpcServer
     {
+    public:
+        using Ptr = IpcServer<MessageType> *;
+        using SharedPtr = std::shared_ptr<IpcServer<MessageType>>;
+        using UniquePtr = std::unique_ptr<IpcServer<MessageType>>;
+
     protected:
         std::shared_ptr<IpcProtocol<MessageType>> _protocol;
         Queue<MessageType> &_queue;

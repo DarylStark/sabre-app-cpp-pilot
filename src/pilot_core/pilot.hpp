@@ -20,9 +20,7 @@ namespace sabre_pilot
         const SubprocessStrategy &_subprocessStrategy;
         const std::string _runnerExec;
 
-        std::unique_ptr<
-            ::ipc::IpcServer<std::unique_ptr<sabre_pilot::ipc::WuphfCommand>>>
-            _ipcServer;
+        ::ipc::IpcServer<ipc::WuphfCommand::UniquePtr>::UniquePtr _ipcServer;
         std::unique_ptr<std::thread> _processMonitorThread = nullptr;
         std::unique_ptr<std::thread> _ipcServerThread = nullptr;
 
