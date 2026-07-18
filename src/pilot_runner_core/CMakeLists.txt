@@ -1,5 +1,3 @@
-# find_package(asio REQUIRED)
-
 file(GLOB_RECURSE SABRE_PILOT_RUNNER_CORE_SOURCES CONFIGURE_DEPENDS *.cpp)
 add_library(sabre_pilot_runner_core STATIC ${SABRE_PILOT_RUNNER_CORE_SOURCES})
 
