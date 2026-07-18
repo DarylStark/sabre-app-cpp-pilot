@@ -86,7 +86,7 @@ namespace sabre_pilot
     {
         using ::ipc::TcpIpcServer;
         using sabre_pilot::ipc::Wuphf;
-        using sabre_pilot::ipc::WuphfMessage;
+        using sabre_pilot::ipc::WuphfCommand;
 
         // Start process monitor
         auto threadLambda = [this]() { this->_processMonitorThreadFn(); };
@@ -106,8 +106,8 @@ namespace sabre_pilot
                     auto item = _ipc_queue.pop();
                     if (item)
                     {
-                        std::cout << "Received message for " << item->dstMcu
-                                  << "\n";
+                        std::cout << "Received message for "
+                                  << (*item)->getDestinationMcuId() << "\n";
                     }
                     else
                     {
@@ -118,8 +118,9 @@ namespace sabre_pilot
         ipcThread.detach();
 
         // TODO: Make the specific concrete IPC server configurable
-        _ipcServer = std::make_unique<TcpIpcServer<WuphfMessage>>(
-            protocol, _ipc_queue, 8998);
+        _ipcServer =
+            std::make_unique<TcpIpcServer<std::unique_ptr<WuphfCommand>>>(
+                protocol, _ipc_queue, 8998);
         _ipcServer->setup();
         _ipcServerThread = std::make_unique<std::thread>(
             [this]() { this->_ipcServer->run(); });

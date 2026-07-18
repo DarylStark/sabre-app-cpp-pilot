@@ -7,7 +7,7 @@
 #include <queue>
 #include <thread>
 #include <unordered_map>
-#include <wuphf/wuphf_message.hpp>
+#include <wuphf/wuphf_command.hpp>
 
 namespace sabre_pilot
 {
@@ -20,12 +20,13 @@ namespace sabre_pilot
         const SubprocessStrategy &_subprocessStrategy;
         const std::string _runnerExec;
 
-        std::unique_ptr<::ipc::IpcServer<sabre_pilot::ipc::WuphfMessage>>
+        std::unique_ptr<
+            ::ipc::IpcServer<std::unique_ptr<sabre_pilot::ipc::WuphfCommand>>>
             _ipcServer;
         std::unique_ptr<std::thread> _processMonitorThread = nullptr;
         std::unique_ptr<std::thread> _ipcServerThread = nullptr;
 
-        ::ipc::Queue<ipc::WuphfMessage> _ipc_queue;
+        ::ipc::Queue<std::unique_ptr<ipc::WuphfCommand>> _ipc_queue;
 
         void _processMonitorThreadFn();
 

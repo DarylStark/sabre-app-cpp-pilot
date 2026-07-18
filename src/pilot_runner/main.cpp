@@ -5,7 +5,7 @@
 #include <string>
 #include <thread>
 #include <wuphf/wuphf.hpp>
-#include <wuphf/wuphf_message.hpp>
+#include <wuphf/wuphf_command.hpp>
 
 int main(int argc, char *argv[])
 {
@@ -40,14 +40,15 @@ int main(int argc, char *argv[])
     using namespace std::chrono_literals;
     using ::ipc::TcpIpcClient;
     using sabre_pilot::ipc::Wuphf;
-    using sabre_pilot::ipc::WuphfMessage;
+    using sabre_pilot::ipc::WuphfCommand;
 
     // Protocol
-    std::shared_ptr<Wuphf> protocol = std::make_shared<Wuphf>();
+    std::shared_ptr<ipc::IpcProtocol<std::unique_ptr<WuphfCommand>>> protocol =
+        std::make_shared<Wuphf>();
 
-    std::shared_ptr<ipc::IpcClient<WuphfMessage>> client =
-        std::make_shared<TcpIpcClient<WuphfMessage>>(protocol, tcp_server_ip,
-                                                     tcp_server_port);
+    std::shared_ptr<ipc::IpcClient<std::unique_ptr<WuphfCommand>>> client =
+        std::make_shared<TcpIpcClient<std::unique_ptr<WuphfCommand>>>(
+            protocol, tcp_server_ip, tcp_server_port);
     client->setup();
     std::thread ipcThread([client]() { client->run(); });
 

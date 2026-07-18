@@ -155,7 +155,7 @@ namespace ipc
 
         if (newMessage)
         {
-            _queue.push(*newMessage);
+            _queue.push(std::move(*newMessage));
         }
 
         _readSome();

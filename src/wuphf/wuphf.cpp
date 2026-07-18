@@ -2,12 +2,13 @@
 
 namespace sabre_pilot::ipc
 {
-    std::unique_ptr<::ipc::IpcProtocol<WuphfMessage>> Wuphf::clone()
+    std::unique_ptr<::ipc::IpcProtocol<std::unique_ptr<WuphfCommand>>>
+    Wuphf::clone()
     {
         return std::make_unique<Wuphf>();
     }
 
-    std::optional<WuphfMessage> Wuphf::_parseClientHello()
+    std::optional<std::unique_ptr<WuphfCommand>> Wuphf::_parseClientHello()
     {
         uint16_t length = _readU16_be(2);
 
@@ -18,7 +19,8 @@ namespace sabre_pilot::ipc
 
         uint32_t id = _readU32_be(4);
         _mcuId = id;
-        return WuphfMessage(id);
+
+        return std::make_unique<WuphfCommand>(id);
     }
 
     std::uint16_t Wuphf::_readU16_be(std::size_t offset) const
@@ -47,7 +49,8 @@ namespace sabre_pilot::ipc
                static_cast<uint32_t>(_buffer[offset + 3]);
     }
 
-    std::optional<WuphfMessage> Wuphf::parseBytes(std::vector<uint8_t> &bytes)
+    std::optional<std::unique_ptr<WuphfCommand>>
+    Wuphf::parseBytes(std::vector<uint8_t> &bytes)
     {
         _buffer.insert(_buffer.end(), bytes.begin(), bytes.end());
 
@@ -74,6 +77,6 @@ namespace sabre_pilot::ipc
 
         if (_mcuId == 0)
             return std::nullopt;
-        return WuphfMessage({_mcuId});
+        return std::make_unique<WuphfCommand>(_mcuId);
     }
 } // namespace sabre_pilot::ipc
