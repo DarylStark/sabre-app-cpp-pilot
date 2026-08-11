@@ -25,6 +25,7 @@ namespace sabre_pilot::ipc
         std::uint32_t _readU32_be(std::size_t offset) const;
 
     public:
+        Wuphf(::ipc::Queue<WuphfCommand::UniquePtr> &queue);
         ::ipc::IpcProtocol<WuphfCommand::UniquePtr>::UniquePtr clone();
 
         std::optional<WuphfCommand::UniquePtr>

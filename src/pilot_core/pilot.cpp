@@ -94,7 +94,7 @@ namespace sabre_pilot
         _processMonitorThread->detach();
 
         // IPC server
-        Wuphf::SharedPtr protocol = std::make_shared<Wuphf>();
+        Wuphf::SharedPtr protocol = std::make_shared<Wuphf>(_ipc_queue);
 
         // Run a thread checking the IPC queue
         std::thread ipcThread(

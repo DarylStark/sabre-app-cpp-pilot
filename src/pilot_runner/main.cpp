@@ -43,8 +43,9 @@ int main(int argc, char *argv[])
     using sabre_pilot::ipc::WuphfCommand;
 
     // Protocol
+    ipc::Queue<WuphfCommand::UniquePtr> ipcQueue;
     ipc::IpcProtocol<WuphfCommand::UniquePtr>::SharedPtr protocol =
-        std::make_shared<Wuphf>();
+        std::make_shared<Wuphf>(ipcQueue);
 
     ipc::IpcClient<WuphfCommand::UniquePtr>::SharedPtr client =
         std::make_shared<TcpIpcClient<WuphfCommand::UniquePtr>>(
