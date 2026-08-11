@@ -120,7 +120,8 @@ namespace sabre_pilot
 
         // TODO: Make the specific concrete IPC server configurable
         _ipcServer = std::make_unique<TcpIpcServer>(
-            [this]() { return std::make_unique<Wuphf>(_ipc_queue); }, 8998);
+            [this]() { return std::make_unique<Wuphf>(_ipc_queue, 4096); },
+            8998);
 
         _ipcServer->setup();
         _ipcServerThread = std::make_unique<std::thread>(

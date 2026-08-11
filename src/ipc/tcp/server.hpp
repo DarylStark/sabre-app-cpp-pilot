@@ -3,12 +3,10 @@
 #include "session.hpp"
 #include <asio.hpp>
 #include <functional>
-#include <iostream> // TODO: Remove
 #include <ipc/protocol.hpp>
 #include <ipc/queue.hpp>
 #include <ipc/server.hpp>
 #include <memory>
-#include <thread> // TODO: Remove
 #include <vector>
 
 namespace ipc

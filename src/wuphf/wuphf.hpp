@@ -3,10 +3,14 @@
 #include "../ipc/ipc/protocol.hpp"
 #include "wuphf_command.hpp"
 #include <cstdint>
+#include <functional>
+#include <unordered_map>
 #include <vector>
 
 namespace sabre_pilot::ipc
 {
+    using ParseMethod = std::function<std::optional<WuphfCommand::UniquePtr>()>;
+
     class Wuphf : public ::ipc::IpcProtocol
     {
     public:
@@ -16,19 +20,17 @@ namespace sabre_pilot::ipc
 
     private:
         uint32_t _mcuId = 0;
-        std::vector<uint8_t> _buffer;
         ::ipc::Queue<WuphfCommand::UniquePtr> &_queue;
 
-        bool _parseBuffer() override;
+        std::size_t _parseOnePacket() override;
 
         std::optional<WuphfCommand::UniquePtr> _parseClientHello();
         std::optional<WuphfCommand::UniquePtr> _parseUartAppend();
 
-        std::uint16_t _readU16_be(std::size_t offset) const;
-        std::uint32_t _readU32_be(std::size_t offset) const;
+        std::unordered_map<uint32_t, ParseMethod> _parseMethods;
 
     public:
-        Wuphf(::ipc::Queue<WuphfCommand::UniquePtr> &queue);
-        void pushBytes(std::span<const uint8_t> bytes) override;
+        Wuphf(::ipc::Queue<WuphfCommand::UniquePtr> &queue,
+              std::size_t bufferSize);
     };
 } // namespace sabre_pilot::ipc

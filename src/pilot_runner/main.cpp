@@ -44,7 +44,8 @@ int main(int argc, char *argv[])
 
     // Protocol
     ipc::Queue<WuphfCommand::UniquePtr> ipcQueue;
-    ipc::IpcProtocol::SharedPtr protocol = std::make_shared<Wuphf>(ipcQueue);
+    ipc::IpcProtocol::SharedPtr protocol =
+        std::make_shared<Wuphf>(ipcQueue, 2048);
 
     ipc::IpcClient::SharedPtr client = std::make_shared<TcpIpcClient>(
         protocol, tcp_server_ip, tcp_server_port);
@@ -63,8 +64,9 @@ int main(int argc, char *argv[])
     client->sendData({0x00, 0x01, 0x00, 0x04, 0x00, 0x00, 0x00, 0x0b});
 
     // Send Uart Append on UART 0
-    client->sendData(
-        {0x01, 0x01, 0x00, 0x08, 0x00, 0x00, 's', 'a', 'b', 'r', 'e', '\n'});
+    client->sendData({0x01, 0x01, 0x00, 19,  0x00, 0x00, 'h', 'e',
+                      'l',  'l',  'o',  ' ', 'f',  'r',  'o', 'm',
+                      ' ',  'S',  'a',  'b', 'r',  'e',  '\n'});
 
     std::this_thread::sleep_for(1s);
 

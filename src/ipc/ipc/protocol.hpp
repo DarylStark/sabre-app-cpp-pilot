@@ -14,10 +14,19 @@ namespace ipc
         using Ptr = IpcProtocol *;
         using SharedPtr = std::shared_ptr<IpcProtocol>;
         using UniquePtr = std::unique_ptr<IpcProtocol>;
-        virtual bool _parseBuffer() = 0;
+        virtual std::size_t _parseOnePacket() = 0;
+
+    protected:
+        std::uint16_t _readU16_be(std::size_t offset) const;
+        std::uint32_t _readU32_be(std::size_t offset) const;
+
+        std::vector<uint8_t> _buffer;
 
     public:
+        IpcProtocol(std::size_t bufferSize);
         virtual ~IpcProtocol() = default;
-        virtual void pushBytes(std::span<const uint8_t> bytes) = 0;
+
+        void pushBytes(std::span<const uint8_t> bytes);
+        void parseBuffer();
     };
 } // namespace ipc
