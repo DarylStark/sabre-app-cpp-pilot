@@ -9,14 +9,11 @@
 
 namespace ipc
 {
-    template <typename MessageType>
-    class TcpIpcClient
-        : public IpcClient<MessageType>,
-          public std::enable_shared_from_this<TcpIpcClient<MessageType>>
+    class TcpIpcClient : public IpcClient,
+                         public std::enable_shared_from_this<TcpIpcClient>
     {
-        using Protocol = IpcProtocol<MessageType>;
-        using std::enable_shared_from_this<
-            TcpIpcClient<MessageType>>::shared_from_this;
+        using Protocol = IpcProtocol;
+        using std::enable_shared_from_this<TcpIpcClient>::shared_from_this;
 
     private:
         const std::string _serverIp;
@@ -54,17 +51,15 @@ namespace ipc
         void sendData(const std::string &data) override;
     };
 
-    template <typename MessageType>
-    TcpIpcClient<MessageType>::TcpIpcClient(std::shared_ptr<Protocol> protocol,
-                                            const std::string &serverAddress,
-                                            uint16_t serverPort)
-        : IpcClient<MessageType>(protocol), _serverIp(serverAddress),
+    TcpIpcClient::TcpIpcClient(std::shared_ptr<Protocol> protocol,
+                               const std::string &serverAddress,
+                               uint16_t serverPort)
+        : IpcClient(protocol), _serverIp(serverAddress),
           _serverPort(serverPort), _resolver(_ioContext), _socket(_ioContext)
     {
     }
 
-    template <typename MessageType>
-    void TcpIpcClient<MessageType>::_writeNext()
+    void TcpIpcClient::_writeNext()
     {
         if (_writeQueue.empty())
         {
@@ -92,8 +87,7 @@ namespace ipc
                           });
     }
 
-    template <typename MessageType>
-    void TcpIpcClient<MessageType>::_startRead()
+    void TcpIpcClient::_startRead()
     {
         auto self = shared_from_this();
 
@@ -104,9 +98,8 @@ namespace ipc
             { _callbackAsyncReadSome(ec, bytesTransferred); });
     }
 
-    template <typename MessageType>
-    void TcpIpcClient<MessageType>::_callbackAsyncReadSome(
-        const std::error_code &ec, std::size_t bytesTransferred)
+    void TcpIpcClient::_callbackAsyncReadSome(const std::error_code &ec,
+                                              std::size_t bytesTransferred)
     {
         if (ec)
         {
@@ -124,8 +117,7 @@ namespace ipc
         _startRead();
     }
 
-    template <typename MessageType>
-    void TcpIpcClient<MessageType>::_callbackAsyncResolve(
+    void TcpIpcClient::_callbackAsyncResolve(
         const std::error_code &ec,
         const asio::ip::tcp::resolver::results_type &endpoints)
     {
@@ -175,8 +167,7 @@ namespace ipc
             });
     }
 
-    template <typename MessageType>
-    void TcpIpcClient<MessageType>::setup()
+    void TcpIpcClient::setup()
     {
         auto self = shared_from_this();
 
@@ -187,14 +178,12 @@ namespace ipc
             { _callbackAsyncResolve(ec, endpoints); });
     }
 
-    template <typename MessageType>
-    void TcpIpcClient<MessageType>::run()
+    void TcpIpcClient::run()
     {
         _ioContext.run();
     }
 
-    template <typename MessageType>
-    void TcpIpcClient<MessageType>::stop()
+    void TcpIpcClient::stop()
     {
         if (!_socket.is_open())
         {
@@ -208,8 +197,7 @@ namespace ipc
         _ioContext.stop();
     }
 
-    template <typename MessageType>
-    bool TcpIpcClient<MessageType>::waitForConnection()
+    bool TcpIpcClient::waitForConnection()
     {
         std::unique_lock<std::mutex> lock(_connectionMutex);
 
@@ -219,8 +207,7 @@ namespace ipc
         return _isConnected;
     }
 
-    template <typename MessageType>
-    void TcpIpcClient<MessageType>::sendData(const std::string &data)
+    void TcpIpcClient::sendData(const std::string &data)
     {
         std::vector<uint8_t> bytesData(data.begin(), data.end());
         bool writeInProgress = !_writeQueue.empty();

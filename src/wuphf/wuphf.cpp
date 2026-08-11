@@ -2,12 +2,11 @@
 
 namespace sabre_pilot::ipc
 {
-    Wuphf::Wuphf(::ipc::Queue<WuphfCommand::UniquePtr> &queue)
-        : ::ipc::IpcProtocol<WuphfCommand::UniquePtr>(queue)
+    Wuphf::Wuphf(::ipc::Queue<WuphfCommand::UniquePtr> &queue) : _queue(queue)
     {
     }
 
-    ::ipc::IpcProtocol<WuphfCommand::UniquePtr>::UniquePtr Wuphf::clone()
+    ::ipc::IpcProtocol::UniquePtr Wuphf::clone()
     {
         return std::make_unique<Wuphf>(_queue);
     }

@@ -122,8 +122,7 @@ namespace sabre_pilot
         ipcThread.detach();
 
         // TODO: Make the specific concrete IPC server configurable
-        _ipcServer = std::make_unique<TcpIpcServer<WuphfCommand::UniquePtr>>(
-            protocol, _ipc_queue, 8998);
+        _ipcServer = std::make_unique<TcpIpcServer>(protocol, 8998);
         _ipcServer->setup();
         _ipcServerThread = std::make_unique<std::thread>(
             [this]() { this->_ipcServer->run(); });

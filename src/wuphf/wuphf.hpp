@@ -7,7 +7,7 @@
 
 namespace sabre_pilot::ipc
 {
-    class Wuphf : public ::ipc::IpcProtocol<WuphfCommand::UniquePtr>
+    class Wuphf : public ::ipc::IpcProtocol
     {
     public:
         using Ptr = Wuphf *;
@@ -17,6 +17,7 @@ namespace sabre_pilot::ipc
     private:
         uint32_t _mcuId = 0;
         std::vector<uint8_t> _buffer;
+        ::ipc::Queue<WuphfCommand::UniquePtr> &_queue;
 
         std::optional<WuphfCommand::UniquePtr> _parseClientHello();
         std::optional<WuphfCommand::UniquePtr> _parseUartAppend();
@@ -26,7 +27,7 @@ namespace sabre_pilot::ipc
 
     public:
         Wuphf(::ipc::Queue<WuphfCommand::UniquePtr> &queue);
-        ::ipc::IpcProtocol<WuphfCommand::UniquePtr>::UniquePtr clone() override;
+        ::ipc::IpcProtocol::UniquePtr clone() override;
 
         void parseBytes(std::vector<uint8_t> &bytes) override;
     };

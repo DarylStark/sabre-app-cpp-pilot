@@ -5,20 +5,16 @@
 #include <deque>
 #include <functional>
 #include <ipc/protocol.hpp>
-#include <ipc/queue.hpp>
 #include <memory>
 #include <string>
 #include <vector>
 
 namespace ipc
 {
-    template <typename MessageType>
-    class TcpIpcSession
-        : public std::enable_shared_from_this<TcpIpcSession<MessageType>>
+    class TcpIpcSession : public std::enable_shared_from_this<TcpIpcSession>
     {
-        using Protocol = IpcProtocol<MessageType>;
-        using std::enable_shared_from_this<
-            TcpIpcSession<MessageType>>::shared_from_this;
+        using Protocol = IpcProtocol;
+        using std::enable_shared_from_this<TcpIpcSession>::shared_from_this;
 
     private:
         using DisconnectHandler =
@@ -31,7 +27,6 @@ namespace ipc
         DisconnectHandler _disconnectHandler;
 
         std::unique_ptr<Protocol> _protocol;
-        Queue<MessageType> &_queue;
 
         bool _stopped = false;
 
@@ -47,8 +42,7 @@ namespace ipc
 
     public:
         TcpIpcSession(asio::ip::tcp::socket socket,
-                      std::unique_ptr<Protocol> protocol,
-                      Queue<MessageType> &queue);
+                      std::unique_ptr<Protocol> protocol);
 
         void start();
         void stop();
@@ -59,25 +53,20 @@ namespace ipc
         void setDisconnectHandler(DisconnectHandler handler);
     };
 
-    template <typename MessageType>
-    TcpIpcSession<MessageType>::TcpIpcSession(
-        asio::ip::tcp::socket socket, std::unique_ptr<Protocol> protocol,
-        Queue<MessageType> &queue)
-        : _socket(std::move(socket)), _protocol(std::move(protocol)),
-          _queue(queue)
+    TcpIpcSession::TcpIpcSession(asio::ip::tcp::socket socket,
+                                 std::unique_ptr<Protocol> protocol)
+        : _socket(std::move(socket)), _protocol(std::move(protocol))
     {
     }
 
-    template <typename MessageType>
-    void TcpIpcSession<MessageType>::start()
+    void TcpIpcSession::start()
     {
         std::cout << "SESSION: Session started: " << _socket.remote_endpoint()
                   << '\n';
         _readSome();
     }
 
-    template <typename MessageType>
-    void TcpIpcSession<MessageType>::stop()
+    void TcpIpcSession::stop()
     {
         if (_stopped)
         {
@@ -92,8 +81,7 @@ namespace ipc
         _handleDisconnect();
     }
 
-    template <typename MessageType>
-    void TcpIpcSession<MessageType>::send(const std::vector<std::uint8_t> &data)
+    void TcpIpcSession::send(const std::vector<std::uint8_t> &data)
     {
         bool write_in_progress = !_writeQueue.empty();
         _writeQueue.push_back(data);
@@ -103,21 +91,17 @@ namespace ipc
         }
     }
 
-    template <typename MessageType>
-    void TcpIpcSession<MessageType>::send(std::string_view text)
+    void TcpIpcSession::send(std::string_view text)
     {
         send(std::vector<std::uint8_t>(text.begin(), text.end()));
     }
 
-    template <typename MessageType>
-    void
-    TcpIpcSession<MessageType>::setDisconnectHandler(DisconnectHandler handler)
+    void TcpIpcSession::setDisconnectHandler(DisconnectHandler handler)
     {
         _disconnectHandler = std::move(handler);
     }
 
-    template <typename MessageType>
-    bool TcpIpcSession<MessageType>::_stopOnError(const std::error_code &ec)
+    bool TcpIpcSession::_stopOnError(const std::error_code &ec)
     {
         if (ec)
         {
@@ -128,9 +112,8 @@ namespace ipc
         return false;
     }
 
-    template <typename MessageType>
-    void TcpIpcSession<MessageType>::_callbackAsyncReadSome(
-        const std::error_code &ec, std::size_t bytesTransferred)
+    void TcpIpcSession::_callbackAsyncReadSome(const std::error_code &ec,
+                                               std::size_t bytesTransferred)
     {
         if (_stopOnError(ec))
         {
@@ -154,8 +137,7 @@ namespace ipc
         _protocol->parseBytes(data);
     }
 
-    template <typename MessageType>
-    void TcpIpcSession<MessageType>::_readSome()
+    void TcpIpcSession::_readSome()
     {
         auto self = shared_from_this();
 
@@ -166,10 +148,8 @@ namespace ipc
             { _callbackAsyncReadSome(ec, bytesTransferred); });
     }
 
-    template <typename MessageType>
-    void
-    TcpIpcSession<MessageType>::_callbackAsyncWrite(const std::error_code &ec,
-                                                    std::size_t size)
+    void TcpIpcSession::_callbackAsyncWrite(const std::error_code &ec,
+                                            std::size_t size)
     {
         if (_stopOnError(ec))
         {
@@ -184,8 +164,7 @@ namespace ipc
         }
     }
 
-    template <typename MessageType>
-    void TcpIpcSession<MessageType>::_writeNext()
+    void TcpIpcSession::_writeNext()
     {
         if (_writeQueue.empty() || _stopped)
         {
@@ -200,8 +179,7 @@ namespace ipc
             { _callbackAsyncWrite(ec, size); });
     }
 
-    template <typename MessageType>
-    void TcpIpcSession<MessageType>::_handleDisconnect()
+    void TcpIpcSession::_handleDisconnect()
     {
         if (_disconnectHandler)
         {

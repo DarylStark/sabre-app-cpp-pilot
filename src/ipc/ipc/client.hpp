@@ -5,20 +5,18 @@
 
 namespace ipc
 {
-    template <typename MessageType>
     class IpcClient
     {
     public:
-        using Ptr = IpcClient<MessageType> *;
-        using SharedPtr = std::shared_ptr<IpcClient<MessageType>>;
-        using UniquePtr = std::unique_ptr<IpcClient<MessageType>>;
+        using Ptr = IpcClient *;
+        using SharedPtr = std::shared_ptr<IpcClient>;
+        using UniquePtr = std::unique_ptr<IpcClient>;
 
     protected:
-        std::shared_ptr<IpcProtocol<MessageType>> _protocol;
+        std::shared_ptr<IpcProtocol> _protocol;
 
     public:
-        IpcClient(std::shared_ptr<IpcProtocol<MessageType>> protocol)
-            : _protocol(protocol)
+        IpcClient(std::shared_ptr<IpcProtocol> protocol) : _protocol(protocol)
         {
         }
 
@@ -31,4 +29,5 @@ namespace ipc
         virtual bool waitForConnection() = 0;
         virtual void sendData(const std::string &data) = 0;
     };
+
 } // namespace ipc

@@ -44,12 +44,10 @@ int main(int argc, char *argv[])
 
     // Protocol
     ipc::Queue<WuphfCommand::UniquePtr> ipcQueue;
-    ipc::IpcProtocol<WuphfCommand::UniquePtr>::SharedPtr protocol =
-        std::make_shared<Wuphf>(ipcQueue);
+    ipc::IpcProtocol::SharedPtr protocol = std::make_shared<Wuphf>(ipcQueue);
 
-    ipc::IpcClient<WuphfCommand::UniquePtr>::SharedPtr client =
-        std::make_shared<TcpIpcClient<WuphfCommand::UniquePtr>>(
-            protocol, tcp_server_ip, tcp_server_port);
+    ipc::IpcClient::SharedPtr client = std::make_shared<TcpIpcClient>(
+        protocol, tcp_server_ip, tcp_server_port);
     client->setup();
     std::thread ipcThread([client]() { client->run(); });
 
