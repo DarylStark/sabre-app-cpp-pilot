@@ -2,10 +2,13 @@
 
 #include "protocol.hpp"
 #include "queue.hpp"
+#include <functional>
 #include <memory>
 
 namespace ipc
 {
+    using ProtocolFactory = std::function<std::unique_ptr<IpcProtocol>()>;
+
     class IpcServer
     {
     public:
@@ -14,10 +17,11 @@ namespace ipc
         using UniquePtr = std::unique_ptr<IpcServer>;
 
     protected:
-        std::shared_ptr<IpcProtocol> _protocol;
+        ProtocolFactory _protocolFactory{};
 
     public:
-        IpcServer(std::shared_ptr<IpcProtocol> protocol) : _protocol(protocol)
+        IpcServer(ProtocolFactory protocolFactory)
+            : _protocolFactory(protocolFactory)
         {
         }
 

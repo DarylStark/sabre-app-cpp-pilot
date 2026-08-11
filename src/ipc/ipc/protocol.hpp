@@ -17,7 +17,6 @@ namespace ipc
 
     public:
         virtual ~IpcProtocol() = default;
-        virtual std::unique_ptr<IpcProtocol> clone() = 0;
         virtual void parseBytes(std::vector<uint8_t> &bytes) = 0;
     };
 } // namespace ipc

@@ -17,7 +17,6 @@ namespace ipc
     {
         using Session = TcpIpcSession;
         using Protocol = IpcProtocol;
-        using IpcServer::_protocol;
 
     private:
         uint16_t _port;
@@ -31,15 +30,15 @@ namespace ipc
                                   asio::ip::tcp::socket socket);
 
     public:
-        TcpIpcServer(std::shared_ptr<Protocol> protocol, uint16_t port);
+        TcpIpcServer(::ipc::ProtocolFactory protocolFactory, uint16_t port);
         void setup() override;
         void run() override;
         void stop() override;
     };
 
-    TcpIpcServer::TcpIpcServer(std::shared_ptr<Protocol> protocol,
+    TcpIpcServer::TcpIpcServer(::ipc::ProtocolFactory protocolFactory,
                                uint16_t port)
-        : IpcServer(protocol), _port(port),
+        : IpcServer(protocolFactory), _port(port),
           _acceptor(_io_context,
                     asio::ip::tcp::endpoint(asio::ip::tcp::v4(), port))
     {
@@ -68,7 +67,7 @@ namespace ipc
             std::cout << "SERVER: Origin: " << socket.remote_endpoint() << '\n';
 
             auto session = std::make_shared<Session>(std::move(socket),
-                                                     this->_protocol->clone());
+                                                     this->_protocolFactory());
 
             session->setDisconnectHandler(
                 [this](const std::shared_ptr<Session> &sessionToRemove)

@@ -6,11 +6,6 @@ namespace sabre_pilot::ipc
     {
     }
 
-    ::ipc::IpcProtocol::UniquePtr Wuphf::clone()
-    {
-        return std::make_unique<Wuphf>(_queue);
-    }
-
     std::optional<WuphfCommand::UniquePtr> Wuphf::_parseClientHello()
     {
         uint16_t length = _readU16_be(2);
