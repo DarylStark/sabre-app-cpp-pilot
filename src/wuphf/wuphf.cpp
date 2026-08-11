@@ -1,9 +1,52 @@
 #include "wuphf.hpp"
+#include <iostream>
 
 namespace sabre_pilot::ipc
 {
     Wuphf::Wuphf(::ipc::Queue<WuphfCommand::UniquePtr> &queue) : _queue(queue)
     {
+        _buffer.reserve(8192); // Make this configurable
+    }
+
+    bool Wuphf::_parseBuffer()
+    {
+        // Buffer should be at least 4 bytes to process
+        if (_buffer.size() < 4)
+        {
+            return false;
+        }
+
+        // Get the fields
+        uint16_t type = _readU16_be(0);
+        uint16_t length = _readU16_be(2);
+
+        std::optional<WuphfCommand::UniquePtr> message;
+
+        // If this is not a full packet, we have to abort
+        if (_buffer.size() < 4 + length)
+        {
+            return false;
+        }
+
+        if (type == 0x0001)
+        {
+            message = _parseClientHello();
+        }
+
+        if (type == 0x0101)
+        {
+            message = _parseUartAppend();
+        }
+
+        if (message)
+        {
+            _queue.push(std::move(*message));
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 
     std::optional<WuphfCommand::UniquePtr> Wuphf::_parseClientHello()
@@ -71,43 +114,12 @@ namespace sabre_pilot::ipc
                static_cast<uint32_t>(_buffer[offset + 3]);
     }
 
-    void Wuphf::parseBytes(std::vector<uint8_t> &bytes)
+    void Wuphf::pushBytes(std::span<const uint8_t> bytes)
     {
-        // TODO: Refactor this method; doesn't work the way it is supposed to
-        // work right now.
         _buffer.insert(_buffer.end(), bytes.begin(), bytes.end());
-
-        // Buffer should be at least 4 bytes to process
-        if (_buffer.size() < 4)
+        while (_parseBuffer())
         {
-            return;
-        }
-
-        // Get the fields
-        uint16_t type = _readU16_be(0);
-        uint16_t length = _readU16_be(2);
-
-        std::optional<WuphfCommand::UniquePtr> message;
-
-        // If this is not a full packet, we have to abort
-        if (_buffer.size() < 4 + length)
-        {
-            return;
-        }
-
-        if (type == 0x0001)
-        {
-            message = _parseClientHello();
-        }
-
-        if (type == 0x0101)
-        {
-            message = _parseUartAppend();
-        }
-
-        if (message)
-        {
-            _queue.push(std::move(*message));
+            std::cout << "!\n";
         }
     }
 } // namespace sabre_pilot::ipc

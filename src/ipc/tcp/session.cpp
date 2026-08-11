@@ -76,15 +76,15 @@ namespace ipc
                                      "buffer size");
         }
 
-        _readSome();
-
         std::vector<std::uint8_t> data(
             _readBuffer.begin(),
             _readBuffer.begin() +
                 static_cast<std::ptrdiff_t>(bytesTransferred));
 
         std::cout << "Received data: " << data.size() << " bytes\n";
-        _protocol->parseBytes(data);
+        _protocol->pushBytes(data);
+
+        _readSome();
     }
 
     void TcpIpcSession::_readSome()

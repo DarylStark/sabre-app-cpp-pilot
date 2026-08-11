@@ -19,6 +19,8 @@ namespace sabre_pilot::ipc
         std::vector<uint8_t> _buffer;
         ::ipc::Queue<WuphfCommand::UniquePtr> &_queue;
 
+        bool _parseBuffer() override;
+
         std::optional<WuphfCommand::UniquePtr> _parseClientHello();
         std::optional<WuphfCommand::UniquePtr> _parseUartAppend();
 
@@ -27,6 +29,6 @@ namespace sabre_pilot::ipc
 
     public:
         Wuphf(::ipc::Queue<WuphfCommand::UniquePtr> &queue);
-        void parseBytes(std::vector<uint8_t> &bytes) override;
+        void pushBytes(std::span<const uint8_t> bytes) override;
     };
 } // namespace sabre_pilot::ipc
