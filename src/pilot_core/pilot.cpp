@@ -101,7 +101,7 @@ namespace sabre_pilot
                 while (keepRunning)
                 {
                     std::optional<WuphfCommand::UniquePtr> item =
-                        _ipc_queue.pop();
+                        _ipcQueue.pop();
                     if (item)
                     {
                         WuphfCommand::UniquePtr command = std::move(*item);
@@ -120,7 +120,7 @@ namespace sabre_pilot
 
         // TODO: Make the specific concrete IPC server configurable
         _ipcServer = std::make_unique<TcpIpcServer>(
-            [this]() { return std::make_unique<Wuphf>(_ipc_queue, 4096); },
+            [this]() { return std::make_unique<Wuphf>(_ipcQueue, 4096); },
             8998);
 
         _ipcServer->setup();
