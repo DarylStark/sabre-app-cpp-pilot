@@ -11,7 +11,7 @@ target_link_libraries(
     PRIVATE
         wuphf
     PUBLIC
-        ipc_tcp
+        sabre_ipc_tcp
 )
 
 target_include_directories(

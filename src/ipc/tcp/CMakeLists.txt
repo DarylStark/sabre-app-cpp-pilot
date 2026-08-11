@@ -1,14 +1,25 @@
 find_package(asio REQUIRED)
 
-add_library(ipc_tcp INTERFACE)
+file(GLOB_RECURSE SABRE_IPC_TCP_SOURCES CONFIGURE_DEPENDS *.cpp)
+add_library(sabre_ipc_tcp STATIC ${SABRE_IPC_TCP_SOURCES})
 
-target_link_libraries(
-    ipc_tcp
-    INTERFACE
-        asio::asio
+set_target_properties(
+    sabre_ipc_tcp
+    PROPERTIES
+        POSITION_INDEPENDENT_CODE ON
 )
 
-target_include_directories(ipc_tcp INTERFACE
-	${CMAKE_CURRENT_SOURCE_DIR}
-    ../
+target_link_libraries(
+    sabre_ipc_tcp
+    PUBLIC
+        asio::asio
+    PRIVATE
+        sabre_ipc
+)
+
+target_include_directories(
+    sabre_ipc_tcp
+    PUBLIC
+        ${CMAKE_CURRENT_SOURCE_DIR}
+        ../
 )

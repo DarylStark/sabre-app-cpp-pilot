@@ -16,9 +16,7 @@ namespace ipc
         std::shared_ptr<IpcProtocol> _protocol;
 
     public:
-        IpcClient(std::shared_ptr<IpcProtocol> protocol) : _protocol(protocol)
-        {
-        }
+        IpcClient(std::shared_ptr<IpcProtocol> protocol);
 
         virtual ~IpcClient() = default;
         virtual void setup() = 0;

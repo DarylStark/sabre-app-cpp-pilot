@@ -8,7 +8,7 @@ target_link_libraries(
     PRIVATE
         sabre_pilot_runner_core
     PUBLIC
-        ipc_tcp
+        sabre_ipc_tcp
         wuphf
         CLI11::CLI11
 )
