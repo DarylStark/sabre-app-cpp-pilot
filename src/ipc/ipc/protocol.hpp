@@ -21,8 +21,7 @@ namespace ipc
         IpcProtocol(Queue<MessageType> &queue);
         virtual ~IpcProtocol() = default;
         virtual std::unique_ptr<IpcProtocol<MessageType>> clone() = 0;
-        virtual std::optional<MessageType>
-        parseBytes(std::vector<uint8_t> &bytes) = 0;
+        virtual void parseBytes(std::vector<uint8_t> &bytes) = 0;
     };
 
     template <typename MessageType>

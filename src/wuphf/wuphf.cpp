@@ -77,38 +77,43 @@ namespace sabre_pilot::ipc
                static_cast<uint32_t>(_buffer[offset + 3]);
     }
 
-    std::optional<WuphfCommand::UniquePtr>
-    Wuphf::parseBytes(std::vector<uint8_t> &bytes)
+    void Wuphf::parseBytes(std::vector<uint8_t> &bytes)
     {
+        // TODO: Refactor this method; doesn't work the way it is supposed to
+        // work right now.
         _buffer.insert(_buffer.end(), bytes.begin(), bytes.end());
 
         // Buffer should be at least 4 bytes to process
         if (_buffer.size() < 4)
         {
-            return std::nullopt;
+            return;
         }
 
         // Get the fields
         uint16_t type = _readU16_be(0);
         uint16_t length = _readU16_be(2);
 
+        std::optional<WuphfCommand::UniquePtr> message;
+
         // If this is not a full packet, we have to abort
         if (_buffer.size() < 4 + length)
         {
-            return std::nullopt;
+            return;
         }
 
         if (type == 0x0001)
         {
-            return _parseClientHello();
+            message = _parseClientHello();
         }
 
         if (type == 0x0101)
         {
-            return _parseUartAppend();
+            message = _parseUartAppend();
         }
 
-        // Not a valid command
-        return std::nullopt;
+        if (message)
+        {
+            _queue.push(std::move(*message));
+        }
     }
 } // namespace sabre_pilot::ipc

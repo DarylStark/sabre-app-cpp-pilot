@@ -143,26 +143,15 @@ namespace ipc
                                      "buffer size");
         }
 
+        _readSome();
+
         std::vector<std::uint8_t> data(
             _readBuffer.begin(),
             _readBuffer.begin() +
                 static_cast<std::ptrdiff_t>(bytesTransferred));
 
-        // TODO: Make sure this "loop" happends in the protocol, not here. In
-        // the protocol, it should keep processing the internal buffer untill it
-        // has a valid packet.
-        while (true)
-        {
-            std::cout << "Received data: " << data.size() << " bytes\n";
-            auto newMessage = _protocol->parseBytes(data);
-            if (!newMessage)
-                break;
-
-            _queue.push(std::move(*newMessage));
-            data.clear();
-        }
-
-        _readSome();
+        std::cout << "Received data: " << data.size() << " bytes\n";
+        _protocol->parseBytes(data);
     }
 
     template <typename MessageType>

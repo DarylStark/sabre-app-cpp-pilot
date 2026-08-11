@@ -26,9 +26,8 @@ namespace sabre_pilot::ipc
 
     public:
         Wuphf(::ipc::Queue<WuphfCommand::UniquePtr> &queue);
-        ::ipc::IpcProtocol<WuphfCommand::UniquePtr>::UniquePtr clone();
+        ::ipc::IpcProtocol<WuphfCommand::UniquePtr>::UniquePtr clone() override;
 
-        std::optional<WuphfCommand::UniquePtr>
-        parseBytes(std::vector<uint8_t> &bytes);
+        void parseBytes(std::vector<uint8_t> &bytes) override;
     };
 } // namespace sabre_pilot::ipc
