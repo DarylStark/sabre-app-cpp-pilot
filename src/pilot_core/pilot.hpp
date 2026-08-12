@@ -4,6 +4,7 @@
 #include <ipc/ipc/queue.hpp>
 #include <ipc/ipc/server.hpp>
 #include <memory>
+#include <optional>
 #include <queue>
 #include <thread>
 #include <unordered_map>
@@ -11,12 +12,15 @@
 
 namespace sabre_pilot
 {
-    using DeviceMap = std::unordered_map<std::string, std::unique_ptr<Device>>;
+    using DeviceMap = std::unordered_map<std::string, std::shared_ptr<Device>>;
+    using DeviceMapId =
+        std::unordered_map<Device::DeviceId, std::shared_ptr<Device>>;
 
     class Pilot
     {
     private:
         DeviceMap _devices;
+        DeviceMapId _devicesById;
         const SubprocessStrategy &_subprocessStrategy;
         const std::string _runnerExec;
 
@@ -27,6 +31,9 @@ namespace sabre_pilot
         ::ipc::Queue<std::unique_ptr<ipc::WuphfCommand>> _ipcQueue;
 
         void _processMonitorThreadFn();
+
+        Device::DeviceId _nextDeviceId;
+        Device::DeviceId _getNextDeviceId();
 
     public:
         Pilot(const SubprocessStrategy &subprocessStrategy,
@@ -41,6 +48,11 @@ namespace sabre_pilot
 
         void startDevice(const std::string &deviceName);
         void stopDevice(const std::string &deviceName);
+
+        std::optional<std::shared_ptr<Device>>
+        getDevice(const std::string &deviceName) const;
+        std::optional<std::shared_ptr<Device>>
+        getDevice(const Device::DeviceId deviceId) const;
 
         void start();
     };

@@ -7,6 +7,12 @@
 #include <wuphf/wuphf.hpp>
 #include <wuphf/wuphf_command.hpp>
 
+union DeviceId
+{
+    uint32_t id;
+    int8_t idOctets[4];
+};
+
 int main(int argc, char *argv[])
 {
     CLI::App app{"Sabre Pilot Runner"};
@@ -18,6 +24,11 @@ int main(int argc, char *argv[])
            "The firmware library file (usually a `.so` file) to load and run")
         ->required()
         ->check(CLI::ExistingFile);
+
+    uint32_t deviceId;
+    app.add_option("deviceId", deviceId,
+                   "The unique ID for this device in the IPC protocol")
+        ->required();
 
     std::string firmware_entry_point = "startApp";
     app.add_option("-e,--firmware-entry-point", firmware_entry_point,
@@ -36,6 +47,8 @@ int main(int argc, char *argv[])
         ->capture_default_str();
 
     CLI11_PARSE(app, argc, argv);
+
+    std::cout << "ID: " << deviceId << '\n';
 
     using namespace std::chrono_literals;
     using ::ipc::TcpIpcClient;
@@ -60,8 +73,11 @@ int main(int argc, char *argv[])
         return 0;
     }
 
-    // Send Client Hello (Client ID 11)
-    client->sendData({0x00, 0x01, 0x00, 0x04, 0x00, 0x00, 0x00, 0x0b});
+    // Send Client Hello
+    DeviceId id;
+    id.id = deviceId;
+    client->sendData({0x00, 0x01, 0x00, 0x04, id.idOctets[3], id.idOctets[2],
+                      id.idOctets[1], id.idOctets[0]});
 
     // Send Uart Append on UART 0
     client->sendData({0x01, 0x01, 0x00, 19,  0x00, 0x00, 'h', 'e',

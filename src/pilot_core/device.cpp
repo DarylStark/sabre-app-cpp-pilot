@@ -3,11 +3,11 @@
 
 namespace sabre_pilot
 {
-    Device::Device(DeviceConfig config,
+    Device::Device(uint32_t id, DeviceConfig config,
                    const SubprocessStrategy &subprocessStrategy,
                    const std::string &runnerExec)
-        : _config(std::move(config)), _subprocessStrategy(subprocessStrategy),
-          _runnerExec(runnerExec)
+        : _id(id), _config(std::move(config)),
+          _subprocessStrategy(subprocessStrategy), _runnerExec(runnerExec)
     {
         _uartBuffers = std::make_unique<std::string[]>(
             _config.deviceConfig.upperboundUart);
@@ -21,8 +21,9 @@ namespace sabre_pilot
     void Device::start()
     {
         _firmwarePid = _subprocessStrategy.start(
-            _runnerExec, {_config.firmwarePath, "--firmware-entry-point",
-                          _config.firmwareEntryPoint});
+            _runnerExec,
+            {_config.firmwarePath, std::to_string(_id),
+             "--firmware-entry-point", _config.firmwareEntryPoint});
         if (!_firmwarePid)
         {
             _state = DeviceState::Error;
@@ -39,6 +40,11 @@ namespace sabre_pilot
             return;
         _state = DeviceState::Stopping;
         _subprocessStrategy.stop(_firmwarePid);
+    }
+
+    uint32_t Device::getId() const
+    {
+        return _id;
     }
 
     const std::string &

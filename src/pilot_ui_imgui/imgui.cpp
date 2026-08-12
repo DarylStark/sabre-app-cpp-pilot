@@ -263,6 +263,18 @@ namespace sabre_ui_imgui
                             ImGui::EndDisabled();
                         }
 
+                        ImGui::TableNextRow();
+                        ImGui::TableSetColumnIndex(0);
+                        ImGui::Text("Device ID");
+                        ImGui::TableSetColumnIndex(2);
+                        ImGui::SetCursorPosX(
+                            ImGui::GetCursorPosX() +
+                            ImGui::GetContentRegionAvail().x -
+                            ImGui::CalcTextSize(
+                                std::to_string(device->getId()).c_str())
+                                .x);
+                        ImGui::Text(std::to_string(device->getId()).c_str());
+
                         ImGui::EndTable();
                     }
                 }

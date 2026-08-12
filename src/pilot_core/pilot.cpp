@@ -13,8 +13,14 @@ namespace sabre_pilot
 {
     Pilot::Pilot(const SubprocessStrategy &subprocessStrategy,
                  const std::string &runnerExec)
-        : _subprocessStrategy(subprocessStrategy), _runnerExec(runnerExec)
+        : _subprocessStrategy(subprocessStrategy), _runnerExec(runnerExec),
+          _nextDeviceId(0)
     {
+    }
+
+    Device::DeviceId Pilot::_getNextDeviceId()
+    {
+        return ++_nextDeviceId;
     }
 
     void Pilot::addDevice(const std::string &name,
@@ -30,22 +36,24 @@ namespace sabre_pilot
         }
 
         DeviceConfig deviceConfig{config, library, entryPoint};
-        _devices[name] = std::make_unique<Device>(
-            deviceConfig, _subprocessStrategy, _runnerExec);
+        Device::DeviceId id = _getNextDeviceId();
+        _devices[name] = std::make_shared<Device>(
+            id, deviceConfig, _subprocessStrategy, _runnerExec);
+        _devicesById[id] = _devices[name];
     }
 
     void Pilot::startDevice(const std::string &deviceName)
     {
-        auto it = _devices.find(deviceName);
-        if (it == _devices.end())
+        auto device = getDevice(deviceName);
+        if (device)
         {
-            // TODO: Proper exception
-            std::cerr << "Device " << deviceName << " not found.\n";
+            (*device)->start();
             return;
         }
 
-        auto &device = it->second;
-        device->start();
+        // TODO: Proper exception
+        std::cerr << "Device " << deviceName << " not found.\n";
+        return;
     }
 
     void Pilot::stopDevice(const std::string &deviceName)
@@ -82,6 +90,30 @@ namespace sabre_pilot
         }
     }
 
+    std::optional<std::shared_ptr<Device>>
+    Pilot::getDevice(const std::string &deviceName) const
+    {
+        auto it = _devices.find(deviceName);
+        if (it != _devices.end())
+        {
+            auto &device = it->second;
+            return device;
+        }
+        return std::nullopt;
+    }
+
+    std::optional<std::shared_ptr<Device>>
+    Pilot::getDevice(const Device::DeviceId deviceId) const
+    {
+        auto it = _devicesById.find(deviceId);
+        if (it != _devicesById.end())
+        {
+            auto &device = it->second;
+            return device;
+        }
+        return std::nullopt;
+    }
+
     void Pilot::start()
     {
         using ::ipc::TcpIpcServer;
@@ -105,10 +137,11 @@ namespace sabre_pilot
                     if (item)
                     {
                         WuphfCommand::UniquePtr command = std::move(*item);
-
-                        // TOOD: find the real device based on the ID.
-                        Device &device = *(_devices.at("Device 01"));
-                        command->executeForDevice(device);
+                        auto device = getDevice(command->getDestinationMcuId());
+                        if (device)
+                        {
+                            command->executeForDevice(*(*device));
+                        }
                     }
                     else
                     {
