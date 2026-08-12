@@ -55,5 +55,6 @@ namespace sabre_pilot
         getDevice(const Device::DeviceId deviceId) const;
 
         void start();
+        void stop();
     };
 } // namespace sabre_pilot

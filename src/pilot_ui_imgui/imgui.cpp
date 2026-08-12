@@ -333,5 +333,7 @@ namespace sabre_ui_imgui
         _createImGuiContext();
         _mainLoop();
         _cleanup();
+
+        _pilot.stop();
     }
 } // namespace sabre_ui_imgui

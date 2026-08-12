@@ -161,4 +161,10 @@ namespace sabre_pilot
             [this]() { this->_ipcServer->run(); });
         _ipcServerThread->detach();
     }
+
+    void Pilot::stop()
+    {
+        _ipcServer->stop();
+        _ipcQueue.shutdown();
+    }
 } // namespace sabre_pilot
