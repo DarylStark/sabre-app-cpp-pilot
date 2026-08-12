@@ -25,7 +25,11 @@ namespace sabre_pilot
 
     class Device
     {
+    public:
+        using DeviceId = uint32_t;
+
     private:
+        DeviceId _id;
         std::unique_ptr<std::string[]> _uartBuffers;
         DeviceConfig _config;
         const SubprocessStrategy &_subprocessStrategy;
@@ -34,16 +38,20 @@ namespace sabre_pilot
         DeviceState _state = DeviceState::Stopped;
 
     public:
-        Device(DeviceConfig config,
+        Device(DeviceId id, DeviceConfig config,
                const SubprocessStrategy &subprocessStrategy,
                const std::string &runnerExec);
         ~Device();
         void start();
         void stop();
 
+        DeviceId getId() const;
+
         const std::string &getUartBuffer(sabre::hal::UartNumber uartIdx) const;
         void clearUartBuffer(sabre::hal::UartNumber uartIdx);
         sabre::hal::UartNumber getUartCount() const;
+        void appendToUArt(sabre::hal::UartNumber uartIdx,
+                          const std::string &data);
         const DeviceState getState() const;
         const uint32_t getPid() const;
 

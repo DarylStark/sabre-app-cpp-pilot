@@ -1,20 +1,22 @@
-#include "tcp_session.hpp"
+#include "session.hpp"
 #include <iostream>
 
-namespace sabre_pilot
+namespace ipc
 {
-    using asio::ip::tcp;
+    TcpIpcSession::TcpIpcSession(asio::ip::tcp::socket socket,
+                                 std::unique_ptr<Protocol> protocol)
+        : _socket(std::move(socket)), _protocol(std::move(protocol))
+    {
+    }
 
-    TcpSession::TcpSession(tcp::socket socket) : _socket(std::move(socket)) {}
-
-    void TcpSession::start()
+    void TcpIpcSession::start()
     {
         std::cout << "SESSION: Session started: " << _socket.remote_endpoint()
                   << '\n';
         _readSome();
     }
 
-    void TcpSession::stop()
+    void TcpIpcSession::stop()
     {
         if (_stopped)
         {
@@ -23,13 +25,13 @@ namespace sabre_pilot
 
         _stopped = true;
         std::error_code ec;
-        _socket.shutdown(tcp::socket::shutdown_both, ec);
+        _socket.shutdown(asio::ip::tcp::socket::shutdown_both, ec);
         _socket.close(ec);
 
         _handleDisconnect();
     }
 
-    void TcpSession::send(const std::vector<std::uint8_t> &data)
+    void TcpIpcSession::send(const std::vector<std::uint8_t> &data)
     {
         bool write_in_progress = !_writeQueue.empty();
         _writeQueue.push_back(data);
@@ -39,17 +41,17 @@ namespace sabre_pilot
         }
     }
 
-    void TcpSession::send(std::string_view text)
+    void TcpIpcSession::send(std::string_view text)
     {
         send(std::vector<std::uint8_t>(text.begin(), text.end()));
     }
 
-    void TcpSession::setDisconnectHandler(DisconnectHandler handler)
+    void TcpIpcSession::setDisconnectHandler(DisconnectHandler handler)
     {
         _disconnectHandler = std::move(handler);
     }
 
-    bool TcpSession::_stopOnError(const std::error_code &ec)
+    bool TcpIpcSession::_stopOnError(const std::error_code &ec)
     {
         if (ec)
         {
@@ -60,8 +62,8 @@ namespace sabre_pilot
         return false;
     }
 
-    void TcpSession::_callbackAsyncReadSome(const std::error_code &ec,
-                                            std::size_t bytesTransferred)
+    void TcpIpcSession::_callbackAsyncReadSome(const std::error_code &ec,
+                                               std::size_t bytesTransferred)
     {
         if (_stopOnError(ec))
         {
@@ -79,18 +81,13 @@ namespace sabre_pilot
             _readBuffer.begin() +
                 static_cast<std::ptrdiff_t>(bytesTransferred));
 
-        // TODO: Send to protocol parser
-        std::string receivedData(data.begin(), data.end());
-        std::cout << "SESSION: Received data: " << receivedData;
-
-        // TODO: Remove, just here for troubleshooting and understanding
-        // Send data back
-        this->send("Received your data: " + receivedData + "\n");
+        std::cout << "Received data: " << data.size() << " bytes\n";
+        _protocol->pushBytes(data);
 
         _readSome();
     }
 
-    void TcpSession::_readSome()
+    void TcpIpcSession::_readSome()
     {
         auto self = shared_from_this();
 
@@ -101,8 +98,8 @@ namespace sabre_pilot
             { _callbackAsyncReadSome(ec, bytesTransferred); });
     }
 
-    void TcpSession::_callbackAsyncWrite(const std::error_code &ec,
-                                         std::size_t size)
+    void TcpIpcSession::_callbackAsyncWrite(const std::error_code &ec,
+                                            std::size_t size)
     {
         if (_stopOnError(ec))
         {
@@ -117,7 +114,7 @@ namespace sabre_pilot
         }
     }
 
-    void TcpSession::_writeNext()
+    void TcpIpcSession::_writeNext()
     {
         if (_writeQueue.empty() || _stopped)
         {
@@ -132,11 +129,11 @@ namespace sabre_pilot
             { _callbackAsyncWrite(ec, size); });
     }
 
-    void TcpSession::_handleDisconnect()
+    void TcpIpcSession::_handleDisconnect()
     {
         if (_disconnectHandler)
         {
             _disconnectHandler(shared_from_this());
         }
     }
-} // namespace sabre_pilot
+} // namespace ipc

@@ -20,5 +20,6 @@ if(SABRE_PILOT_BUILD_UI_LIBRARIES)
 endif()
 
 if(SABRE_PILOT_BUILD_IPC_LIBRARIES)
-    add_subdirectory("pilot_ipc_tcp")
+    add_subdirectory("ipc")
+    add_subdirectory("wuphf")
 endif()

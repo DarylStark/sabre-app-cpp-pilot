@@ -1,15 +1,28 @@
-#include "tcp_ipc_server.hpp"
-#include "tcp_session.hpp"
+#include "server.hpp"
 #include <iostream>
 
-namespace sabre_pilot
+namespace ipc
 {
-    using asio::ip::tcp;
-
-    TcpIpcServer::TcpIpcServer(uint16_t port)
-        : _acceptor(_io_context, asio::ip::tcp::endpoint(tcp::v4(), port)),
-          _port(port)
+    TcpIpcServer::TcpIpcServer(::ipc::ProtocolFactory protocolFactory,
+                               uint16_t port)
+        : IpcServer(std::move(protocolFactory)), _port(port),
+          _acceptor(_io_context,
+                    asio::ip::tcp::endpoint(asio::ip::tcp::v4(), port))
     {
+    }
+
+    void TcpIpcServer::_removeSession(const std::shared_ptr<Session> &session)
+    {
+        std::erase(_sessions, session);
+        std::cout << "SERVER: Session removed. Active sessions: "
+                  << _sessions.size() << '\n';
+    }
+
+    void TcpIpcServer::_configureAcceptCallback()
+    {
+        _acceptor.async_accept(
+            [this](std::error_code ec, asio::ip::tcp::socket socket)
+            { _callbackAsyncAccept(ec, std::move(socket)); });
     }
 
     void TcpIpcServer::_callbackAsyncAccept(const std::error_code &ec,
@@ -20,10 +33,11 @@ namespace sabre_pilot
             std::cout << "SERVER: New connection has been made!\n";
             std::cout << "SERVER: Origin: " << socket.remote_endpoint() << '\n';
 
-            auto session = std::make_shared<TcpSession>(std::move(socket));
+            auto session = std::make_shared<Session>(std::move(socket),
+                                                     this->_protocolFactory());
 
             session->setDisconnectHandler(
-                [this](const std::shared_ptr<TcpSession> &sessionToRemove)
+                [this](const std::shared_ptr<Session> &sessionToRemove)
                 { _removeSession(sessionToRemove); });
 
             _sessions.push_back(session);
@@ -37,13 +51,6 @@ namespace sabre_pilot
         this->_configureAcceptCallback();
     }
 
-    void TcpIpcServer::_configureAcceptCallback()
-    {
-        _acceptor.async_accept(
-            [this](std::error_code ec, tcp::socket socket)
-            { _callbackAsyncAccept(ec, std::move(socket)); });
-    }
-
     void TcpIpcServer::setup()
     {
         std::cout << "SERVER: Setting up TCP IPC server on port " << _port
@@ -51,7 +58,7 @@ namespace sabre_pilot
         _configureAcceptCallback();
     }
 
-    void TcpIpcServer::start()
+    void TcpIpcServer::run()
     {
         std::cout << "SERVER: Running TcpIpcServer on port " << _port << '\n';
         _io_context.run();
@@ -71,20 +78,4 @@ namespace sabre_pilot
 
         std::cout << "SERVER: TcpIpcServer stopped\n";
     }
-
-    void TcpIpcServer::broadcast(std::string_view text)
-    {
-        for (auto &session : _sessions)
-        {
-            session->send(text);
-        }
-    }
-
-    void
-    TcpIpcServer::_removeSession(const std::shared_ptr<TcpSession> &session)
-    {
-        std::erase(_sessions, session);
-        std::cout << "SERVER: Session removed. Active sessions: "
-                  << _sessions.size() << '\n';
-    }
-} // namespace sabre_pilot
+} // namespace ipc

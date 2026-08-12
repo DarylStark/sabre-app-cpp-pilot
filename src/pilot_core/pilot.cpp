@@ -2,17 +2,25 @@
 #include "device.hpp"
 #include "subprocess_strategy.hpp"
 #include <iostream>
-#include <pilot_ipc_tcp/tcp_ipc_server.hpp>
+#include <ipc/tcp/server.hpp>
+#include <memory>
 #include <sabre/runtime/app.hpp>
 #include <sabre/runtime/run_app.hpp>
 #include <thread>
+#include <wuphf/wuphf.hpp>
 
 namespace sabre_pilot
 {
     Pilot::Pilot(const SubprocessStrategy &subprocessStrategy,
                  const std::string &runnerExec)
-        : _subprocessStrategy(subprocessStrategy), _runnerExec(runnerExec)
+        : _subprocessStrategy(subprocessStrategy), _runnerExec(runnerExec),
+          _nextDeviceId(0)
     {
+    }
+
+    Device::DeviceId Pilot::_getNextDeviceId()
+    {
+        return ++_nextDeviceId;
     }
 
     void Pilot::addDevice(const std::string &name,
@@ -28,22 +36,24 @@ namespace sabre_pilot
         }
 
         DeviceConfig deviceConfig{config, library, entryPoint};
-        _devices[name] = std::make_unique<Device>(
-            deviceConfig, _subprocessStrategy, _runnerExec);
+        Device::DeviceId id = _getNextDeviceId();
+        _devices[name] = std::make_shared<Device>(
+            id, deviceConfig, _subprocessStrategy, _runnerExec);
+        _devicesById[id] = _devices[name];
     }
 
     void Pilot::startDevice(const std::string &deviceName)
     {
-        auto it = _devices.find(deviceName);
-        if (it == _devices.end())
+        auto device = getDevice(deviceName);
+        if (device)
         {
-            // TODO: Proper exception
-            std::cerr << "Device " << deviceName << " not found.\n";
+            (*device)->start();
             return;
         }
 
-        auto &device = it->second;
-        device->start();
+        // TODO: Proper exception
+        std::cerr << "Device " << deviceName << " not found.\n";
+        return;
     }
 
     void Pilot::stopDevice(const std::string &deviceName)
@@ -80,18 +90,81 @@ namespace sabre_pilot
         }
     }
 
+    std::optional<std::shared_ptr<Device>>
+    Pilot::getDevice(const std::string &deviceName) const
+    {
+        auto it = _devices.find(deviceName);
+        if (it != _devices.end())
+        {
+            auto &device = it->second;
+            return device;
+        }
+        return std::nullopt;
+    }
+
+    std::optional<std::shared_ptr<Device>>
+    Pilot::getDevice(const Device::DeviceId deviceId) const
+    {
+        auto it = _devicesById.find(deviceId);
+        if (it != _devicesById.end())
+        {
+            auto &device = it->second;
+            return device;
+        }
+        return std::nullopt;
+    }
+
     void Pilot::start()
     {
+        using ::ipc::TcpIpcServer;
+        using sabre_pilot::ipc::Wuphf;
+        using sabre_pilot::ipc::WuphfCommand;
+
+        // Start process monitor
         auto threadLambda = [this]() { this->_processMonitorThreadFn(); };
         _processMonitorThread = std::make_unique<std::thread>(threadLambda);
         _processMonitorThread->detach();
 
-        // IPC server
+        // Run a thread checking the IPC queue
+        std::thread ipcThread(
+            [this]()
+            {
+                bool keepRunning = true;
+                while (keepRunning)
+                {
+                    std::optional<WuphfCommand::UniquePtr> item =
+                        _ipcQueue.pop();
+                    if (item)
+                    {
+                        WuphfCommand::UniquePtr command = std::move(*item);
+                        auto device = getDevice(command->getDestinationMcuId());
+                        if (device)
+                        {
+                            command->executeForDevice(*(*device));
+                        }
+                    }
+                    else
+                    {
+                        keepRunning = false;
+                    }
+                }
+            });
+        ipcThread.detach();
+
         // TODO: Make the specific concrete IPC server configurable
-        _ipcServer = std::make_unique<TcpIpcServer>(8998);
+        _ipcServer = std::make_unique<TcpIpcServer>(
+            [this]() { return std::make_unique<Wuphf>(_ipcQueue, 4096); },
+            8998);
+
         _ipcServer->setup();
         _ipcServerThread = std::make_unique<std::thread>(
-            [this]() { this->_ipcServer->start(); });
+            [this]() { this->_ipcServer->run(); });
         _ipcServerThread->detach();
+    }
+
+    void Pilot::stop()
+    {
+        _ipcServer->stop();
+        _ipcQueue.shutdown();
     }
 } // namespace sabre_pilot

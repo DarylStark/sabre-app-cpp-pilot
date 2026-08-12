@@ -1,13 +1,72 @@
-#include "tcp_ipc_client.hpp"
-#include <asio.hpp>
+#include "client.hpp"
 #include <iostream>
 
-namespace sabre_pilot_runner_core
+namespace ipc
 {
-    TcpIpcClient::TcpIpcClient(const std::string &serverIp, uint16_t port)
-        : _serverIp(serverIp), _serverPort(port), _resolver(_ioContext),
-          _socket(_ioContext)
+    TcpIpcClient::TcpIpcClient(std::shared_ptr<Protocol> protocol,
+                               const std::string &serverAddress,
+                               uint16_t serverPort)
+        : IpcClient(std::move(protocol)), _serverIp(serverAddress),
+          _serverPort(serverPort), _resolver(_ioContext), _socket(_ioContext)
     {
+    }
+
+    void TcpIpcClient::_writeNext()
+    {
+        if (_writeQueue.empty())
+        {
+            return;
+        }
+
+        auto self = shared_from_this();
+
+        asio::async_write(_socket, asio::buffer(_writeQueue.front()),
+                          [this, self](const std::error_code &ec, std::size_t)
+                          {
+                              if (ec)
+                              {
+                                  std::cerr << "Write failed: " << ec.message()
+                                            << '\n';
+                                  return;
+                              }
+
+                              _writeQueue.pop_front();
+
+                              if (!_writeQueue.empty())
+                              {
+                                  _writeNext();
+                              }
+                          });
+    }
+
+    void TcpIpcClient::_startRead()
+    {
+        auto self = shared_from_this();
+
+        _socket.async_read_some(
+            asio::buffer(_readBuffer),
+            [this, self](const std::error_code &ec,
+                         std::size_t bytesTransferred)
+            { _callbackAsyncReadSome(ec, bytesTransferred); });
+    }
+
+    void TcpIpcClient::_callbackAsyncReadSome(const std::error_code &ec,
+                                              std::size_t bytesTransferred)
+    {
+        if (ec)
+        {
+            std::cerr << "Read failed: " << ec.message() << '\n';
+            return;
+        }
+
+        std::vector<std::uint8_t> data(_readBuffer.begin(),
+                                       _readBuffer.begin() + bytesTransferred);
+        std::string strData(data.begin(), data.end());
+
+        std::cout << "CLIENT: Received: " << strData;
+        std::cout << "CLIENT: This was " << data.size() << " bytes\n";
+
+        _startRead();
     }
 
     void TcpIpcClient::_callbackAsyncResolve(
@@ -71,7 +130,7 @@ namespace sabre_pilot_runner_core
             { _callbackAsyncResolve(ec, endpoints); });
     }
 
-    void TcpIpcClient::start()
+    void TcpIpcClient::run()
     {
         _ioContext.run();
     }
@@ -111,63 +170,4 @@ namespace sabre_pilot_runner_core
             _writeNext();
         }
     }
-
-    void TcpIpcClient::_writeNext()
-    {
-        if (_writeQueue.empty())
-        {
-            return;
-        }
-
-        auto self = shared_from_this();
-
-        asio::async_write(_socket, asio::buffer(_writeQueue.front()),
-                          [this, self](const std::error_code &ec, std::size_t)
-                          {
-                              if (ec)
-                              {
-                                  std::cerr << "Write failed: " << ec.message()
-                                            << '\n';
-                                  return;
-                              }
-
-                              _writeQueue.pop_front();
-
-                              if (!_writeQueue.empty())
-                              {
-                                  _writeNext();
-                              }
-                          });
-    }
-
-    void TcpIpcClient::_callbackAsyncReadSome(const std::error_code &ec,
-                                              std::size_t bytesTransferred)
-    {
-        if (ec)
-        {
-            std::cerr << "Read failed: " << ec.message() << '\n';
-            return;
-        }
-
-        std::vector<std::uint8_t> data(_readBuffer.begin(),
-                                       _readBuffer.begin() + bytesTransferred);
-        std::string strData(data.begin(), data.end());
-
-        std::cout << "CLIENT: Received: " << strData;
-        std::cout << "CLIENT: This was " << data.size() << " bytes\n";
-
-        _startRead();
-    }
-
-    void TcpIpcClient::_startRead()
-    {
-        auto self = shared_from_this();
-
-        _socket.async_read_some(
-            asio::buffer(_readBuffer),
-            [this, self](const std::error_code &ec,
-                         std::size_t bytesTransferred)
-            { _callbackAsyncReadSome(ec, bytesTransferred); });
-    }
-
-} // namespace sabre_pilot_runner_core
+} // namespace ipc

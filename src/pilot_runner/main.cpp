@@ -1,9 +1,17 @@
 #include <CLI/CLI.hpp>
+#include <ipc/tcp/client.hpp>
 #include <pilot_impl/core.hpp>
-#include <pilot_ipc_tcp/tcp_ipc_client.hpp>
 #include <pilot_runner_core/start_firmware.hpp>
 #include <string>
 #include <thread>
+#include <wuphf/wuphf.hpp>
+#include <wuphf/wuphf_command.hpp>
+
+union DeviceId
+{
+    uint32_t id;
+    int8_t idOctets[4];
+};
 
 int main(int argc, char *argv[])
 {
@@ -16,6 +24,11 @@ int main(int argc, char *argv[])
            "The firmware library file (usually a `.so` file) to load and run")
         ->required()
         ->check(CLI::ExistingFile);
+
+    uint32_t deviceId;
+    app.add_option("deviceId", deviceId,
+                   "The unique ID for this device in the IPC protocol")
+        ->required();
 
     std::string firmware_entry_point = "startApp";
     app.add_option("-e,--firmware-entry-point", firmware_entry_point,
@@ -35,13 +48,22 @@ int main(int argc, char *argv[])
 
     CLI11_PARSE(app, argc, argv);
 
-    using namespace std::chrono_literals;
+    std::cout << "ID: " << deviceId << '\n';
 
-    std::shared_ptr<sabre_pilot_runner_core::IpcClient> client =
-        std::make_shared<sabre_pilot_runner_core::TcpIpcClient>(
-            tcp_server_ip, tcp_server_port);
+    using namespace std::chrono_literals;
+    using ::ipc::TcpIpcClient;
+    using sabre_pilot::ipc::Wuphf;
+    using sabre_pilot::ipc::WuphfCommand;
+
+    // Protocol
+    ipc::Queue<WuphfCommand::UniquePtr> ipcQueue;
+    ipc::IpcProtocol::SharedPtr protocol =
+        std::make_shared<Wuphf>(ipcQueue, 2048);
+
+    ipc::IpcClient::SharedPtr client = std::make_shared<TcpIpcClient>(
+        protocol, tcp_server_ip, tcp_server_port);
     client->setup();
-    std::thread ipcThread([client]() { client->start(); });
+    std::thread ipcThread([client]() { client->run(); });
 
     if (!client->waitForConnection())
     {
@@ -51,11 +73,19 @@ int main(int argc, char *argv[])
         return 0;
     }
 
-    std::this_thread::sleep_for(1s);
-    client->sendData("Hallo!");
-    std::cout << "MAIN: Send data\n";
+    // Send Client Hello
+    DeviceId id;
+    id.id = deviceId;
+    client->sendData({0x00, 0x01, 0x00, 0x04, id.idOctets[3], id.idOctets[2],
+                      id.idOctets[1], id.idOctets[0]});
 
-    std::this_thread::sleep_for(5s);
+    // Send Uart Append on UART 0
+    client->sendData({0x01, 0x01, 0x00, 19,  0x00, 0x00, 'h', 'e',
+                      'l',  'l',  'o',  ' ', 'f',  'r',  'o', 'm',
+                      ' ',  'S',  'a',  'b', 'r',  'e',  '\n'});
+
+    std::this_thread::sleep_for(1s);
+
     client->stop();
     ipcThread.join();
 

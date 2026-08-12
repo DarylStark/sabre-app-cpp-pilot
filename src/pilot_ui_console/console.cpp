@@ -179,5 +179,6 @@ namespace sabre_ui_console
         }
 
         std::cout << "Byebye!\n";
+        _pilot.stop();
     }
 } // namespace sabre_ui_console

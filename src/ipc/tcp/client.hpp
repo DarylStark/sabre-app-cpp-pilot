@@ -1,15 +1,20 @@
-#include <asio.hpp>
-#include <cstdint>
-#include <deque>
-#include <memory>
-#include <pilot_runner_core/ipc_client.hpp>
-#include <string>
+#pragma once
 
-namespace sabre_pilot_runner_core
+#include <asio.hpp>
+#include <deque>
+#include <ipc/client.hpp>
+#include <ipc/protocol.hpp>
+#include <string>
+#include <vector>
+
+namespace ipc
 {
     class TcpIpcClient : public IpcClient,
                          public std::enable_shared_from_this<TcpIpcClient>
     {
+        using Protocol = IpcProtocol;
+        using std::enable_shared_from_this<TcpIpcClient>::shared_from_this;
+
     private:
         const std::string _serverIp;
         const uint16_t _serverPort;
@@ -36,15 +41,14 @@ namespace sabre_pilot_runner_core
             const asio::ip::tcp::resolver::results_type &endpoints);
 
     public:
-        TcpIpcClient(const std::string &serverIp, uint16_t serverPort);
-
+        TcpIpcClient(std::shared_ptr<Protocol> protocol,
+                     const std::string &serverAddress, uint16_t serverPort);
         void setup() override;
-
-        void start() override;
+        void run() override;
         void stop() override;
 
         bool waitForConnection() override;
-
         void sendData(const std::string &data) override;
     };
-} // namespace sabre_pilot_runner_core
+
+} // namespace ipc

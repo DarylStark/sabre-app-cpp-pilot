@@ -4,24 +4,29 @@
 #include <asio.hpp>
 #include <deque>
 #include <functional>
+#include <ipc/protocol.hpp>
 #include <memory>
 #include <string>
 #include <vector>
 
-namespace sabre_pilot
+namespace ipc
 {
-
-    class TcpSession : public std::enable_shared_from_this<TcpSession>
+    class TcpIpcSession : public std::enable_shared_from_this<TcpIpcSession>
     {
+        using Protocol = IpcProtocol;
+        using std::enable_shared_from_this<TcpIpcSession>::shared_from_this;
+
     private:
         using DisconnectHandler =
-            std::function<void(std::shared_ptr<TcpSession>)>;
+            std::function<void(std::shared_ptr<TcpIpcSession>)>;
 
         asio::ip::tcp::socket _socket;
         std::array<std::uint8_t, 4096> _readBuffer{};
         std::deque<std::vector<std::uint8_t>> _writeQueue;
 
         DisconnectHandler _disconnectHandler;
+
+        std::unique_ptr<Protocol> _protocol;
 
         bool _stopped = false;
 
@@ -36,7 +41,8 @@ namespace sabre_pilot
         void _callbackAsyncWrite(const std::error_code &ec, std::size_t size);
 
     public:
-        explicit TcpSession(asio::ip::tcp::socket socket);
+        TcpIpcSession(asio::ip::tcp::socket socket,
+                      std::unique_ptr<Protocol> protocol);
 
         void start();
         void stop();
@@ -46,4 +52,4 @@ namespace sabre_pilot
 
         void setDisconnectHandler(DisconnectHandler handler);
     };
-} // namespace sabre_pilot
+} // namespace ipc
