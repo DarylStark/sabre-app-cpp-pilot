@@ -16,7 +16,7 @@
                 "SABRE_PILOT_BUILD_PILOT": "ON",
                 "SABRE_PILOT_BUILD_RUNNER": "ON",
                 "SABRE_PILOT_BUILD_TESTS": "ON",
-                "SABRE_PILOT_CORE_RUNNER_EXECUTABLE": "${sourceDir}/build/dbg-all-with_tests/src/pilot_runner/sabre_pilot_runner",
+                "SABRE_PILOT_CORE_RUNNER_EXECUTABLE": "${sourceDir}/build/dbg-all-with_tests/src/runner/app/sabre_pilot_runner",
                 "CMAKE_TOOLCHAIN_FILE": "${sourceDir}/.conan/build/Debug/generators/conan_toolchain.cmake"
             }
         },
@@ -31,7 +31,7 @@
                 "SABRE_PILOT_BUILD_PILOT": "ON",
                 "SABRE_PILOT_BUILD_RUNNER": "ON",
                 "SABRE_PILOT_BUILD_TESTS": "ON",
-                "SABRE_PILOT_CORE_RUNNER_EXECUTABLE": "${sourceDir}/build/rel-all-with_tests/src/pilot_runner/sabre_pilot_runner",
+                "SABRE_PILOT_CORE_RUNNER_EXECUTABLE": "${sourceDir}$/build/dbg-all-with_tests/src/runner/app/sabre_pilot_runner",
                 "CMAKE_TOOLCHAIN_FILE": "${sourceDir}/.conan/build/Release/generators/conan_toolchain.cmake"
             }
         }

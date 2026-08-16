@@ -4,19 +4,19 @@ title = "My test project"
 name = "Device 01"
 maxGpios = 1
 upperBoundUart = 3
-library = "../app_example_app/libapp_example_app.so"
+library = "../../examples/example_app/libexample_app.so"
 entryPoint = "startDev1"
 
 [[devices]]
 name = "Device 02"
 maxGpios = 1
 upperBoundUart = 3
-library = "../app_example_app/libapp_example_app.so"
+library = "../../examples/example_app/libexample_app.so"
 entryPoint = "startDev2"
 
 [[devices]]
 name = "Device 03"
 maxGpios = 1
 upperBoundUart = 3
-library = "../app_example_app/libapp_example_app.so"
+library = "../../examples/example_app/libexample_app.so"
 entryPoint = "startDev3"
