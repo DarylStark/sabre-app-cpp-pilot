@@ -1,25 +1,13 @@
-add_subdirectory("pilot_impl")
-add_subdirectory("pilot_core")
-add_subdirectory("pilot_runner_core")
+if(SABRE_PILOT_BUILD_EXAMPLES STREQUAL "ON")
+    add_subdirectory("examples")
+endif()
 
-if(SABRE_PILOT_BUILD_PILOT_EXEC)
+if(SABRE_PILOT_BUILD_PILOT STREQUAL "ON")
     add_subdirectory("pilot")
-ENDIF()
-
-if(SABRE_PILOT_BUILD_PILOT_RUNNER)
-    add_subdirectory("pilot_runner")
-ENDIF()
-
-if(SABRE_PILOT_BUILD_EXAMPLE_APPS)
-    add_subdirectory("app_example_app")
 endif()
 
-if(SABRE_PILOT_BUILD_UI_LIBRARIES)
-    add_subdirectory("pilot_ui_imgui")
-    add_subdirectory("pilot_ui_console")
+if(SABRE_PILOT_BUILD_RUNNER STREQUAL "ON")
+    add_subdirectory("runner")
 endif()
 
-if(SABRE_PILOT_BUILD_IPC_LIBRARIES)
-    add_subdirectory("ipc")
-    add_subdirectory("wuphf")
-endif()
+add_subdirectory("shared")
