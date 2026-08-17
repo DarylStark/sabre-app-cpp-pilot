@@ -7,70 +7,77 @@
 #include <toml++/toml.hpp>
 #include <ui_console/console.hpp>
 
-bool parseProjectTomlFile(const std::string &filename,
-                          sabre_pilot::Pilot &pilot)
+namespace sabre_pilot::app
 {
-    auto data = toml::parse_file(filename);
+    bool parseProjectTomlFile(const std::string &filename,
+                              sabre_pilot::Pilot &pilot)
+    {
+        auto data = toml::parse_file(filename);
 
-    if (auto title = data["title"].value<std::string>())
-    {
-        std::cout << "Opening project " << *title << "\n";
-    }
-    else
-    {
-        std::cerr << "Missing project title\n";
-        return false;
-    }
-
-    auto *devices = data["devices"].as_array();
-    if (!devices)
-    {
-        std::cerr << "Missing or invalid 'devices' array\n";
-        return false;
-    }
-
-    for (const auto &elem : *devices)
-    {
-        auto *device = elem.as_table();
-        if (!device)
+        if (auto title = data["title"].value<std::string>())
         {
-            continue;
+            std::cout << "Opening project " << *title << "\n";
+        }
+        else
+        {
+            std::cerr << "Missing project title\n";
+            return false;
         }
 
-        auto name = (*device)["name"].value<std::string>();
-        auto library = (*device)["library"].value<std::string>();
-        auto entryPoint = (*device)["entryPoint"].value<std::string>();
-        if (!name || !library || !entryPoint)
+        auto *devices = data["devices"].as_array();
+        if (!devices)
         {
-            std::cerr << "Device missing either name, library of entryPoint\n";
-            continue;
+            std::cerr << "Missing or invalid 'devices' array\n";
+            return false;
         }
 
-        std::cout << "Adding device " << *name << "\n";
-
-        auto maxGpios = (*device)["maxGpios"].value<int64_t>();
-        auto upperBoundUart = (*device)["upperBoundUart"].value<int64_t>();
-
-        if (!maxGpios || !upperBoundUart)
+        for (const auto &elem : *devices)
         {
-            std::cerr << "Device " << *name << " has invalid config values.\n";
-            continue;
+            auto *device = elem.as_table();
+            if (!device)
+            {
+                continue;
+            }
+
+            auto name = (*device)["name"].value<std::string>();
+            auto library = (*device)["library"].value<std::string>();
+            auto entryPoint = (*device)["entryPoint"].value<std::string>();
+            if (!name || !library || !entryPoint)
+            {
+                std::cerr
+                    << "Device missing either name, library of entryPoint\n";
+                continue;
+            }
+
+            std::cout << "Adding device " << *name << "\n";
+
+            auto maxGpios = (*device)["maxGpios"].value<int64_t>();
+            auto upperBoundUart = (*device)["upperBoundUart"].value<int64_t>();
+
+            if (!maxGpios || !upperBoundUart)
+            {
+                std::cerr << "Device " << *name
+                          << " has invalid config values.\n";
+                continue;
+            }
+
+            sabre::core::ResourceManagerConfig config = {
+                .maxGpios = static_cast<sabre::hal::PinNumber>(*maxGpios),
+                .upperboundUart =
+                    static_cast<sabre::hal::UartNumber>(*upperBoundUart),
+            };
+
+            pilot.addDevice(*name, config, *library, *entryPoint);
         }
 
-        sabre::core::ResourceManagerConfig config = {
-            .maxGpios = static_cast<sabre::hal::PinNumber>(*maxGpios),
-            .upperboundUart =
-                static_cast<sabre::hal::UartNumber>(*upperBoundUart),
-        };
-
-        pilot.addDevice(*name, config, *library, *entryPoint);
+        return true;
     }
-
-    return true;
-}
+} // namespace sabre_pilot::app
 
 int main(int argc, char *argv[])
 {
+    using namespace sabre_pilot::app;
+
     CLI::App app{"Sabre Pilot"};
     argv = app.ensure_utf8(argv);
 
