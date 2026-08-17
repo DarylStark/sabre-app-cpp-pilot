@@ -84,7 +84,7 @@ int main(int argc, char *argv[])
     std::string ui_lib = "";
     app.add_option("--ui-lib", ui_lib, "The UI library to use");
 
-    std::string runnerExec = sabre_pilot::config::runnerExec;
+    std::string runnerExec = sabre_pilot::app::runnerExec;
     app.add_option("--runner-exec", runnerExec, "The executable runner");
 
     std::string project_file;
