@@ -3,6 +3,8 @@
 
 extern "C"
 {
+    using namespace sabre_pilot::examples;
+
     int startDev1(sabre::core::ResourceManager &resourceManager)
     {
         sabre::runtime::RunApp<MyApp>(resourceManager, "DEVICE-1");
