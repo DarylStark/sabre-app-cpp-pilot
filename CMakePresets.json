@@ -14,7 +14,14 @@
                 "CMAKE_BUILD_TYPE": "Debug",
                 "SABRE_PILOT_BUILD_EXAMPLES": "ON",
                 "SABRE_PILOT_BUILD_PILOT": "ON",
+                "SABRE_PILOT_BUILD_PILOT_APP": "ON",
+                "SABRE_PILOT_BUILD_PILOT_CORE": "ON",
+                "SABRE_PILOT_BUILD_PILOT_UI_CONSOLE": "ON",
+                "SABRE_PILOT_BUILD_PILOT_UI_IMGUI": "ON",
                 "SABRE_PILOT_BUILD_RUNNER": "ON",
+                "SABRE_PILOT_BUILD_RUNNER_APP": "ON",
+                "SABRE_PILOT_BUILD_RUNNER_CORE": "ON",
+                "SABRE_PILOT_BUILD_RUNNER_SABRE_IMPL": "ON",
                 "SABRE_PILOT_BUILD_TESTS": "ON",
                 "SABRE_PILOT_CORE_RUNNER_EXECUTABLE": "${sourceDir}/build/dbg-all-with_tests/src/runner/app/sabre_pilot_runner",
                 "CMAKE_TOOLCHAIN_FILE": "${sourceDir}/.conan/build/Debug/generators/conan_toolchain.cmake"
@@ -29,9 +36,37 @@
                 "CMAKE_BUILD_TYPE": "Release",
                 "SABRE_PILOT_BUILD_EXAMPLES": "ON",
                 "SABRE_PILOT_BUILD_PILOT": "ON",
+                "SABRE_PILOT_BUILD_PILOT_APP": "ON",
+                "SABRE_PILOT_BUILD_PILOT_CORE": "ON",
+                "SABRE_PILOT_BUILD_PILOT_UI_CONSOLE": "ON",
+                "SABRE_PILOT_BUILD_PILOT_UI_IMGUI": "ON",
                 "SABRE_PILOT_BUILD_RUNNER": "ON",
+                "SABRE_PILOT_BUILD_RUNNER_APP": "ON",
+                "SABRE_PILOT_BUILD_RUNNER_CORE": "ON",
+                "SABRE_PILOT_BUILD_RUNNER_SABRE_IMPL": "ON",
                 "SABRE_PILOT_BUILD_TESTS": "ON",
-                "SABRE_PILOT_CORE_RUNNER_EXECUTABLE": "${sourceDir}$/build/dbg-all-with_tests/src/runner/app/sabre_pilot_runner",
+                "SABRE_PILOT_CORE_RUNNER_EXECUTABLE": "${sourceDir}/build/rel-all-with_tests/src/runner/app/sabre_pilot_runner",
+                "CMAKE_TOOLCHAIN_FILE": "${sourceDir}/.conan/build/Release/generators/conan_toolchain.cmake"
+            }
+        },
+        {
+            "name": "rel-tests-only",
+            "displayName": "Release - Tests only",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/build/rel-tests-only",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release",
+                "SABRE_PILOT_BUILD_EXAMPLES": "OFF",
+                "SABRE_PILOT_BUILD_PILOT": "ON",
+                "SABRE_PILOT_BUILD_PILOT_APP": "OFF",
+                "SABRE_PILOT_BUILD_PILOT_CORE": "ON",
+                "SABRE_PILOT_BUILD_PILOT_UI_CONSOLE": "ON",
+                "SABRE_PILOT_BUILD_PILOT_UI_IMGUI": "OFF",
+                "SABRE_PILOT_BUILD_RUNNER": "ON",
+                "SABRE_PILOT_BUILD_RUNNER_APP": "OFF",
+                "SABRE_PILOT_BUILD_RUNNER_CORE": "OFF",
+                "SABRE_PILOT_BUILD_RUNNER_SABRE_IMPL": "ON",
+                "SABRE_PILOT_BUILD_TESTS": "ON",
                 "CMAKE_TOOLCHAIN_FILE": "${sourceDir}/.conan/build/Release/generators/conan_toolchain.cmake"
             }
         }
