@@ -7,7 +7,7 @@
 #include <unordered_map>
 #include <vector>
 
-namespace sabre_pilot::ipc
+namespace sabre::ipc
 {
     using ParseMethod = std::function<std::optional<WuphfCommand::UniquePtr>()>;
 
@@ -33,4 +33,4 @@ namespace sabre_pilot::ipc
         Wuphf(::ipc::Queue<WuphfCommand::UniquePtr> &queue,
               std::size_t bufferSize);
     };
-} // namespace sabre_pilot::ipc
+} // namespace sabre::ipc

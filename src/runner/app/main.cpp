@@ -55,8 +55,8 @@ int main(int argc, char *argv[])
 
     using namespace std::chrono_literals;
     using ::ipc::tcp::TcpIpcClient;
-    using sabre_pilot::ipc::Wuphf;
-    using sabre_pilot::ipc::WuphfCommand;
+    using sabre::ipc::Wuphf;
+    using sabre::ipc::WuphfCommand;
 
     // Protocol
     ipc::Queue<WuphfCommand::UniquePtr> ipcQueue;

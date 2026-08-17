@@ -28,7 +28,7 @@ namespace sabre_pilot::core
         std::unique_ptr<std::thread> _processMonitorThread = nullptr;
         std::unique_ptr<std::thread> _ipcServerThread = nullptr;
 
-        ::ipc::Queue<std::unique_ptr<ipc::WuphfCommand>> _ipcQueue;
+        ::ipc::Queue<std::unique_ptr<sabre::ipc::WuphfCommand>> _ipcQueue;
 
         void _processMonitorThreadFn();
 

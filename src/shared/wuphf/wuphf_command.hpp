@@ -4,7 +4,7 @@
 #include <cstdint>
 #include <memory>
 
-namespace sabre_pilot::ipc
+namespace sabre::ipc
 {
     class WuphfCommand
     {
@@ -46,4 +46,4 @@ namespace sabre_pilot::ipc
                    const std::string &data);
         void executeForDevice(sabre_pilot::core::Device &device) const;
     };
-} // namespace sabre_pilot::ipc
+} // namespace sabre::ipc

@@ -1,7 +1,7 @@
 #include "wuphf_command.hpp"
 #include <iostream> // TODO: Remove
 
-namespace sabre_pilot::ipc
+namespace sabre::ipc
 {
     WuphfCommand::WuphfCommand() : _dstMcu(0) {}
 
@@ -40,4 +40,4 @@ namespace sabre_pilot::ipc
     {
         device.appendToUArt(_uartIdx, _data);
     }
-} // namespace sabre_pilot::ipc
+} // namespace sabre::ipc

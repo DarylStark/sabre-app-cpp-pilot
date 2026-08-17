@@ -1,7 +1,7 @@
 #include "wuphf.hpp"
 #include <iostream>
 
-namespace sabre_pilot::ipc
+namespace sabre::ipc
 {
     Wuphf::Wuphf(::ipc::Queue<WuphfCommand::UniquePtr> &queue,
                  std::size_t bufferSize)
@@ -77,4 +77,4 @@ namespace sabre_pilot::ipc
         return std::make_unique<UartAppend>(_mcuId, uartId, data);
     }
 
-} // namespace sabre_pilot::ipc
+} // namespace sabre::ipc

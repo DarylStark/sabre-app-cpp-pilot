@@ -117,8 +117,8 @@ namespace sabre_pilot::core
     void Pilot::start()
     {
         using ::ipc::tcp::TcpIpcServer;
-        using sabre_pilot::ipc::Wuphf;
-        using sabre_pilot::ipc::WuphfCommand;
+        using sabre::ipc::Wuphf;
+        using sabre::ipc::WuphfCommand;
 
         // Start process monitor
         auto threadLambda = [this]() { this->_processMonitorThreadFn(); };
