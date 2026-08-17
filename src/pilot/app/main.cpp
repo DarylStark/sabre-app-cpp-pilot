@@ -10,7 +10,7 @@
 namespace sabre_pilot::app
 {
     bool parseProjectTomlFile(const std::string &filename,
-                              sabre_pilot::Pilot &pilot)
+                              sabre_pilot::core::Pilot &pilot)
     {
         auto data = toml::parse_file(filename);
 
@@ -92,8 +92,8 @@ int main(int argc, char *argv[])
 
     CLI11_PARSE(app, argc, argv);
 
-    sabre_pilot::LinuxSubprocessStrategy strategy;
-    sabre_pilot::Pilot sabrePilot(strategy, runnerExec);
+    sabre_pilot::core::LinuxSubprocessStrategy strategy;
+    sabre_pilot::core::Pilot sabrePilot(strategy, runnerExec);
 
     if (!project_file.empty())
     {
@@ -101,7 +101,7 @@ int main(int argc, char *argv[])
         parseProjectTomlFile(project_file, sabrePilot);
     }
 
-    sabre_pilot::UI::UniquePtr ui;
+    sabre_pilot::core::UI::UniquePtr ui;
 
     if (ui_lib.empty())
     {
@@ -110,8 +110,8 @@ int main(int argc, char *argv[])
     else
     {
         void *handle = dlopen(ui_lib.c_str(), RTLD_NOW);
-        auto ep = reinterpret_cast<std::unique_ptr<sabre_pilot ::UI> (*)(
-            sabre_pilot::Pilot &)>(dlsym(handle, "constructUIObject"));
+        auto ep = reinterpret_cast<std::unique_ptr<sabre_pilot::core::UI> (*)(
+            sabre_pilot::core::Pilot &)>(dlsym(handle, "constructUIObject"));
         ui = ep(sabrePilot);
     }
 

@@ -25,7 +25,7 @@ namespace sabre_pilot::ipc
     {
     }
 
-    void ClientHello::executeForDevice(sabre_pilot::Device &device) const
+    void ClientHello::executeForDevice(sabre_pilot::core::Device &device) const
     {
         std::clog << "HELLO FROM " << _dstMcu << "\n";
     }
@@ -36,7 +36,7 @@ namespace sabre_pilot::ipc
     {
     }
 
-    void UartAppend::executeForDevice(sabre_pilot::Device &device) const
+    void UartAppend::executeForDevice(sabre_pilot::core::Device &device) const
     {
         device.appendToUArt(_uartIdx, _data);
     }

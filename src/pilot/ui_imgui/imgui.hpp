@@ -8,7 +8,7 @@ namespace sabre_ui_imgui
         bool isVisible = true;
     };
 
-    class ImGuiUI : public sabre_pilot::UI
+    class ImGuiUI : public sabre_pilot::core::UI
     {
     private:
         GLFWwindow *_window = nullptr;
@@ -49,7 +49,7 @@ namespace sabre_ui_imgui
         void _deviceDialog(const std::string &deviceName);
 
     public:
-        ImGuiUI(sabre_pilot::Pilot &pilot);
+        ImGuiUI(sabre_pilot::core::Pilot &pilot);
         ~ImGuiUI() override;
 
         void start() override;

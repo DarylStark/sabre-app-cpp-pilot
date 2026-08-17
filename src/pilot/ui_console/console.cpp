@@ -7,7 +7,10 @@
 
 namespace sabre_ui_console
 {
-    ConsoleUI::ConsoleUI(sabre_pilot::Pilot &pilot) : sabre_pilot::UI(pilot) {}
+    ConsoleUI::ConsoleUI(sabre_pilot::core::Pilot &pilot)
+        : sabre_pilot::core::UI(pilot)
+    {
+    }
 
     ConsoleUI::~ConsoleUI() {}
 
@@ -19,19 +22,19 @@ namespace sabre_ui_console
             std::string state = "Unknown";
             switch (device->getState())
             {
-            case sabre_pilot::DeviceState::Error:
+            case sabre_pilot::core::DeviceState::Error:
                 state = "Error";
                 break;
-            case sabre_pilot::DeviceState::Running:
+            case sabre_pilot::core::DeviceState::Running:
                 state = "Running PID: " + std::to_string(device->getPid());
                 break;
-            case sabre_pilot::DeviceState::Starting:
+            case sabre_pilot::core::DeviceState::Starting:
                 state = "Starting PID: " + std::to_string(device->getPid());
                 break;
-            case sabre_pilot::DeviceState::Stopped:
+            case sabre_pilot::core::DeviceState::Stopped:
                 state = "Stopped";
                 break;
-            case sabre_pilot::DeviceState::Stopping:
+            case sabre_pilot::core::DeviceState::Stopping:
                 state = "Stopping";
                 break;
             }

@@ -2,7 +2,7 @@
 
 #include <core/subprocess_strategy.hpp>
 
-class MockSubprocessStrategy : public sabre_pilot::SubprocessStrategy
+class MockSubprocessStrategy : public sabre_pilot::core::SubprocessStrategy
 {
 public:
     uint32_t start(const std::string &program,

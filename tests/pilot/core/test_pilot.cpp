@@ -6,7 +6,7 @@ TEST(PilotTests, Construct)
 {
     MockSubprocessStrategy mockStrategy;
 
-    sabre_pilot::Pilot pilot(mockStrategy, "");
+    sabre_pilot::core::Pilot pilot(mockStrategy, "");
     const auto &devices = pilot.getDeviceMap();
     ASSERT_EQ(devices.size(), 0);
 }
@@ -15,7 +15,7 @@ TEST(PilotTests, AddOneDevice)
 {
     MockSubprocessStrategy mockStrategy;
 
-    sabre_pilot::Pilot pilot(mockStrategy, "");
+    sabre_pilot::core::Pilot pilot(mockStrategy, "");
     const auto &devices = pilot.getDeviceMap();
 
     sabre::core::ResourceManagerConfig config = {.maxGpios = 1,
@@ -31,7 +31,7 @@ TEST(PilotTests, AddTwoDevices)
 {
     MockSubprocessStrategy mockStrategy;
 
-    sabre_pilot::Pilot pilot(mockStrategy, "");
+    sabre_pilot::core::Pilot pilot(mockStrategy, "");
     const auto &devices = pilot.getDeviceMap();
 
     sabre::core::ResourceManagerConfig config = {.maxGpios = 1,

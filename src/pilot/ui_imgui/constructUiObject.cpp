@@ -4,7 +4,8 @@
 
 extern "C"
 {
-    sabre_pilot::UI::UniquePtr constructUIObject(sabre_pilot::Pilot &pilot)
+    sabre_pilot::core::UI::UniquePtr
+    constructUIObject(sabre_pilot::core::Pilot &pilot)
     {
         return std::make_unique<sabre_ui_imgui::ImGuiUI>(pilot);
     }

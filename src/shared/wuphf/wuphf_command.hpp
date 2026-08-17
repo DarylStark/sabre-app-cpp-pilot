@@ -24,14 +24,15 @@ namespace sabre_pilot::ipc
         void setDestionationMcuId(uint32_t mcuId);
         uint32_t getDestinationMcuId() const;
 
-        virtual void executeForDevice(sabre_pilot::Device &device) const = 0;
+        virtual void
+        executeForDevice(sabre_pilot::core::Device &device) const = 0;
     };
 
     class ClientHello : public WuphfCommand
     {
     public:
         ClientHello(uint32_t destinationMcuId);
-        void executeForDevice(sabre_pilot::Device &device) const;
+        void executeForDevice(sabre_pilot::core::Device &device) const;
     };
 
     class UartAppend : public WuphfCommand
@@ -43,6 +44,6 @@ namespace sabre_pilot::ipc
     public:
         UartAppend(uint32_t destinationMcuId, uint16_t uartIdx,
                    const std::string &data);
-        void executeForDevice(sabre_pilot::Device &device) const;
+        void executeForDevice(sabre_pilot::core::Device &device) const;
     };
 } // namespace sabre_pilot::ipc

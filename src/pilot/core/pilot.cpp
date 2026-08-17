@@ -9,7 +9,7 @@
 #include <thread>
 #include <wuphf/wuphf.hpp>
 
-namespace sabre_pilot
+namespace sabre_pilot::core
 {
     Pilot::Pilot(const SubprocessStrategy &subprocessStrategy,
                  const std::string &runnerExec)
@@ -167,4 +167,4 @@ namespace sabre_pilot
         _ipcServer->stop();
         _ipcQueue.shutdown();
     }
-} // namespace sabre_pilot
+} // namespace sabre_pilot::core

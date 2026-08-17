@@ -1,7 +1,7 @@
 #include "device.hpp"
 #include <iostream>
 
-namespace sabre_pilot
+namespace sabre_pilot::core
 {
     Device::Device(uint32_t id, DeviceConfig config,
                    const SubprocessStrategy &subprocessStrategy,
@@ -94,4 +94,4 @@ namespace sabre_pilot
             _state = DeviceState::Stopped;
         }
     }
-} // namespace sabre_pilot
+} // namespace sabre_pilot::core

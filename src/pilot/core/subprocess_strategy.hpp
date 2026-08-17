@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 
-namespace sabre_pilot
+namespace sabre_pilot::core
 {
     class SubprocessStrategy
     {
@@ -15,4 +15,4 @@ namespace sabre_pilot
         virtual void stop(uint32_t pid) const = 0;
         virtual bool isRunning(uint32_t pid) const = 0;
     };
-} // namespace sabre_pilot
+} // namespace sabre_pilot::core

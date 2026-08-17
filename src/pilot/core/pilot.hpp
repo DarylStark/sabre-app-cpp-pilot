@@ -10,7 +10,7 @@
 #include <unordered_map>
 #include <wuphf/wuphf_command.hpp>
 
-namespace sabre_pilot
+namespace sabre_pilot::core
 {
     using DeviceMap = std::unordered_map<std::string, std::shared_ptr<Device>>;
     using DeviceMapId =
@@ -57,4 +57,4 @@ namespace sabre_pilot
         void start();
         void stop();
     };
-} // namespace sabre_pilot
+} // namespace sabre_pilot::core

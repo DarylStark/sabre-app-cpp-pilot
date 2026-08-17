@@ -5,7 +5,7 @@
 #include <memory>
 #include <sabre/core/resource_manager.hpp>
 
-namespace sabre_pilot
+namespace sabre_pilot::core
 {
     struct DeviceConfig
     {
@@ -57,4 +57,4 @@ namespace sabre_pilot
 
         void updateState();
     };
-} // namespace sabre_pilot
+} // namespace sabre_pilot::core

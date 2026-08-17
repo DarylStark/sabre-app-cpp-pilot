@@ -1,6 +1,6 @@
 #include "subprocess_strategy.hpp"
 
-namespace sabre_pilot
+namespace sabre_pilot::core
 {
     class LinuxSubprocessStrategy : public SubprocessStrategy
     {
@@ -10,4 +10,4 @@ namespace sabre_pilot
         void stop(uint32_t pid) const override;
         bool isRunning(uint32_t pid) const override;
     };
-} // namespace sabre_pilot
+} // namespace sabre_pilot::core

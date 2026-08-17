@@ -12,7 +12,7 @@
 
 extern char **environ;
 
-namespace sabre_pilot
+namespace sabre_pilot::core
 {
     uint32_t LinuxSubprocessStrategy::start(const std::string &program,
                                             std::vector<std::string> args) const
@@ -57,4 +57,4 @@ namespace sabre_pilot
         auto result = waitpid(pid, &exitStatus, WNOHANG);
         return result == 0;
     }
-} // namespace sabre_pilot
+} // namespace sabre_pilot::core
