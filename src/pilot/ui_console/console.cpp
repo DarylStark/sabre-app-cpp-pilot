@@ -5,7 +5,7 @@
 #include <signal.h>
 #include <thread>
 
-namespace sabre_ui_console
+namespace sabre_pilot::ui
 {
     ConsoleUI::ConsoleUI(sabre_pilot::core::Pilot &pilot)
         : sabre_pilot::core::UI(pilot)
@@ -184,4 +184,4 @@ namespace sabre_ui_console
         std::cout << "Byebye!\n";
         _pilot.stop();
     }
-} // namespace sabre_ui_console
+} // namespace sabre_pilot::ui

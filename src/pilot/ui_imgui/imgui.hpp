@@ -1,7 +1,7 @@
 #include <GLFW/glfw3.h>
 #include <core/ui.hpp>
 
-namespace sabre_ui_imgui
+namespace sabre_pilot::ui
 {
     struct DeviceSettings
     {
@@ -54,4 +54,4 @@ namespace sabre_ui_imgui
 
         void start() override;
     };
-} // namespace sabre_ui_imgui
+} // namespace sabre_pilot::ui

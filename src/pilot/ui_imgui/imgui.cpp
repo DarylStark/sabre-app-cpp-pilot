@@ -4,7 +4,7 @@
 #include <imgui_impl_opengl3.h>
 #include <iostream>
 
-namespace sabre_ui_imgui
+namespace sabre_pilot::ui
 {
     ImGuiUI::ImGuiUI(sabre_pilot::core::Pilot &pilot)
         : sabre_pilot::core::UI(pilot)
@@ -341,4 +341,4 @@ namespace sabre_ui_imgui
 
         _pilot.stop();
     }
-} // namespace sabre_ui_imgui
+} // namespace sabre_pilot::ui

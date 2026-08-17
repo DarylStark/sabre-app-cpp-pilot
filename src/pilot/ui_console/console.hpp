@@ -1,6 +1,6 @@
 #include <core/ui.hpp>
 
-namespace sabre_ui_console
+namespace sabre_pilot::ui
 {
     class ConsoleUI : public sabre_pilot::core::UI
     {
@@ -14,4 +14,4 @@ namespace sabre_ui_console
 
         void start() override;
     };
-} // namespace sabre_ui_console
+} // namespace sabre_pilot::ui

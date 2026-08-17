@@ -105,7 +105,7 @@ int main(int argc, char *argv[])
 
     if (ui_lib.empty())
     {
-        ui = std::make_unique<sabre_ui_console::ConsoleUI>(sabrePilot);
+        ui = std::make_unique<sabre_pilot::ui::ConsoleUI>(sabrePilot);
     }
     else
     {
