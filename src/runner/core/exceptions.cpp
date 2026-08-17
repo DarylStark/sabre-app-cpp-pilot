@@ -1,6 +1,6 @@
 #include "exceptions.hpp"
 
-namespace sabre_pilot_runner_core
+namespace sabre_runner::core
 {
     SabrePilotRunnerException::SabrePilotRunnerException(const char *message)
         : std::runtime_error(message)
@@ -18,4 +18,4 @@ namespace sabre_pilot_runner_core
         : SabrePilotRunnerException(message)
     {
     }
-} // namespace sabre_pilot_runner_core
+} // namespace sabre_runner::core

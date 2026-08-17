@@ -3,7 +3,7 @@
 #include <dlfcn.h>
 #include <iostream>
 
-namespace sabre_pilot_runner_core
+namespace sabre_runner::core
 {
     LinuxDynamicLibrary::LinuxDynamicLibrary(const std::string &libLocation)
         : DynamicLibrary(libLocation)
@@ -44,4 +44,4 @@ namespace sabre_pilot_runner_core
         if (_libHandle)
             dlclose(_libHandle);
     }
-} // namespace sabre_pilot_runner_core
+} // namespace sabre_runner::core

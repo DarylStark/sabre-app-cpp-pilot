@@ -1,7 +1,7 @@
 #include "dynamic_library.hpp"
 #include "exceptions.hpp"
 
-namespace sabre_pilot_runner_core
+namespace sabre_runner::core
 {
     DynamicLibrary::DynamicLibrary(const std::string &libLocation)
         : _libLocation(libLocation)
@@ -19,4 +19,4 @@ namespace sabre_pilot_runner_core
             _loadEntryPoint(name);
         return _entryPoints.at(name);
     }
-} // namespace sabre_pilot_runner_core
+} // namespace sabre_runner::core

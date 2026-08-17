@@ -3,7 +3,7 @@
 #include <sabre/core/resource_manager.hpp>
 #include <sabre_impl/core.hpp>
 
-namespace sabre_pilot_runner_core
+namespace sabre_runner::core
 {
     void startFirmware(sabre::core::ResourceManagerConfig config,
                        const std::string &firmwareFile,
@@ -12,9 +12,9 @@ namespace sabre_pilot_runner_core
         sabre::impl::pilot::Factory fac(nullptr);
         sabre::core::ResourceManager rm(fac, config);
 
-        sabre_pilot_runner_core::DynamicLibrary::UniquePtr firmware =
-            std::make_unique<sabre_pilot_runner_core::LinuxDynamicLibrary>(
+        sabre_runner::core::DynamicLibrary::UniquePtr firmware =
+            std::make_unique<sabre_runner::core::LinuxDynamicLibrary>(
                 firmwareFile);
         firmware->getEntryPoint(entryPoint)(rm);
     }
-} // namespace sabre_pilot_runner_core
+} // namespace sabre_runner::core

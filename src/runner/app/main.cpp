@@ -99,8 +99,7 @@ int main(int argc, char *argv[])
     sabre::core::ResourceManagerConfig config;
     config.maxGpios = 1;
     config.upperboundUart = 1;
-    sabre_pilot_runner_core::startFirmware(config, firmware,
-                                           firmware_entry_point);
+    sabre_runner::core::startFirmware(config, firmware, firmware_entry_point);
 
     return 0;
 }
