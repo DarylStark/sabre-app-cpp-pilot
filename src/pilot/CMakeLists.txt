@@ -1,33 +1,15 @@
-find_package(tomlplusplus REQUIRED)
-find_package(CLI11 REQUIRED)
+if ("${SABRE_PILOT_BUILD_PILOT_APP}" STREQUAL "ON")
+    add_subdirectory("app")
+endif()
 
-file(GLOB_RECURSE SABRE_PILOT_EXEC_SOURCES CONFIGURE_DEPENDS *.cpp)
-add_executable(sabre_pilot ${SABRE_PILOT_EXEC_SOURCES})
+if ("${SABRE_PILOT_BUILD_PILOT_CORE}" STREQUAL "ON")
+    add_subdirectory("core")
+endif()
 
-configure_file(
-    ${CMAKE_CURRENT_SOURCE_DIR}/config.hpp.in
-    ${CMAKE_CURRENT_BINARY_DIR}/config.hpp
-    @ONLY
-)
+if ("${SABRE_PILOT_BUILD_PILOT_UI_CONSOLE}" STREQUAL "ON")
+    add_subdirectory("ui_console")
+endif()
 
-target_link_libraries(
-    sabre_pilot
-    PUBLIC
-        sabre_pilot_core
-        sabre_pilot_ui_console
-        tomlplusplus::tomlplusplus
-        CLI11::CLI11
-)
-
-set_target_properties(sabre_pilot
-    PROPERTIES
-        POSITION_INDEPENDENT_CODE ON
-)
-
-target_include_directories(
-    sabre_pilot
-    PUBLIC
-        ${CMAKE_CURRENT_BINARY_DIR}
-        ${sabre_SOURCE_DIR}/src/sabre/
-        ../
-)
+if ("${SABRE_PILOT_BUILD_PILOT_UI_IMGUI}" STREQUAL "ON")
+    add_subdirectory("ui_imgui")
+endif()

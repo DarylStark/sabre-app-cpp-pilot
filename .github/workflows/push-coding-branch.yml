@@ -71,9 +71,9 @@ jobs:
             -c tools.system.package_manager:sudo=True
       - name: Build project
         run: |
-          cmake --preset rel-core_impl-with_tests
-          cmake --build build/rel-core_impl-with_tests
+          cmake --preset rel-tests-only
+          cmake --build build/rel-tests-only
       - name: Run tests
         run: |
-          cd build/rel-core_impl-with_tests
+          cd build/rel-tests-only
           ctest

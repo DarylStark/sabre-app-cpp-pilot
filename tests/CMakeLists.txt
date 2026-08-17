@@ -1,7 +1,9 @@
 include(GoogleTest)
 
-if(SABRE_PILOT_BUILD_TESTS STREQUAL "ON")
-    add_subdirectory(test_sabre_pilot_core)
-    add_subdirectory(test_sabre_pilot_impl)
-    add_subdirectory(test_sabre_pilot_runner_core)
+if(SABRE_PILOT_BUILD_PILOT STREQUAL "ON")
+    add_subdirectory("pilot")
+endif()
+
+if(SABRE_PILOT_BUILD_RUNNER STREQUAL "ON")
+    add_subdirectory("runner")
 endif()
