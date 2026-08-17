@@ -17,7 +17,7 @@ target_link_libraries(
 target_include_directories(
     sabre_pilot_core
     PUBLIC
-        ${sabre_SOURCE_DIR}/src/sabre/  # TODO: Remove this once ResourceManager is not a dependency of sabre_pilot_core anymore
+        ${sabre_SOURCE_DIR}/src/sabre/ # TODO: Remove this once ResourceManager is not a dependency of sabre_pilot_core anymore
         ${PROJECT_SOURCE_DIR}/src/shared/
         ${PROJECT_SOURCE_DIR}/src/pilot/
 )

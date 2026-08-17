@@ -1,7 +1,7 @@
 find_package(GTest REQUIRED CONFIG)
 
-file(GLOB test_sabre_pilot_core_SOURCES CONFIGURE_DEPENDS test_*.cpp)
-add_executable(test_sabre_pilot_core ${test_sabre_pilot_core_SOURCES})
+file(GLOB TEST_SABRE_PILOT_CORE_SOURCES CONFIGURE_DEPENDS test_*.cpp)
+add_executable(test_sabre_pilot_core ${TEST_SABRE_PILOT_CORE_SOURCES})
 
 target_link_libraries(test_sabre_pilot_core
     PRIVATE

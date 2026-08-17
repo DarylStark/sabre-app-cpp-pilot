@@ -1,15 +1,15 @@
-if ("${SABRE_PILOT_BUILD_PILOT_APP}" STREQUAL "ON")
-    add_subdirectory("app")
+if(SABRE_PILOT_BUILD_PILOT_APP)
+    add_subdirectory(app)
 endif()
 
-if ("${SABRE_PILOT_BUILD_PILOT_CORE}" STREQUAL "ON")
-    add_subdirectory("core")
+if(SABRE_PILOT_BUILD_PILOT_CORE)
+    add_subdirectory(core)
 endif()
 
-if ("${SABRE_PILOT_BUILD_PILOT_UI_CONSOLE}" STREQUAL "ON")
-    add_subdirectory("ui_console")
+if(SABRE_PILOT_BUILD_PILOT_UI_CONSOLE)
+    add_subdirectory(ui_console)
 endif()
 
-if ("${SABRE_PILOT_BUILD_PILOT_UI_IMGUI}" STREQUAL "ON")
-    add_subdirectory("ui_imgui")
+if(SABRE_PILOT_BUILD_PILOT_UI_IMGUI)
+    add_subdirectory(ui_imgui)
 endif()

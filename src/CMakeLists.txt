@@ -1,13 +1,13 @@
-if(SABRE_PILOT_BUILD_EXAMPLES STREQUAL "ON")
-    add_subdirectory("examples")
+if(SABRE_PILOT_BUILD_EXAMPLES)
+    add_subdirectory(examples)
 endif()
 
-if(SABRE_PILOT_BUILD_PILOT STREQUAL "ON")
-    add_subdirectory("pilot")
+if(SABRE_PILOT_BUILD_PILOT)
+    add_subdirectory(pilot)
 endif()
 
-if(SABRE_PILOT_BUILD_RUNNER STREQUAL "ON")
-    add_subdirectory("runner")
+if(SABRE_PILOT_BUILD_RUNNER)
+    add_subdirectory(runner)
 endif()
 
-add_subdirectory("shared")
+add_subdirectory(shared)

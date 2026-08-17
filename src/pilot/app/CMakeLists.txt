@@ -1,8 +1,8 @@
 find_package(tomlplusplus REQUIRED)
 find_package(CLI11 REQUIRED)
 
-file(GLOB_RECURSE SABRE_PILOT_EXEC_SOURCES CONFIGURE_DEPENDS *.cpp)
-add_executable(sabre_pilot ${SABRE_PILOT_EXEC_SOURCES})
+file(GLOB_RECURSE SABRE_PILOT_SOURCES CONFIGURE_DEPENDS *.cpp)
+add_executable(sabre_pilot ${SABRE_PILOT_SOURCES})
 
 configure_file(
     ${CMAKE_CURRENT_SOURCE_DIR}/config.hpp.in
@@ -19,7 +19,8 @@ target_link_libraries(
         CLI11::CLI11
 )
 
-set_target_properties(sabre_pilot
+set_target_properties(
+    sabre_pilot
     PROPERTIES
         POSITION_INDEPENDENT_CODE ON
 )

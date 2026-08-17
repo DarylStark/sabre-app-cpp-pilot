@@ -3,11 +3,9 @@ project(sabre_pilot LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_CXX_CLANG_TIDY "clang-tidy")
 
-# Dependencies
 include(FetchContent)
 FetchContent_Declare(
     sabre
@@ -16,14 +14,12 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(sabre)
 
-# Tests
-if(SABRE_PILOT_BUILD_TESTS STREQUAL "ON")
+if(SABRE_PILOT_BUILD_TESTS)
     enable_testing()
     add_compile_options(--coverage)
     add_link_options(--coverage)
     add_subdirectory(tests)
 endif()
 
-# Application source
-add_subdirectory(src/)
+add_subdirectory(src)
 

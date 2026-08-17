@@ -7,7 +7,8 @@ target_link_libraries(
         sabre_pilot_core
 )
 
-set_target_properties(wuphf
+set_target_properties(
+    wuphf
     PROPERTIES
         POSITION_INDEPENDENT_CODE ON
 )
