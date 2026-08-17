@@ -15,13 +15,15 @@ add_library(
         "${IMGUI_SOURCE_FOLDER}/res/bindings/imgui_impl_opengl3.cpp"
 )
 
-set_target_properties(sabre_pilot_ui_imgui
+set_target_properties(
+    sabre_pilot_ui_imgui
     PROPERTIES
         CXX_CLANG_TIDY ""
         POSITION_INDEPENDENT_CODE ON
 )
 
-target_link_libraries(sabre_pilot_ui_imgui
+target_link_libraries(
+    sabre_pilot_ui_imgui
     PUBLIC
         sabre_pilot_core
         imgui::imgui

@@ -3,13 +3,14 @@ add_library(sabre_pilot_runner_core STATIC ${SABRE_PILOT_RUNNER_CORE_SOURCES})
 
 target_link_libraries(
     sabre_pilot_runner_core
-    PUBLIC 
+    PUBLIC
         sabre
         sabre_pilot_impl
         sabre_ipc_tcp
 )
 
-set_target_properties(sabre_pilot_runner_core
+set_target_properties(
+    sabre_pilot_runner_core
     PROPERTIES
         POSITION_INDEPENDENT_CODE ON
 )
