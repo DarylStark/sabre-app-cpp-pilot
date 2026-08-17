@@ -1,7 +1,7 @@
 #include "client.hpp"
 #include <iostream>
 
-namespace ipc
+namespace ipc::tcp
 {
     TcpIpcClient::TcpIpcClient(std::shared_ptr<Protocol> protocol,
                                const std::string &serverAddress,
@@ -170,4 +170,4 @@ namespace ipc
             _writeNext();
         }
     }
-} // namespace ipc
+} // namespace ipc::tcp

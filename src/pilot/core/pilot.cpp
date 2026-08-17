@@ -116,7 +116,7 @@ namespace sabre_pilot::core
 
     void Pilot::start()
     {
-        using ::ipc::TcpIpcServer;
+        using ::ipc::tcp::TcpIpcServer;
         using sabre_pilot::ipc::Wuphf;
         using sabre_pilot::ipc::WuphfCommand;
 

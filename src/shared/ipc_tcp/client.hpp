@@ -7,7 +7,7 @@
 #include <string>
 #include <vector>
 
-namespace ipc
+namespace ipc::tcp
 {
     class TcpIpcClient : public IpcClient,
                          public std::enable_shared_from_this<TcpIpcClient>
@@ -51,4 +51,4 @@ namespace ipc
         void sendData(const std::string &data) override;
     };
 
-} // namespace ipc
+} // namespace ipc::tcp

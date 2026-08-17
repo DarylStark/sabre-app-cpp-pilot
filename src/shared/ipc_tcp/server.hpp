@@ -9,7 +9,7 @@
 #include <memory>
 #include <vector>
 
-namespace ipc
+namespace ipc::tcp
 {
     class TcpIpcServer : public IpcServer
     {
@@ -34,4 +34,4 @@ namespace ipc
         void stop() override;
     };
 
-} // namespace ipc
+} // namespace ipc::tcp

@@ -9,7 +9,7 @@
 #include <string>
 #include <vector>
 
-namespace ipc
+namespace ipc::tcp
 {
     class TcpIpcSession : public std::enable_shared_from_this<TcpIpcSession>
     {
@@ -52,4 +52,4 @@ namespace ipc
 
         void setDisconnectHandler(DisconnectHandler handler);
     };
-} // namespace ipc
+} // namespace ipc::tcp

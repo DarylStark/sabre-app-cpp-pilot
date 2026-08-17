@@ -54,7 +54,7 @@ int main(int argc, char *argv[])
     std::cout << "ID: " << deviceId << '\n';
 
     using namespace std::chrono_literals;
-    using ::ipc::TcpIpcClient;
+    using ::ipc::tcp::TcpIpcClient;
     using sabre_pilot::ipc::Wuphf;
     using sabre_pilot::ipc::WuphfCommand;
 

@@ -1,7 +1,7 @@
 #include "server.hpp"
 #include <iostream>
 
-namespace ipc
+namespace ipc::tcp
 {
     TcpIpcServer::TcpIpcServer(::ipc::ProtocolFactory protocolFactory,
                                uint16_t port)
@@ -78,4 +78,4 @@ namespace ipc
 
         std::cout << "SERVER: TcpIpcServer stopped\n";
     }
-} // namespace ipc
+} // namespace ipc::tcp

@@ -1,7 +1,7 @@
 #include "session.hpp"
 #include <iostream>
 
-namespace ipc
+namespace ipc::tcp
 {
     TcpIpcSession::TcpIpcSession(asio::ip::tcp::socket socket,
                                  std::unique_ptr<Protocol> protocol)
@@ -136,4 +136,4 @@ namespace ipc
             _disconnectHandler(shared_from_this());
         }
     }
-} // namespace ipc
+} // namespace ipc::tcp
