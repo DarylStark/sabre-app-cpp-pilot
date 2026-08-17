@@ -7,11 +7,14 @@
 #include <wuphf/wuphf.hpp>
 #include <wuphf/wuphf_command.hpp>
 
-union DeviceId
+namespace sabre_runner::ui
 {
-    uint32_t id;
-    int8_t idOctets[4];
-};
+    union DeviceId
+    {
+        uint32_t id;
+        int8_t idOctets[4];
+    };
+} // namespace sabre_runner::ui
 
 int main(int argc, char *argv[])
 {
@@ -74,7 +77,7 @@ int main(int argc, char *argv[])
     }
 
     // Send Client Hello
-    DeviceId id;
+    sabre_runner::ui::DeviceId id;
     id.id = deviceId;
     client->sendData({0x00, 0x01, 0x00, 0x04, id.idOctets[3], id.idOctets[2],
                       id.idOctets[1], id.idOctets[0]});
