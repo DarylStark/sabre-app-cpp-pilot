@@ -1,7 +1,7 @@
 find_package(asio REQUIRED)
 
 file(GLOB_RECURSE SABRE_IPC_TCP_SOURCES CONFIGURE_DEPENDS *.cpp)
-add_library(sabre_ipc_tcp STATIC ${SABRE_IPC_TCP_SOURCES})
+add_library(sabre_ipc_tcp SHARED ${SABRE_IPC_TCP_SOURCES})
 
 set_target_properties(
     sabre_ipc_tcp
