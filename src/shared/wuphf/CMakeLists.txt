@@ -1,20 +1,20 @@
-file(GLOB_RECURSE WUPHF_SOURCES CONFIGURE_DEPENDS *.cpp)
-add_library(wuphf STATIC ${WUPHF_SOURCES})
+file(GLOB_RECURSE SABRE_WUPHF_SOURCES CONFIGURE_DEPENDS *.cpp)
+add_library(sabre_wuphf STATIC ${SABRE_WUPHF_SOURCES})
 
 target_link_libraries(
-    wuphf
+    sabre_wuphf
     PRIVATE
         sabre_pilot_core
 )
 
 set_target_properties(
-    wuphf
+    sabre_wuphf
     PROPERTIES
         POSITION_INDEPENDENT_CODE ON
 )
 
 target_include_directories(
-    wuphf
+    sabre_wuphf
     PUBLIC
         ${PROJECT_SOURCE_DIR}/src/shared/
         ${PROJECT_SOURCE_DIR}/src/pilot/

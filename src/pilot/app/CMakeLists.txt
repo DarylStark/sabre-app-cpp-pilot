@@ -28,7 +28,5 @@ set_target_properties(
 target_include_directories(
     sabre_pilot
     PUBLIC
-        ${PROJECT_SOURCE_DIR}/src/shared/
-        ${PROJECT_SOURCE_DIR}/src/pilot/
         ${CMAKE_CURRENT_BINARY_DIR}/
 )

@@ -15,5 +15,5 @@ set_target_properties(
 target_include_directories(
     example_app
     PUBLIC
-        ${sabre_SOURCE_DIR}/src/sabre/
+        ${sabre_SOURCE_DIR}/src/sabre/   # TODO: Remove this once Sabre is a shared library with PUBLIC header files
 )

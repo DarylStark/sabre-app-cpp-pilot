@@ -9,7 +9,7 @@ set_target_properties(sabre_pilot_core
 target_link_libraries(
     sabre_pilot_core
     PRIVATE
-        wuphf
+        sabre_wuphf
     PUBLIC
         sabre_ipc_tcp
 )
@@ -18,6 +18,5 @@ target_include_directories(
     sabre_pilot_core
     PUBLIC
         ${sabre_SOURCE_DIR}/src/sabre/ # TODO: Remove this once ResourceManager is not a dependency of sabre_pilot_core anymore
-        ${PROJECT_SOURCE_DIR}/src/shared/
         ${PROJECT_SOURCE_DIR}/src/pilot/
 )
