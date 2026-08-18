@@ -8,6 +8,7 @@ target_link_libraries(test_sabre_pilot_core
         sabre_pilot_core
         GTest::gtest
         GTest::gtest_main
+        sabre_wuphf
 )
 
 target_compile_options(test_sabre_pilot_core PRIVATE --coverage)
