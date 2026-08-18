@@ -9,7 +9,7 @@ target_link_libraries(
         sabre_pilot_runner_core
     PUBLIC
         sabre_ipc_tcp
-        wuphf
+        sabre_wuphf
         CLI11::CLI11
 )
 
@@ -23,6 +23,5 @@ target_include_directories(
     sabre_pilot_runner
     PUBLIC
         ${sabre_SOURCE_DIR}/src/sabre/
-        ${PROJECT_SOURCE_DIR}/src/shared/
         ${PROJECT_SOURCE_DIR}/src/runner/
 )

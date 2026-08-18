@@ -15,8 +15,9 @@ target_link_options(test_sabre_pilot_core PRIVATE --coverage)
 
 target_include_directories(
     test_sabre_pilot_core
-    PRIVATE
+    PUBLIC
         ${PROJECT_SOURCE_DIR}/src/pilot/
+        ${PROJECT_SOURCE_DIR}/src/shared/
 )
 
 gtest_discover_tests(test_sabre_pilot_core)

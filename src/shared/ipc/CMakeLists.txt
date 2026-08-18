@@ -7,4 +7,8 @@ set_target_properties(
         POSITION_INDEPENDENT_CODE ON
 )
 
-
+target_include_directories(
+    sabre_ipc
+    PUBLIC
+        ${PROJECT_SOURCE_DIR}/src/shared/
+)
