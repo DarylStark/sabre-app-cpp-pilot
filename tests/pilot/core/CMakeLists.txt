@@ -6,9 +6,11 @@ add_executable(test_sabre_pilot_core ${TEST_SABRE_PILOT_CORE_SOURCES})
 target_link_libraries(test_sabre_pilot_core
     PRIVATE
         sabre_pilot_core
+        sabre_wuphf
         GTest::gtest
         GTest::gtest_main
-        sabre_wuphf
+        sabre_ipc_tcp
+        sabre_ipc
 )
 
 target_compile_options(test_sabre_pilot_core PRIVATE --coverage)
