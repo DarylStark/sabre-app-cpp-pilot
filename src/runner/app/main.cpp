@@ -21,37 +21,77 @@ int main(int argc, char *argv[])
     CLI::App app{"Sabre Pilot Runner"};
     argv = app.ensure_utf8(argv);
 
-    std::string firmware;
+    std::string firmwareFile;
     app.add_option(
-           "firmware", firmware,
+           "firmware", firmwareFile,
            "The firmware library file (usually a `.so` file) to load and run")
         ->required()
         ->check(CLI::ExistingFile);
 
-    uint32_t deviceId;
-    app.add_option("deviceId", deviceId,
-                   "The unique ID for this device in the IPC protocol")
-        ->required();
-
-    std::string firmware_entry_point = "startApp";
-    app.add_option("-e,--firmware-entry-point", firmware_entry_point,
-                   "The entry point function to call in the firmware library")
+    // Hardware options
+    auto *appHardware = app.add_option_group("Hardware");
+    uint32_t maxGpios = 1;
+    appHardware
+        ->add_option("--hw-max-gpios", maxGpios,
+                     "The maximum number of GPIOs this device supports.")
         ->capture_default_str();
 
-    std::string tcp_server_ip = "127.0.0.1";
-    app.add_option("--tcp-server-ip", tcp_server_ip,
-                   "The TCP server for IPC connection.")
+    uint32_t upperboundUart = 1;
+    appHardware
+        ->add_option("--hw-upperbound-uart", upperboundUart,
+                     "The upperbound of UART interfaces this device supports.")
         ->capture_default_str();
 
-    uint16_t tcp_server_port = 8998;
-    app.add_option("--tcp-server-port", tcp_server_port,
-                   "The TCP port for IPC connections.")
+    // Software options
+    auto *appSoftware = app.add_option_group("Software");
+    std::string firmwareEntryPoint = "startApp";
+    appSoftware
+        ->add_option("--sw-firmware-entry-point", firmwareEntryPoint,
+                     "The entry point function to call in the firmware library")
+        ->capture_default_str();
+
+    // IPC options
+    auto *appIpc = app.add_option_group("IPC with Sabre Pilot");
+
+    uint32_t ipcId = 0;
+    appIpc
+        ->add_option("--ipc-id", ipcId,
+                     "The unique ID for this device in the IPC protocol")
+        ->capture_default_str();
+
+    std::string ipcMode = "none";
+    appIpc->add_option("--ipc-mode", ipcMode, "IPC mode")
+        ->check(CLI::IsMember({"none", "tcp"}))
+        ->capture_default_str();
+
+    std::string ipcTcpServerIp = "127.0.0.1";
+    appIpc
+        ->add_option("--tcp-server-ip", ipcTcpServerIp,
+                     "The TCP server for IPC connection.")
+        ->capture_default_str();
+
+    uint16_t ipcTcpServerPort = 8998;
+    appIpc
+        ->add_option("--tcp-server-port", ipcTcpServerPort,
+                     "The TCP port for IPC connections.")
         ->check(CLI::Range(1, 65535))
         ->capture_default_str();
 
     CLI11_PARSE(app, argc, argv);
 
-    std::cout << "ID: " << deviceId << '\n';
+    std::cout << "Starting with\n";
+    std::cout << "- Hardware:\n";
+    std::cout << "  - MaxGpios: " << maxGpios << '\n';
+    std::cout << "  - UpperBoundUart: " << upperboundUart << '\n';
+    std::cout << "- Software:\n";
+    std::cout << "  - Firmware: " << firmwareFile << '\n';
+    std::cout << "  - Entry point: " << firmwareEntryPoint << '\n';
+    std::cout << "- IPC:\n";
+    std::cout << "  - Mode: " << ipcMode << '\n';
+    std::cout << "  - TCP IP: " << ipcTcpServerIp << '\n';
+    std::cout << "  - TCP port: " << ipcTcpServerPort << '\n';
+
+    return 0;
 
     using namespace std::chrono_literals;
     using ::ipc::tcp::TcpIpcClient;
@@ -64,7 +104,7 @@ int main(int argc, char *argv[])
         std::make_shared<Wuphf>(ipcQueue, 2048);
 
     ipc::IpcClient::SharedPtr client = std::make_shared<TcpIpcClient>(
-        protocol, tcp_server_ip, tcp_server_port);
+        protocol, ipcTcpServerIp, ipcTcpServerPort);
     client->setup();
     std::thread ipcThread([client]() { client->run(); });
 
@@ -78,7 +118,7 @@ int main(int argc, char *argv[])
 
     // Send Client Hello
     sabre_runner::ui::DeviceId id;
-    id.id = deviceId;
+    id.id = ipcId;
     client->sendData({0x00, 0x01, 0x00, 0x04, id.idOctets[3], id.idOctets[2],
                       id.idOctets[1], id.idOctets[0]});
 
@@ -99,7 +139,7 @@ int main(int argc, char *argv[])
     sabre::core::ResourceManagerConfig config;
     config.maxGpios = 1;
     config.upperboundUart = 1;
-    sabre_runner::core::startFirmware(config, firmware, firmware_entry_point);
+    sabre_runner::core::startFirmware(config, firmwareFile, firmwareEntryPoint);
 
     return 0;
 }
