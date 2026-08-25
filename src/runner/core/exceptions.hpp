@@ -21,4 +21,16 @@ namespace sabre_runner::core
     public:
         EntryPointNotInLibraryException(const char *message);
     };
+
+    class UnknownIpcMode : public SabrePilotRunnerException
+    {
+    public:
+        UnknownIpcMode(const char *message);
+    };
+
+    class IpcException : public SabrePilotRunnerException
+    {
+    public:
+        IpcException(const char *message);
+    };
 }; // namespace sabre_runner::core

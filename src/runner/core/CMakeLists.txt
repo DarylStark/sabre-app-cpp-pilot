@@ -7,6 +7,7 @@ target_link_libraries(
         sabre
         sabre_pilot_impl
         sabre_ipc_tcp
+        sabre_wuphf
 )
 
 set_target_properties(
