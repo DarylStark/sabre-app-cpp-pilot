@@ -62,7 +62,9 @@
                 "--ipc-mode",
                 "none",
                 "--sw-firmware-entry-point",
-                "startDev1"
+                "startDev1",
+                "--hw-upperbound-uart",
+                "3"
             ],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}/build/dbg-all-with_tests/src/runner/app/",
@@ -90,7 +92,9 @@
                 "--ipc-mode",
                 "tcp",
                 "--sw-firmware-entry-point",
-                "startDev1"
+                "startDev1",
+                "--hw-upperbound-uart",
+                "3"
             ],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}/build/dbg-all-with_tests/src/runner/app/",

@@ -1,5 +1,6 @@
 #pragma once
 #include <CLI/CLI.hpp>
+#include <core/config.hpp>
 #include <core/runner.hpp>
 
 namespace sabre_pilot::runner

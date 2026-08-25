@@ -20,6 +20,11 @@ namespace sabre::ipc
         return _dstMcu;
     }
 
+    const std::string WuphfCommand::getRawBytes() const noexcept
+    {
+        return "";
+    }
+
     ClientHello::ClientHello(uint32_t destinationMcuId)
         : WuphfCommand(destinationMcuId)
     {
@@ -28,6 +33,12 @@ namespace sabre::ipc
     void ClientHello::executeForDevice(sabre_pilot::core::Device &device) const
     {
         std::clog << "HELLO FROM " << _dstMcu << "\n";
+    }
+
+    const std::string ClientHello::getRawBytes() const noexcept
+    {
+        return {0x00, 0x00, 0x00,
+                static_cast<char>((_dstMcu & 0xff000000) >> 24)};
     }
 
     UartAppend::UartAppend(uint32_t destinationMcuId, uint16_t uartIdx,

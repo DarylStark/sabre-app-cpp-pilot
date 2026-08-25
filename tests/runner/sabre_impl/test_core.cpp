@@ -8,7 +8,7 @@ public:
     {
         sabre::core::ResourceManagerConfig config = {.maxGpios = 30,
                                                      .upperboundUart = 3};
-        _factory = std::make_unique<sabre::impl::pilot::Factory>();
+        _factory = std::make_unique<sabre::impl::pilot::Factory>(nullptr);
     }
 
 protected:

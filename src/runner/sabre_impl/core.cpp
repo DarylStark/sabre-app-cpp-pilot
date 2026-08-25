@@ -4,7 +4,10 @@
 
 namespace sabre::impl::pilot
 {
-    Factory::Factory() {}
+    Factory::Factory(sabre_runner::hardware::Controller::SharedPtr hardware)
+        : _hardware(std::move(hardware))
+    {
+    }
 
     Factory::~Factory() {}
 
@@ -13,7 +16,8 @@ namespace sabre::impl::pilot
         sabre::hal::PinNumber txPin, sabre::hal::PinNumber rxPin,
         size_t bufferSize) const
     {
-        return std::make_unique<sabre::impl::pilot::Uart>(uartNumber);
+        return std::make_unique<sabre::impl::pilot::Uart>(_hardware, uartNumber,
+                                                          bufferSize);
     }
 
     sabre::hal::Serial::UniquePtr Factory::createUsbCdc(uint32_t index,

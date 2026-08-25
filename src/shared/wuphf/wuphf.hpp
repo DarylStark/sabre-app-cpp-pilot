@@ -3,6 +3,7 @@
 #include "wuphf_command.hpp"
 #include <cstdint>
 #include <functional>
+#include <ipc/client.hpp>
 #include <ipc/protocol.hpp>
 #include <unordered_map>
 #include <vector>

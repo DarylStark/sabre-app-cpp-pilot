@@ -1,5 +1,6 @@
 #pragma once
 
+#include <hardware/controller.hpp>
 #include <sabre/core/factory.hpp>
 #include <sabre/runtime/app.hpp>
 
@@ -7,8 +8,11 @@ namespace sabre::impl::pilot
 {
     class Factory : public sabre::core::Factory
     {
+    private:
+        sabre_runner::hardware::Controller::SharedPtr _hardware;
+
     public:
-        Factory();
+        Factory(sabre_runner::hardware::Controller::SharedPtr hardware);
         ~Factory();
 
         sabre::hal::Serial::UniquePtr createUartObject(

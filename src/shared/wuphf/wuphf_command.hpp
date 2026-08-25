@@ -26,6 +26,8 @@ namespace sabre::ipc
 
         virtual void
         executeForDevice(sabre_pilot::core::Device &device) const = 0;
+
+        virtual const std::string getRawBytes() const noexcept;
     };
 
     class ClientHello : public WuphfCommand
@@ -33,6 +35,7 @@ namespace sabre::ipc
     public:
         ClientHello(uint32_t destinationMcuId);
         void executeForDevice(sabre_pilot::core::Device &device) const;
+        const std::string getRawBytes() const noexcept override;
     };
 
     class UartAppend : public WuphfCommand

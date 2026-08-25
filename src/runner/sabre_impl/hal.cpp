@@ -3,12 +3,22 @@
 
 namespace sabre::impl::pilot
 {
-    Uart::Uart(sabre::hal::UartNumber uartIndex) : _uartIndex(uartIndex) {}
+    Uart::Uart(sabre_runner::hardware::Controller::SharedPtr hardware,
+               sabre::hal::UartNumber uartIndex, size_t bufferSize)
+        : _uartIndex(uartIndex), _hardware(std::move(hardware)),
+          _bufferSize(bufferSize)
+    {
+    }
 
-    void Uart::initialize() {}
+    void Uart::initialize()
+    {
+        _hardware->getUartController(_uartIndex)
+            .initialize(_bufferSize, _bufferSize);
+    }
 
     int Uart::writeByte(char data) const
     {
+        _hardware->getUartController(_uartIndex).write(data);
         return 0;
     }
 
@@ -17,13 +27,16 @@ namespace sabre::impl::pilot
         return "test"; // TODO: Make something good
     }
 
-    void Uart::flush() {}
+    void Uart::flush()
+    {
+        _hardware->getUartController(_uartIndex).flush();
+    }
 
     void Uart::deinitialize() {}
 
     bool Uart::isInitialized() const noexcept
     {
-        return false;
+        return _hardware->getUartController(_uartIndex).isInitialized();
     }
 
     Gpio::Gpio(sabre::hal::PinNumber pinNumber) : sabre::hal::Gpio(pinNumber) {}

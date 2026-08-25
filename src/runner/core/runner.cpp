@@ -5,6 +5,7 @@
 #include <sabre_impl/core.hpp>
 #include <thread>
 #include <wuphf/wuphf.hpp>
+#include <wuphf/wuphf_command.hpp>
 
 namespace sabre_runner::core
 {
@@ -54,11 +55,20 @@ namespace sabre_runner::core
         }
 
         _ipcThread->detach();
+
+        // Create a Hello Command
+        sabre::ipc::ClientHello hello(_config.deviceId);
     }
 
     void Runner::_configureIpc()
     {
         _ipcClient = std::visit(IpcModeVisitor(_ipcProtocol), _config.ipc);
+    }
+
+    void Runner::_configureHardware()
+    {
+        using sabre_runner::hardware::Controller;
+        _hardware = std::make_shared<Controller>(_config.hardware, _ipcClient);
     }
 
     void Runner::_startFirmware()
@@ -72,7 +82,7 @@ namespace sabre_runner::core
         config.maxGpios = _config.hardware.maxGpios;
         config.upperboundUart = _config.hardware.upperboundUart;
 
-        sabre::impl::pilot::Factory fac;
+        sabre::impl::pilot::Factory fac(_hardware);
         sabre::core::ResourceManager rm(fac, config);
 
         _entryPointFn(rm);
@@ -82,6 +92,7 @@ namespace sabre_runner::core
     {
         _loadEntryPoint();
         _configureIpc();
+        _configureHardware();
         _startIpc();
         _startFirmware();
     }

@@ -10,6 +10,17 @@ namespace sabre_pilot::examples
                  std::string name)
         : sabre::runtime::App<void>(resourceManager), _name(std::move(name))
     {
+        auto &txPin = getResourceManager().gpio().getGpio(0);
+        auto &rxPin = getResourceManager().gpio().getGpio(1);
+        getResourceManager().serial().configureUart(0, 9600, txPin, rxPin, 100);
+        auto &uart = getResourceManager().serial().getUart(0);
+        uart.initialize();
+        uart.writeByte('D');
+        uart.writeByte('a');
+        uart.writeByte('r');
+        uart.writeByte('y');
+        uart.writeByte('l');
+        uart.flush();
     }
 
     // MyApp::MyApp(sabre::core::ResourceManager &resourceManager, std::string
