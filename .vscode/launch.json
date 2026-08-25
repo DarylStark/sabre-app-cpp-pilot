@@ -75,6 +75,32 @@
             ],
             "preLaunchTask": "CMake: build",
             "miDebuggerPath": "/usr/bin/gdb",
+        },
+        {
+            "name": "Pilot Runner - Debug with example app (TCP IPC)",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/dbg-all-with_tests/src/runner/app/sabre_pilot_runner",
+            "args": [
+                "${workspaceFolder}/build/dbg-all-with_tests/src/examples/example_app/libexample_app.so",
+                "--ipc-id",
+                "9999",
+                "--ipc-mode",
+                "tcp"
+            ],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}/build/dbg-all-with_tests/src/runner/app/",
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ],
+            "preLaunchTask": "CMake: build",
+            "miDebuggerPath": "/usr/bin/gdb",
         }
     ]
 }

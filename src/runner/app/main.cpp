@@ -1,20 +1,6 @@
 #include <CLI/CLI.hpp>
-#include <core/start_firmware.hpp>
-#include <ipc_tcp/client.hpp>
-#include <sabre_impl/core.hpp>
+#include <core/runner.hpp>
 #include <string>
-#include <thread>
-#include <wuphf/wuphf.hpp>
-#include <wuphf/wuphf_command.hpp>
-
-namespace sabre_runner::ui
-{
-    union DeviceId
-    {
-        uint32_t id;
-        int8_t idOctets[4];
-    };
-} // namespace sabre_runner::ui
 
 int main(int argc, char *argv[])
 {
@@ -53,15 +39,15 @@ int main(int argc, char *argv[])
     // IPC options
     auto *appIpc = app.add_option_group("IPC with Sabre Pilot");
 
+    std::string ipcMode = "none";
+    appIpc->add_option("--ipc-mode", ipcMode, "IPC mode")
+        ->check(CLI::IsMember({"none", "tcp"}))
+        ->capture_default_str();
+
     uint32_t ipcId = 0;
     appIpc
         ->add_option("--ipc-id", ipcId,
                      "The unique ID for this device in the IPC protocol")
-        ->capture_default_str();
-
-    std::string ipcMode = "none";
-    appIpc->add_option("--ipc-mode", ipcMode, "IPC mode")
-        ->check(CLI::IsMember({"none", "tcp"}))
         ->capture_default_str();
 
     std::string ipcTcpServerIp = "127.0.0.1";
@@ -79,67 +65,89 @@ int main(int argc, char *argv[])
 
     CLI11_PARSE(app, argc, argv);
 
-    std::cout << "Starting with\n";
-    std::cout << "- Hardware:\n";
-    std::cout << "  - MaxGpios: " << maxGpios << '\n';
-    std::cout << "  - UpperBoundUart: " << upperboundUart << '\n';
-    std::cout << "- Software:\n";
-    std::cout << "  - Firmware: " << firmwareFile << '\n';
-    std::cout << "  - Entry point: " << firmwareEntryPoint << '\n';
-    std::cout << "- IPC:\n";
-    std::cout << "  - Mode: " << ipcMode << '\n';
-    std::cout << "  - TCP IP: " << ipcTcpServerIp << '\n';
-    std::cout << "  - TCP port: " << ipcTcpServerPort << '\n';
+    // Custom validation
+    const bool ipcIdRequired = ipcMode == "tcp";
+
+    if (ipcIdRequired && !app.count("--ipc-id") || ipcId == 0)
+    {
+        throw CLI::ValidationError("--ipc-id",
+                                   "is required when --ipc-mode is " + ipcMode);
+    }
+
+    // Configure the Configuration object for Sabre Runner Core
+    using namespace sabre_runner::core;
+    CoreConfig config;
+    config.hardware.maxGpios = maxGpios;
+    config.hardware.upperboundUart = upperboundUart;
+    config.software.firmwareFile = firmwareFile;
+    config.software.entryPoint = firmwareEntryPoint;
+    if (ipcMode == "none")
+    {
+        config.ipc = IpcNoneConfig{};
+    }
+    else if (ipcMode == "tcp")
+    {
+        config.ipc = IpcTcpConfig{};
+        auto &ipcConfig = std::get<IpcTcpConfig>(config.ipc);
+        ipcConfig.serverIp = ipcTcpServerIp;
+        ipcConfig.serverPort = ipcTcpServerPort;
+        ipcConfig.deviceId = ipcId;
+    }
+
+    // Create the Runner object
+    Runner runner(config);
+    runner.start();
 
     return 0;
 
-    using namespace std::chrono_literals;
-    using ::ipc::tcp::TcpIpcClient;
-    using sabre::ipc::Wuphf;
-    using sabre::ipc::WuphfCommand;
+    // using namespace std::chrono_literals;
+    // using ::ipc::tcp::TcpIpcClient;
+    // using sabre::ipc::Wuphf;
+    // using sabre::ipc::WuphfCommand;
 
-    // Protocol
-    ipc::Queue<WuphfCommand::UniquePtr> ipcQueue;
-    ipc::IpcProtocol::SharedPtr protocol =
-        std::make_shared<Wuphf>(ipcQueue, 2048);
+    // // Protocol
+    // ipc::Queue<WuphfCommand::UniquePtr> ipcQueue;
+    // ipc::IpcProtocol::SharedPtr protocol =
+    //     std::make_shared<Wuphf>(ipcQueue, 2048);
 
-    ipc::IpcClient::SharedPtr client = std::make_shared<TcpIpcClient>(
-        protocol, ipcTcpServerIp, ipcTcpServerPort);
-    client->setup();
-    std::thread ipcThread([client]() { client->run(); });
+    // ipc::IpcClient::SharedPtr client = std::make_shared<TcpIpcClient>(
+    //     protocol, ipcTcpServerIp, ipcTcpServerPort);
+    // client->setup();
+    // std::thread ipcThread([client]() { client->run(); });
 
-    if (!client->waitForConnection())
-    {
-        std::cerr << "Error connecting to IPC server\n";
-        client->stop();
-        ipcThread.join();
-        return 0;
-    }
+    // if (!client->waitForConnection())
+    // {
+    //     std::cerr << "Error connecting to IPC server\n";
+    //     client->stop();
+    //     ipcThread.join();
+    //     return 0;
+    // }
 
-    // Send Client Hello
-    sabre_runner::ui::DeviceId id;
-    id.id = ipcId;
-    client->sendData({0x00, 0x01, 0x00, 0x04, id.idOctets[3], id.idOctets[2],
-                      id.idOctets[1], id.idOctets[0]});
+    // // Send Client Hello
+    // sabre_runner::ui::DeviceId id;
+    // id.id = ipcId;
+    // client->sendData({0x00, 0x01, 0x00, 0x04, id.idOctets[3], id.idOctets[2],
+    //                   id.idOctets[1], id.idOctets[0]});
 
-    // Send Uart Append on UART 0
-    client->sendData({0x01, 0x01, 0x00, 19,  0x00, 0x00, 'h', 'e',
-                      'l',  'l',  'o',  ' ', 'f',  'r',  'o', 'm',
-                      ' ',  'S',  'a',  'b', 'r',  'e',  '\n'});
+    // // Send Uart Append on UART 0
+    // client->sendData({0x01, 0x01, 0x00, 19,  0x00, 0x00, 'h', 'e',
+    //                   'l',  'l',  'o',  ' ', 'f',  'r',  'o', 'm',
+    //                   ' ',  'S',  'a',  'b', 'r',  'e',  '\n'});
 
-    std::this_thread::sleep_for(1s);
+    // std::this_thread::sleep_for(1s);
 
-    client->stop();
-    ipcThread.join();
+    // client->stop();
+    // ipcThread.join();
 
     return 0;
 
     // Skipping this for now, will re-add later
 
-    sabre::core::ResourceManagerConfig config;
-    config.maxGpios = 1;
-    config.upperboundUart = 1;
-    sabre_runner::core::startFirmware(config, firmwareFile, firmwareEntryPoint);
+    // sabre::core::ResourceManagerConfig config;
+    // config.maxGpios = 1;
+    // config.upperboundUart = 1;
+    // sabre_runner::core::startFirmware(config, firmwareFile,
+    // firmwareEntryPoint);
 
     return 0;
 }
