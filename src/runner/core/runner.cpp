@@ -72,7 +72,7 @@ namespace sabre_runner::core
         config.maxGpios = _config.hardware.maxGpios;
         config.upperboundUart = _config.hardware.upperboundUart;
 
-        sabre::impl::pilot::Factory fac(nullptr);
+        sabre::impl::pilot::Factory fac;
         sabre::core::ResourceManager rm(fac, config);
 
         _entryPointFn(rm);

@@ -1,8 +1,8 @@
 #include <gtest/gtest.h>
 #include <memory>
+#include <sabre/core/resource_manager.hpp>
 #include <sabre_impl/exceptions.hpp>
 #include <sabre_impl/hal.hpp>
-#include <sabre_impl/mcu.hpp>
 
 class HalUart : public ::testing::Test
 {
@@ -11,41 +11,37 @@ public:
     {
         sabre::core::ResourceManagerConfig config = {.maxGpios = 30,
                                                      .upperboundUart = 3};
-        _device = std::make_unique<sabre::impl::pilot::Mcu>(config);
     }
-
-protected:
-    std::unique_ptr<sabre::impl::pilot::Mcu> _device;
 };
 
 TEST_F(HalUart, CreateWithoutDevice)
 {
-    ASSERT_THROW(sabre::impl::pilot::Uart uart(nullptr, 0),
+    ASSERT_THROW(sabre::impl::pilot::Uart uart(0),
                  sabre::impl::pilot::DeviceNotConfiguredException);
 }
 
 TEST_F(HalUart, CreateUnitialized)
 {
-    sabre::impl::pilot::Uart uart(_device.get(), 0);
+    sabre::impl::pilot::Uart uart(0);
     ASSERT_FALSE(uart.isInitialized());
 }
 
 TEST_F(HalUart, CreateInvalidYartDevice)
 {
-    ASSERT_THROW(sabre::impl::pilot::Uart uart(_device.get(), 5),
+    ASSERT_THROW(sabre::impl::pilot::Uart uart(5),
                  sabre::impl::pilot::InvalidUartIndex);
 }
 
 TEST_F(HalUart, Initialize)
 {
-    sabre::impl::pilot::Uart uart(_device.get(), 0);
+    sabre::impl::pilot::Uart uart(0);
     uart.initialize();
     ASSERT_TRUE(uart.isInitialized());
 }
 
 TEST_F(HalUart, Deinitialize)
 {
-    sabre::impl::pilot::Uart uart(_device.get(), 0);
+    sabre::impl::pilot::Uart uart(0);
     uart.initialize();
     ASSERT_TRUE(uart.isInitialized());
     uart.deinitialize();
@@ -54,44 +50,31 @@ TEST_F(HalUart, Deinitialize)
 
 TEST_F(HalUart, WriteAndFlushData)
 {
-    std::string output = "";
-    _device->getUartController(0).setOutputBufferCallback(
-        [&output](char c) { output.push_back(c); });
-    sabre::impl::pilot::Uart uart(_device.get(), 0);
-    uart.initialize();
-    uart.writeByte('d');
-    uart.flush();
-    ASSERT_EQ(output, "d");
+    ASSERT_TRUE(false);
 }
 
 TEST_F(HalUart, WriteWithoutFlushData)
 {
-    std::string output = "";
-    _device->getUartController(0).setOutputBufferCallback(
-        [&output](char c) { output.push_back(c); });
-    sabre::impl::pilot::Uart uart(_device.get(), 0);
-    uart.initialize();
-    uart.writeByte('d');
-    ASSERT_EQ(output, "");
+    ASSERT_TRUE(false);
 }
 
 TEST_F(HalUart, WriteDataReturnValue)
 {
-    sabre::impl::pilot::Uart uart(_device.get(), 0);
+    sabre::impl::pilot::Uart uart(0);
     uart.initialize();
     ASSERT_EQ(uart.writeByte('d'), 1);
 }
 
 TEST_F(HalUart, WriteDataBeforeInitialized)
 {
-    sabre::impl::pilot::Uart uart(_device.get(), 0);
+    sabre::impl::pilot::Uart uart(0);
     ASSERT_THROW(uart.writeByte('d'),
                  sabre::impl::pilot::UartControllerNotInitializedException);
 }
 
 TEST_F(HalUart, FlushDataBeforeInitialized)
 {
-    sabre::impl::pilot::Uart uart(_device.get(), 0);
+    sabre::impl::pilot::Uart uart(0);
     ASSERT_THROW(uart.flush(),
                  sabre::impl::pilot::UartControllerNotInitializedException);
 }
@@ -103,15 +86,10 @@ public:
     {
         sabre::core::ResourceManagerConfig config = {.maxGpios = 30,
                                                      .upperboundUart = 3};
-        _device = std::make_unique<sabre::impl::pilot::Mcu>(config);
     }
-
-protected:
-    std::unique_ptr<sabre::impl::pilot::Mcu> _device;
 };
 
 TEST_F(HalGpio, CreateWithoutDevice)
 {
-    ASSERT_THROW(sabre::impl::pilot::Gpio gpio(nullptr, 1),
-                 sabre::impl::pilot::DeviceNotConfiguredException);
+    ASSERT_TRUE(false);
 }
