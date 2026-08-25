@@ -30,7 +30,6 @@ namespace sabre_runner::core
 
     struct IpcTcpConfig
     {
-        uint32_t deviceId;
         std::string serverIp;
         uint16_t serverPort;
     };
