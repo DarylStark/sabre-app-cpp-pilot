@@ -28,4 +28,9 @@ namespace sabre_runner::core
         : SabrePilotRunnerException(message)
     {
     }
+
+    NotConfigureException::NotConfigureException(const char *message)
+        : SabrePilotRunnerException(message)
+    {
+    }
 } // namespace sabre_runner::core

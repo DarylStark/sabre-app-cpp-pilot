@@ -60,7 +60,9 @@
                 "--ipc-id",
                 "9999",
                 "--ipc-mode",
-                "none"
+                "none",
+                "--sw-firmware-entry-point",
+                "startDev1"
             ],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}/build/dbg-all-with_tests/src/runner/app/",
@@ -86,7 +88,9 @@
                 "--ipc-id",
                 "9999",
                 "--ipc-mode",
-                "tcp"
+                "tcp",
+                "--sw-firmware-entry-point",
+                "startDev1"
             ],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}/build/dbg-all-with_tests/src/runner/app/",

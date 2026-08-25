@@ -61,7 +61,7 @@ namespace sabre_pilot::examples
         {
             std::cout << _name << '\n';
             std::flush(std::cout);
-            std::this_thread::sleep_for(2s);
+            std::this_thread::sleep_for(500ms);
         }
     }
 } // namespace sabre_pilot::examples

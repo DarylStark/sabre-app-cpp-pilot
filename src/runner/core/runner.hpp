@@ -1,5 +1,6 @@
 #pragma once
 
+#include "dynamic_library.hpp"
 #include "exceptions.hpp"
 #include <cstdint>
 #include <ipc/client.hpp>
@@ -71,14 +72,20 @@ namespace sabre_runner::core
     private:
         CoreConfig _config;
 
+        // Software
+        DynamicLibrary::UniquePtr _library{};
+        LibraryEntryPoint _entryPointFn;
+
         // IPC
         ipc::Queue<sabre::ipc::WuphfCommand::UniquePtr> _ipcQueue;
         ipc::IpcProtocol::SharedPtr _ipcProtocol;
         ipc::IpcClient::SharedPtr _ipcClient{};
         std::unique_ptr<std::thread> _ipcThread{};
 
+        void _loadEntryPoint();
         void _configureIpc();
         void _startIpc();
+        void _startFirmware();
 
     public:
         Runner(CoreConfig config);

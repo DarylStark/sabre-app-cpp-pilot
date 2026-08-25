@@ -33,4 +33,10 @@ namespace sabre_runner::core
     public:
         IpcException(const char *message);
     };
+
+    class NotConfigureException : public SabrePilotRunnerException
+    {
+    public:
+        NotConfigureException(const char *message);
+    };
 }; // namespace sabre_runner::core
