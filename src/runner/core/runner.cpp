@@ -1,6 +1,7 @@
 #include "runner.hpp"
 #include "exceptions.hpp"
 #include "linux_dynamic_library.hpp"
+#include <iostream> // TODO: Remove
 #include <ipc_tcp/client.hpp>
 #include <sabre_impl/core.hpp>
 #include <thread>
@@ -58,6 +59,7 @@ namespace sabre_runner::core
 
         // Create a Hello Command
         sabre::ipc::ClientHello hello(_config.deviceId);
+        sabre::ipc::sendWuphfCommand(*_ipcClient, hello);
     }
 
     void Runner::_configureIpc()
@@ -68,7 +70,8 @@ namespace sabre_runner::core
     void Runner::_configureHardware()
     {
         using sabre_runner::hardware::Controller;
-        _hardware = std::make_shared<Controller>(_config.hardware, _ipcClient);
+        _hardware = std::make_shared<Controller>(
+            _config.hardware, []() { std::cout << "Commando\n"; });
     }
 
     void Runner::_startFirmware()

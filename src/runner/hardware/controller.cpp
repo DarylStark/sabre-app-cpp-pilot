@@ -5,8 +5,8 @@
 namespace sabre_runner::hardware
 {
     Controller::Controller(sabre_runner::core::HardwareConfig config,
-                           ipc::IpcClient::SharedPtr ipcClient)
-        : _config(config), _ipcClient(std::move(ipcClient)),
+                           SendCommandHandler sendCommandHandler)
+        : _config(config), _sendCommandHandler(std::move(sendCommandHandler)),
           _uartControllers(_config.upperboundUart)
     {
         for (size_t uartIdx = 0; uartIdx < _uartControllers.size(); uartIdx++)

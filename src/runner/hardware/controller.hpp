@@ -2,12 +2,15 @@
 
 #include "uart_controller.hpp"
 #include <core/config.hpp>
+#include <functional>
 #include <ipc/client.hpp>
 #include <memory>
 #include <vector>
 
 namespace sabre_runner::hardware
 {
+    using SendCommandHandler = std::function<void()>;
+
     class Controller
     {
     public:
@@ -19,12 +22,13 @@ namespace sabre_runner::hardware
         sabre_runner::core::HardwareConfig _config;
         ipc::IpcClient::SharedPtr _ipcClient{};
         std::vector<UartController> _uartControllers;
+        SendCommandHandler _sendCommandHandler;
 
         void _uartFlushCallback(size_t uartIndex, char byte);
 
     public:
         Controller(sabre_runner::core::HardwareConfig config,
-                   ipc::IpcClient::SharedPtr ipcClient);
+                   SendCommandHandler sendCommandHandler);
 
         UartController &getUartController(size_t uartNumber);
     };

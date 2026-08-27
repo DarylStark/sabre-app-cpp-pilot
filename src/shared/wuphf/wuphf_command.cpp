@@ -1,5 +1,6 @@
 #include "wuphf_command.hpp"
 #include <iostream> // TODO: Remove
+#include <vector>
 
 namespace sabre::ipc
 {
@@ -20,9 +21,14 @@ namespace sabre::ipc
         return _dstMcu;
     }
 
-    const std::string WuphfCommand::getRawBytes() const noexcept
+    const std::vector<uint8_t> WuphfCommand::getRawBytes() const noexcept
     {
-        return "";
+        return {};
+    }
+
+    const uint16_t WuphfCommand::getOpCode() const noexcept
+    {
+        return 0x0001;
     }
 
     ClientHello::ClientHello(uint32_t destinationMcuId)
@@ -35,10 +41,16 @@ namespace sabre::ipc
         std::clog << "HELLO FROM " << _dstMcu << "\n";
     }
 
-    const std::string ClientHello::getRawBytes() const noexcept
+    const std::vector<uint8_t> ClientHello::getRawBytes() const noexcept
     {
-        return {0x00, 0x00, 0x00,
-                static_cast<char>((_dstMcu & 0xff000000) >> 24)};
+        // TODO: Make sure this ID is correct since it is wrong now
+        uint8_t lastoctet = static_cast<uint8_t>(_dstMcu & 0x000000ff);
+        return {0x00, 0x00, 0x00, lastoctet};
+    }
+
+    const uint16_t ClientHello::getOpCode() const noexcept
+    {
+        return 0x0001;
     }
 
     UartAppend::UartAppend(uint32_t destinationMcuId, uint16_t uartIdx,

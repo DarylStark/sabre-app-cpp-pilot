@@ -88,7 +88,7 @@
             "args": [
                 "${workspaceFolder}/build/dbg-all-with_tests/src/examples/example_app/libexample_app.so",
                 "--ipc-id",
-                "9999",
+                "1",
                 "--ipc-mode",
                 "tcp",
                 "--sw-firmware-entry-point",

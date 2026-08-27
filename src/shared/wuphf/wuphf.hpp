@@ -34,4 +34,7 @@ namespace sabre::ipc
         Wuphf(::ipc::Queue<WuphfCommand::UniquePtr> &queue,
               std::size_t bufferSize);
     };
+
+    void sendWuphfCommand(::ipc::IpcClient &client,
+                          const WuphfCommand &command);
 } // namespace sabre::ipc
