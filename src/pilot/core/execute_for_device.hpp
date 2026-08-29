@@ -1,0 +1,19 @@
+#pragma once
+
+#include "device.hpp"
+#include <wuphf/wuphf_message_visitor.hpp>
+
+namespace sabre_pilot::core
+{
+    class ExecuteForDevice : public sabre::ipc::WuphfMessageVisitorAdapter
+    {
+    private:
+        std::shared_ptr<Device> _device;
+        void setDevice(std::shared_ptr<Device> device);
+
+    public:
+        void setDevice(std::optional<std::shared_ptr<Device>> device);
+        void visitClientHello(sabre::ipc::ClientHello &message) override;
+        void visitUartAppend(sabre::ipc::UartAppend &message) override;
+    };
+} // namespace sabre_pilot::core

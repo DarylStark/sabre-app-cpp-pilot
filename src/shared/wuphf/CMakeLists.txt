@@ -4,7 +4,6 @@ add_library(sabre_wuphf STATIC ${SABRE_WUPHF_SOURCES})
 target_link_libraries(
     sabre_wuphf
     PRIVATE
-        sabre_pilot_core
         sabre_ipc
 )
 

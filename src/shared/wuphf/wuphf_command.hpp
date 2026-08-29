@@ -1,11 +1,13 @@
 #pragma once
 
-#include <core/device.hpp>
 #include <cstdint>
 #include <memory>
+#include <vector>
 
 namespace sabre::ipc
 {
+    class WuphfMessageVisitor; // Forward declaration
+
     class WuphfCommand
     {
     public:
@@ -24,20 +26,19 @@ namespace sabre::ipc
         void setDestionationMcuId(uint32_t mcuId);
         uint32_t getDestinationMcuId() const;
 
-        virtual void
-        executeForDevice(sabre_pilot::core::Device &device) const = 0;
-
         virtual const std::vector<uint8_t> getRawBytes() const noexcept;
         virtual const uint16_t getOpCode() const noexcept;
+
+        virtual void accept(WuphfMessageVisitor &visitor) = 0;
     };
 
     class ClientHello : public WuphfCommand
     {
     public:
         ClientHello(uint32_t destinationMcuId);
-        void executeForDevice(sabre_pilot::core::Device &device) const;
         const std::vector<uint8_t> getRawBytes() const noexcept override;
         const uint16_t getOpCode() const noexcept override;
+        void accept(WuphfMessageVisitor &visitor);
     };
 
     class UartAppend : public WuphfCommand
@@ -49,6 +50,6 @@ namespace sabre::ipc
     public:
         UartAppend(uint32_t destinationMcuId, uint16_t uartIdx,
                    const std::string &data);
-        void executeForDevice(sabre_pilot::core::Device &device) const;
+        void accept(WuphfMessageVisitor &visitor);
     };
 } // namespace sabre::ipc

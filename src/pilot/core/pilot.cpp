@@ -1,5 +1,6 @@
 #include "pilot.hpp"
 #include "device.hpp"
+#include "execute_for_device.hpp"
 #include "subprocess_strategy.hpp"
 #include <iostream>
 #include <ipc_tcp/server.hpp>
@@ -129,6 +130,7 @@ namespace sabre_pilot::core
         std::thread ipcThread(
             [this]()
             {
+                ExecuteForDevice executor;
                 bool keepRunning = true;
                 while (keepRunning)
                 {
@@ -140,7 +142,7 @@ namespace sabre_pilot::core
                         auto device = getDevice(command->getDestinationMcuId());
                         if (device)
                         {
-                            command->executeForDevice(*(*device));
+                            command->accept(executor);
                         }
                     }
                     else

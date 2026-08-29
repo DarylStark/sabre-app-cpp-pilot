@@ -1,4 +1,5 @@
 #include "wuphf_command.hpp"
+#include "wuphf_message_visitor.hpp"
 #include <iostream> // TODO: Remove
 #include <vector>
 
@@ -36,11 +37,6 @@ namespace sabre::ipc
     {
     }
 
-    void ClientHello::executeForDevice(sabre_pilot::core::Device &device) const
-    {
-        std::clog << "HELLO FROM " << _dstMcu << "\n";
-    }
-
     const std::vector<uint8_t> ClientHello::getRawBytes() const noexcept
     {
         // TODO: Make sure this ID is correct since it is wrong now
@@ -53,14 +49,19 @@ namespace sabre::ipc
         return 0x0001;
     }
 
+    void ClientHello::accept(WuphfMessageVisitor &visitor)
+    {
+        visitor.visitClientHello(*this);
+    }
+
     UartAppend::UartAppend(uint32_t destinationMcuId, uint16_t uartIdx,
                            const std::string &data)
         : WuphfCommand(destinationMcuId), _uartIdx(uartIdx), _data(data)
     {
     }
 
-    void UartAppend::executeForDevice(sabre_pilot::core::Device &device) const
+    void UartAppend::accept(WuphfMessageVisitor &visitor)
     {
-        device.appendToUArt(_uartIdx, _data);
+        visitor.visitUartAppend(*this);
     }
 } // namespace sabre::ipc
