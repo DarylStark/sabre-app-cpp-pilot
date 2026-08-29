@@ -1,6 +1,7 @@
 #pragma once
 
 #include "device.hpp"
+#include <optional>
 #include <wuphf/wuphf_message_visitor.hpp>
 
 namespace sabre_pilot::core
