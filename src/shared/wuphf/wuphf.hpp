@@ -1,6 +1,6 @@
 #pragma once
 
-#include "wuphf_command.hpp"
+#include "wuphf_message.hpp"
 #include <cstdint>
 #include <functional>
 #include <ipc/client.hpp>
@@ -10,7 +10,7 @@
 
 namespace sabre::ipc
 {
-    using ParseMethod = std::function<std::optional<WuphfCommand::UniquePtr>()>;
+    using ParseMethod = std::function<std::optional<WuphfMessage::UniquePtr>()>;
 
     class Wuphf : public ::ipc::IpcProtocol
     {
@@ -21,20 +21,20 @@ namespace sabre::ipc
 
     private:
         uint32_t _mcuId = 0;
-        ::ipc::Queue<WuphfCommand::UniquePtr> &_queue;
+        ::ipc::Queue<WuphfMessage::UniquePtr> &_queue;
 
         std::size_t _parseOnePacket() override;
 
-        std::optional<WuphfCommand::UniquePtr> _parseClientHello();
-        std::optional<WuphfCommand::UniquePtr> _parseUartAppend();
+        std::optional<WuphfMessage::UniquePtr> _parseClientHello();
+        std::optional<WuphfMessage::UniquePtr> _parseUartAppend();
 
         std::unordered_map<uint32_t, ParseMethod> _parseMethods;
 
     public:
-        Wuphf(::ipc::Queue<WuphfCommand::UniquePtr> &queue,
+        Wuphf(::ipc::Queue<WuphfMessage::UniquePtr> &queue,
               std::size_t bufferSize);
     };
 
-    void sendWuphfCommand(::ipc::IpcClient &client,
-                          const WuphfCommand &command);
+    void sendWuphfMessage(::ipc::IpcClient &client,
+                          const WuphfMessage &message);
 } // namespace sabre::ipc

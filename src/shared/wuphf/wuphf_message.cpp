@@ -1,39 +1,39 @@
-#include "wuphf_command.hpp"
+#include "wuphf_message.hpp"
 #include "wuphf_message_visitor.hpp"
 #include <iostream> // TODO: Remove
 #include <vector>
 
 namespace sabre::ipc
 {
-    WuphfCommand::WuphfCommand() : _dstMcu(0) {}
+    WuphfMessage::WuphfMessage() : _dstMcu(0) {}
 
-    WuphfCommand::WuphfCommand(uint32_t destinationMcuId)
+    WuphfMessage::WuphfMessage(uint32_t destinationMcuId)
         : _dstMcu(destinationMcuId)
     {
     }
 
-    void WuphfCommand::setDestionationMcuId(uint32_t mcuId)
+    void WuphfMessage::setDestionationMcuId(uint32_t mcuId)
     {
         _dstMcu = mcuId;
     }
 
-    uint32_t WuphfCommand::getDestinationMcuId() const
+    uint32_t WuphfMessage::getDestinationMcuId() const
     {
         return _dstMcu;
     }
 
-    const std::vector<uint8_t> WuphfCommand::getRawBytes() const noexcept
+    const std::vector<uint8_t> WuphfMessage::getRawBytes() const noexcept
     {
         return {};
     }
 
-    const uint16_t WuphfCommand::getOpCode() const noexcept
+    const uint16_t WuphfMessage::getOpCode() const noexcept
     {
         return 0x0001;
     }
 
     ClientHello::ClientHello(uint32_t destinationMcuId)
-        : WuphfCommand(destinationMcuId)
+        : WuphfMessage(destinationMcuId)
     {
     }
 
@@ -56,7 +56,7 @@ namespace sabre::ipc
 
     UartAppend::UartAppend(uint32_t destinationMcuId, uint16_t uartIdx,
                            const std::string &data)
-        : WuphfCommand(destinationMcuId), _uartIdx(uartIdx), _data(data)
+        : WuphfMessage(destinationMcuId), _uartIdx(uartIdx), _data(data)
     {
     }
 

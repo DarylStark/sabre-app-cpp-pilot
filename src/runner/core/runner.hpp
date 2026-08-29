@@ -12,7 +12,7 @@
 #include <string>
 #include <thread>
 #include <variant>
-#include <wuphf/wuphf_command.hpp>
+#include <wuphf/wuphf_message.hpp>
 
 namespace sabre_runner::core
 {
@@ -46,7 +46,7 @@ namespace sabre_runner::core
         sabre_runner::hardware::Controller::SharedPtr _hardware;
 
         // IPC
-        ipc::Queue<sabre::ipc::WuphfCommand::UniquePtr> _ipcQueue;
+        ipc::Queue<sabre::ipc::WuphfMessage::UniquePtr> _ipcQueue;
         ipc::IpcProtocol::SharedPtr _ipcProtocol;
         ipc::IpcClient::SharedPtr _ipcClient{};
         std::unique_ptr<std::thread> _ipcThread{};

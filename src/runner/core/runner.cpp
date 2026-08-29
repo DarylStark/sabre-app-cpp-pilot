@@ -6,7 +6,7 @@
 #include <sabre_impl/core.hpp>
 #include <thread>
 #include <wuphf/wuphf.hpp>
-#include <wuphf/wuphf_command.hpp>
+#include <wuphf/wuphf_message.hpp>
 
 namespace sabre_runner::core
 {
@@ -59,7 +59,7 @@ namespace sabre_runner::core
 
         // Create a Hello Command
         sabre::ipc::ClientHello hello(_config.deviceId);
-        sabre::ipc::sendWuphfCommand(*_ipcClient, hello);
+        sabre::ipc::sendWuphfMessage(*_ipcClient, hello);
     }
 
     void Runner::_configureIpc()

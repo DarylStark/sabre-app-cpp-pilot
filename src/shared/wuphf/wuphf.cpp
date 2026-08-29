@@ -4,7 +4,7 @@
 
 namespace sabre::ipc
 {
-    Wuphf::Wuphf(::ipc::Queue<WuphfCommand::UniquePtr> &queue,
+    Wuphf::Wuphf(::ipc::Queue<WuphfMessage::UniquePtr> &queue,
                  std::size_t bufferSize)
         : IpcProtocol(bufferSize), _queue(queue)
     {
@@ -33,7 +33,7 @@ namespace sabre::ipc
         const auto method = _parseMethods.find(type);
         if (method != _parseMethods.end())
         {
-            std::optional<WuphfCommand::UniquePtr> message;
+            std::optional<WuphfMessage::UniquePtr> message;
             message = method->second();
             if (message)
             {
@@ -44,7 +44,7 @@ namespace sabre::ipc
         return 0;
     }
 
-    std::optional<WuphfCommand::UniquePtr> Wuphf::_parseClientHello()
+    std::optional<WuphfMessage::UniquePtr> Wuphf::_parseClientHello()
     {
         uint16_t length = _readU16_be(2);
 
@@ -59,7 +59,7 @@ namespace sabre::ipc
         return std::make_unique<ClientHello>(id);
     }
 
-    std::optional<WuphfCommand::UniquePtr> Wuphf::_parseUartAppend()
+    std::optional<WuphfMessage::UniquePtr> Wuphf::_parseUartAppend()
     {
         if (!_mcuId)
             return std::nullopt;
@@ -78,10 +78,10 @@ namespace sabre::ipc
         return std::make_unique<UartAppend>(_mcuId, uartId, data);
     }
 
-    void sendWuphfCommand(::ipc::IpcClient &client, const WuphfCommand &command)
+    void sendWuphfMessage(::ipc::IpcClient &client, const WuphfMessage &message)
     {
-        const uint16_t opcode = command.getOpCode();
-        const auto data = command.getRawBytes();
+        const uint16_t opcode = message.getOpCode();
+        const auto data = message.getRawBytes();
 
         std::vector<uint8_t> bytes(2 + 2 + data.size());
         size_t length = data.size();

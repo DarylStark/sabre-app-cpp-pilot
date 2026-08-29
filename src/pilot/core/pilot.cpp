@@ -119,7 +119,7 @@ namespace sabre_pilot::core
     {
         using ::ipc::tcp::TcpIpcServer;
         using sabre::ipc::Wuphf;
-        using sabre::ipc::WuphfCommand;
+        using sabre::ipc::WuphfMessage;
 
         // Start process monitor
         auto threadLambda = [this]() { this->_processMonitorThreadFn(); };
@@ -134,15 +134,15 @@ namespace sabre_pilot::core
                 bool keepRunning = true;
                 while (keepRunning)
                 {
-                    std::optional<WuphfCommand::UniquePtr> item =
+                    std::optional<WuphfMessage::UniquePtr> item =
                         _ipcQueue.pop();
                     if (item)
                     {
-                        WuphfCommand::UniquePtr command = std::move(*item);
-                        auto device = getDevice(command->getDestinationMcuId());
+                        WuphfMessage::UniquePtr message = std::move(*item);
+                        auto device = getDevice(message->getDestinationMcuId());
                         if (device)
                         {
-                            command->accept(executor);
+                            message->accept(executor);
                         }
                     }
                     else

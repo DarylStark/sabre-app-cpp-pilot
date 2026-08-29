@@ -1,6 +1,6 @@
 #pragma once
 
-#include "wuphf_command.hpp"
+#include "wuphf_message.hpp"
 
 namespace sabre::ipc
 {

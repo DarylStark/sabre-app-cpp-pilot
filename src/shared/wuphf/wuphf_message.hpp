@@ -8,20 +8,20 @@ namespace sabre::ipc
 {
     class WuphfMessageVisitor; // Forward declaration
 
-    class WuphfCommand
+    class WuphfMessage
     {
     public:
-        using Ptr = WuphfCommand *;
-        using SharedPtr = std::shared_ptr<WuphfCommand>;
-        using UniquePtr = std::unique_ptr<WuphfCommand>;
+        using Ptr = WuphfMessage *;
+        using SharedPtr = std::shared_ptr<WuphfMessage>;
+        using UniquePtr = std::unique_ptr<WuphfMessage>;
 
     protected:
         uint32_t _dstMcu = 0;
 
     public:
-        WuphfCommand();
-        virtual ~WuphfCommand() = default;
-        WuphfCommand(uint32_t destinationMcuId);
+        WuphfMessage();
+        virtual ~WuphfMessage() = default;
+        WuphfMessage(uint32_t destinationMcuId);
 
         void setDestionationMcuId(uint32_t mcuId);
         uint32_t getDestinationMcuId() const;
@@ -32,7 +32,7 @@ namespace sabre::ipc
         virtual void accept(WuphfMessageVisitor &visitor) = 0;
     };
 
-    class ClientHello : public WuphfCommand
+    class ClientHello : public WuphfMessage
     {
     public:
         ClientHello(uint32_t destinationMcuId);
@@ -41,7 +41,7 @@ namespace sabre::ipc
         void accept(WuphfMessageVisitor &visitor);
     };
 
-    class UartAppend : public WuphfCommand
+    class UartAppend : public WuphfMessage
     {
     private:
         uint16_t _uartIdx;
