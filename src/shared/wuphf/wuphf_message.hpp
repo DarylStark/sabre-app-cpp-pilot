@@ -26,8 +26,8 @@ namespace sabre::ipc
         void setDestionationMcuId(uint32_t mcuId);
         uint32_t getDestinationMcuId() const;
 
-        virtual const std::vector<uint8_t> getRawBytes() const noexcept;
-        virtual const uint16_t getOpCode() const noexcept;
+        virtual const std::vector<uint8_t> getRawBytes() const noexcept = 0;
+        virtual const uint16_t getOpCode() const noexcept = 0;
 
         virtual void accept(WuphfMessageVisitor &visitor) = 0;
     };
@@ -50,6 +50,12 @@ namespace sabre::ipc
     public:
         UartAppend(uint32_t destinationMcuId, uint16_t uartIdx,
                    const std::string &data);
+
         void accept(WuphfMessageVisitor &visitor);
+        const std::vector<uint8_t> getRawBytes() const noexcept override;
+        const uint16_t getOpCode() const noexcept override;
+
+        const uint16_t getUartIdx() const;
+        const std::string getData() const;
     };
 } // namespace sabre::ipc

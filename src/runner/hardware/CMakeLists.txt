@@ -5,6 +5,7 @@ target_link_libraries(
     sabre_pilot_hardware
     PUBLIC
         sabre_ipc
+        sabre_wuphf
 )
 
 set_target_properties(

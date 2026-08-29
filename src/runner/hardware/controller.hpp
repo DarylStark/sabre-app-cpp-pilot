@@ -9,8 +9,6 @@
 
 namespace sabre_runner::hardware
 {
-    using SendCommandHandler = std::function<void()>;
-
     class Controller
     {
     public:
@@ -22,13 +20,12 @@ namespace sabre_runner::hardware
         sabre_runner::core::HardwareConfig _config;
         ipc::IpcClient::SharedPtr _ipcClient{};
         std::vector<UartController> _uartControllers;
-        SendCommandHandler _sendCommandHandler;
 
         void _uartFlushCallback(size_t uartIndex, char byte);
 
     public:
         Controller(sabre_runner::core::HardwareConfig config,
-                   SendCommandHandler sendCommandHandler);
+                   ipc::IpcClient::SharedPtr ipcClient);
 
         UartController &getUartController(size_t uartNumber);
     };

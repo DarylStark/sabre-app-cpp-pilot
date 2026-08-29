@@ -22,16 +22,6 @@ namespace sabre::ipc
         return _dstMcu;
     }
 
-    const std::vector<uint8_t> WuphfMessage::getRawBytes() const noexcept
-    {
-        return {};
-    }
-
-    const uint16_t WuphfMessage::getOpCode() const noexcept
-    {
-        return 0x0001;
-    }
-
     ClientHello::ClientHello(uint32_t destinationMcuId)
         : WuphfMessage(destinationMcuId)
     {
@@ -63,5 +53,27 @@ namespace sabre::ipc
     void UartAppend::accept(WuphfMessageVisitor &visitor)
     {
         visitor.visitUartAppend(*this);
+    }
+
+    const uint16_t UartAppend::getUartIdx() const
+    {
+        return _uartIdx;
+    }
+
+    const std::string UartAppend::getData() const
+    {
+        return _data;
+    }
+
+    const std::vector<uint8_t> UartAppend::getRawBytes() const noexcept
+    {
+        // TODO: Make sure this works the way it is supposed to work.
+        std::vector<uint8_t> output(_data.begin(), _data.end());
+        return output;
+    }
+
+    const uint16_t UartAppend::getOpCode() const noexcept
+    {
+        return 0x0101;
     }
 } // namespace sabre::ipc

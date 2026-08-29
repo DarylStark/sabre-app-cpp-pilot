@@ -1,12 +1,15 @@
 #include "controller.hpp"
 #include "exceptions.hpp"
 #include <iostream>
+#include <thread>
+#include <wuphf/wuphf.hpp>
+#include <wuphf/wuphf_message.hpp>
 
 namespace sabre_runner::hardware
 {
     Controller::Controller(sabre_runner::core::HardwareConfig config,
-                           SendCommandHandler sendCommandHandler)
-        : _config(config), _sendCommandHandler(std::move(sendCommandHandler)),
+                           ipc::IpcClient::SharedPtr ipcClient)
+        : _config(config), _ipcClient(std::move(ipcClient)),
           _uartControllers(_config.upperboundUart)
     {
         for (size_t uartIdx = 0; uartIdx < _uartControllers.size(); uartIdx++)
@@ -18,7 +21,10 @@ namespace sabre_runner::hardware
 
     void Controller::_uartFlushCallback(size_t uartIndex, char byte)
     {
+        std::this_thread::sleep_for(std::chrono::seconds(1));
         std::cout << uartIndex << " --> " << byte << '\n' << std::flush;
+        sabre::ipc::UartAppend append(0, uartIndex, std::string(1, byte));
+        sabre::ipc::sendWuphfMessage(*_ipcClient, append);
     }
 
     UartController &Controller::getUartController(size_t uartNumber)

@@ -18,6 +18,7 @@ namespace sabre_pilot::core
     {
         // TODO: Implement for real; before doing that, the `UartAppend` has
         // to get methods to retrieve the data (uart index and text).
-        _device->appendToUArt(1, "Need to configure this...");
+        std::cout << "HERE\n";
+        _device->appendToUArt(1, "Need to configure this...\n");
     }
 } // namespace sabre_pilot::core

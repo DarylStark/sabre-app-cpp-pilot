@@ -139,6 +139,8 @@ namespace sabre_pilot::core
                     if (item)
                     {
                         WuphfMessage::UniquePtr message = std::move(*item);
+                        std::cout << "Message for "
+                                  << message->getDestinationMcuId() << '\n';
                         auto device = getDevice(message->getDestinationMcuId());
                         if (device)
                         {

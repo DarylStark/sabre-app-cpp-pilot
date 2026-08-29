@@ -70,8 +70,7 @@ namespace sabre_runner::core
     void Runner::_configureHardware()
     {
         using sabre_runner::hardware::Controller;
-        _hardware = std::make_shared<Controller>(
-            _config.hardware, []() { std::cout << "Commando\n"; });
+        _hardware = std::make_shared<Controller>(_config.hardware, _ipcClient);
     }
 
     void Runner::_startFirmware()
