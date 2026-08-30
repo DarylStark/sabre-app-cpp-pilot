@@ -86,12 +86,12 @@ namespace sabre::ipc
         std::vector<uint8_t> bytes(2 + 2 + data.size());
         size_t length = data.size();
 
-        bytes[0] = (opcode & 0xff00) >> 24;
+        bytes[0] = (opcode & 0xff00) >> 8;
         bytes[1] = opcode & 0x00ff;
 
         // TODO: check if length is smaller then 2^16
 
-        bytes[2] = (length & 0xff00) >> 24;
+        bytes[2] = (length & 0xff00) >> 8;
         bytes[3] = length & 0x00ff;
 
         std::copy(data.begin(), data.end(), bytes.begin() + 4);

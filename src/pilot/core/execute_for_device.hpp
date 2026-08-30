@@ -10,10 +10,9 @@ namespace sabre_pilot::core
     {
     private:
         std::shared_ptr<Device> _device;
-        void setDevice(std::shared_ptr<Device> device);
 
     public:
-        void setDevice(std::optional<std::shared_ptr<Device>> device);
+        void setDevice(std::shared_ptr<Device> device);
         void visitClientHello(sabre::ipc::ClientHello &message) override;
         void visitUartAppend(sabre::ipc::UartAppend &message) override;
     };

@@ -21,7 +21,7 @@ namespace sabre_runner::hardware
 
     void Controller::_uartFlushCallback(size_t uartIndex, char byte)
     {
-        std::this_thread::sleep_for(std::chrono::seconds(1));
+        // std::this_thread::sleep_for(std::chrono::seconds(1));
         std::cout << uartIndex << " --> " << byte << '\n' << std::flush;
         sabre::ipc::UartAppend append(0, uartIndex, std::string(1, byte));
         sabre::ipc::sendWuphfMessage(*_ipcClient, append);

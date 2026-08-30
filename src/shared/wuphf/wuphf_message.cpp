@@ -68,7 +68,10 @@ namespace sabre::ipc
     const std::vector<uint8_t> UartAppend::getRawBytes() const noexcept
     {
         // TODO: Make sure this works the way it is supposed to work.
-        std::vector<uint8_t> output(_data.begin(), _data.end());
+        std::vector<uint8_t> output(_data.size() + 2);
+        output[0] = (_uartIdx & 0xff00) >> 8;
+        output[1] = (_uartIdx & 0x00ff) >> 8;
+        std::copy(_data.begin(), _data.end(), output.begin() + 2);
         return output;
     }
 

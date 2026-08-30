@@ -144,6 +144,7 @@ namespace sabre_pilot::core
                         auto device = getDevice(message->getDestinationMcuId());
                         if (device)
                         {
+                            executor.setDevice(*device);
                             message->accept(executor);
                         }
                     }

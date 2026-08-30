@@ -15,12 +15,9 @@ namespace sabre_pilot::examples
         getResourceManager().serial().configureUart(0, 9600, txPin, rxPin, 100);
         auto &uart = getResourceManager().serial().getUart(0);
         uart.initialize();
-        uart.writeByte('D');
-        uart.writeByte('a');
-        uart.writeByte('r');
-        uart.writeByte('y');
-        uart.writeByte('l');
-        uart.flush();
+        auto u0 = getResourceManager().serial().getOutputStreamForUart(0);
+        u0 << "Hallo vanuit de applicatie\n" << std::flush;
+        // uart.flush();
     }
 
     // MyApp::MyApp(sabre::core::ResourceManager &resourceManager, std::string
