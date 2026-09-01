@@ -1,5 +1,6 @@
 #include "session.hpp"
 #include <iostream>
+#include <ipc/types.hpp>
 
 namespace ipc::tcp
 {
@@ -76,7 +77,7 @@ namespace ipc::tcp
                                      "buffer size");
         }
 
-        std::vector<std::uint8_t> data(
+        ::ipc::BufferType data(
             _readBuffer.begin(),
             _readBuffer.begin() +
                 static_cast<std::ptrdiff_t>(bytesTransferred));

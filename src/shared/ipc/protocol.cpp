@@ -9,7 +9,7 @@ namespace ipc
         _buffer.reserve(bufferSize);
     }
 
-    void IpcProtocol::pushBytes(std::span<const uint8_t> bytes)
+    void IpcProtocol::pushBytes(std::span<const std::byte> bytes)
     {
         _buffer.insert(_buffer.end(), bytes.begin(), bytes.end());
         parseBuffer();

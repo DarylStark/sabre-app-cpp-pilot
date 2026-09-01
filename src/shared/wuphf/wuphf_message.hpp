@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdint>
+#include <ipc/types.hpp>
 #include <memory>
 #include <vector>
 
@@ -26,7 +27,7 @@ namespace sabre::ipc
         void setDestionationMcuId(uint32_t mcuId);
         uint32_t getDestinationMcuId() const;
 
-        virtual const std::vector<uint8_t> getRawBytes() const noexcept = 0;
+        virtual const ::ipc::BufferType getRawBytes() const noexcept = 0;
         virtual const uint16_t getOpCode() const noexcept = 0;
 
         virtual void accept(WuphfMessageVisitor &visitor) = 0;
@@ -36,7 +37,7 @@ namespace sabre::ipc
     {
     public:
         ClientHello(uint32_t destinationMcuId);
-        const std::vector<uint8_t> getRawBytes() const noexcept override;
+        const ::ipc::BufferType getRawBytes() const noexcept override;
         const uint16_t getOpCode() const noexcept override;
         void accept(WuphfMessageVisitor &visitor);
     };
@@ -52,7 +53,7 @@ namespace sabre::ipc
                    const std::string &data);
 
         void accept(WuphfMessageVisitor &visitor);
-        const std::vector<uint8_t> getRawBytes() const noexcept override;
+        const ::ipc::BufferType getRawBytes() const noexcept override;
         const uint16_t getOpCode() const noexcept override;
 
         const uint16_t getUartIdx() const;

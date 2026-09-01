@@ -21,7 +21,7 @@ namespace ipc::tcp
             std::function<void(std::shared_ptr<TcpIpcSession>)>;
 
         asio::ip::tcp::socket _socket;
-        std::array<std::uint8_t, 4096> _readBuffer{};
+        std::array<std::byte, 4096> _readBuffer{};
         std::deque<std::vector<std::uint8_t>> _writeQueue;
 
         DisconnectHandler _disconnectHandler;

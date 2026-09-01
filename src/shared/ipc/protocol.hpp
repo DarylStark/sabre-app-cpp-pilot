@@ -1,6 +1,7 @@
 #pragma once
 
 #include "queue.hpp"
+#include "types.hpp"
 #include <cstdint>
 #include <memory>
 #include <optional>
@@ -21,13 +22,13 @@ namespace ipc
         std::uint16_t _readU16_be(std::size_t offset) const;
         std::uint32_t _readU32_be(std::size_t offset) const;
 
-        std::vector<uint8_t> _buffer;
+        BufferType _buffer;
 
     public:
         IpcProtocol(std::size_t bufferSize);
         virtual ~IpcProtocol() = default;
 
-        void pushBytes(std::span<const uint8_t> bytes);
+        void pushBytes(std::span<const std::byte> bytes);
         void parseBuffer();
     };
 } // namespace ipc

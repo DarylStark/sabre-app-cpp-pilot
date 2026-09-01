@@ -27,11 +27,13 @@ namespace sabre::ipc
     {
     }
 
-    const std::vector<uint8_t> ClientHello::getRawBytes() const noexcept
+    const ::ipc::BufferType ClientHello::getRawBytes() const noexcept
     {
         // TODO: Make sure this ID is correct since it is wrong now
         uint8_t lastoctet = static_cast<uint8_t>(_dstMcu & 0x000000ff);
-        return {0x00, 0x00, 0x00, lastoctet};
+        return {static_cast<std::byte>(0x00), static_cast<std::byte>(0x00),
+                static_cast<std::byte>(0x00),
+                static_cast<std::byte>(lastoctet)};
     }
 
     const uint16_t ClientHello::getOpCode() const noexcept
@@ -65,13 +67,16 @@ namespace sabre::ipc
         return _data;
     }
 
-    const std::vector<uint8_t> UartAppend::getRawBytes() const noexcept
+    const ::ipc::BufferType UartAppend::getRawBytes() const noexcept
     {
         // TODO: Make sure this works the way it is supposed to work.
-        std::vector<uint8_t> output(_data.size() + 2);
-        output[0] = (_uartIdx & 0xff00) >> 8;
-        output[1] = (_uartIdx & 0x00ff) >> 8;
-        std::copy(_data.begin(), _data.end(), output.begin() + 2);
+        ::ipc::BufferType output(_data.size() + 2);
+        output[0] = static_cast<std::byte>((_uartIdx & 0xff00) >> 8);
+        output[1] = static_cast<std::byte>((_uartIdx & 0x00ff) >> 8);
+        // std::copy(_data.begin(), _data.end(), output.begin() + 2);
+        std::transform(
+            _data.begin(), _data.end(), output.begin() + 2, [](char c)
+            { return static_cast<std::byte>(static_cast<uint8_t>(c)); });
         return output;
     }
 

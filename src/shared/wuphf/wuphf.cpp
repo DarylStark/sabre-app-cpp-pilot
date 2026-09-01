@@ -83,21 +83,19 @@ namespace sabre::ipc
         const uint16_t opcode = message.getOpCode();
         const auto data = message.getRawBytes();
 
-        std::vector<uint8_t> bytes(2 + 2 + data.size());
+        ::ipc::BufferType bytes(2 + 2 + data.size());
         size_t length = data.size();
 
-        bytes[0] = (opcode & 0xff00) >> 8;
-        bytes[1] = opcode & 0x00ff;
+        bytes[0] = static_cast<std::byte>((opcode >> 8) & 0xFF);
+        bytes[1] = static_cast<std::byte>(opcode & 0xFF);
 
         // TODO: check if length is smaller then 2^16
 
-        bytes[2] = (length & 0xff00) >> 8;
-        bytes[3] = length & 0x00ff;
+        bytes[2] = static_cast<std::byte>((length & 0xff00) >> 8);
+        bytes[3] = static_cast<std::byte>(length & 0x00ff);
 
         std::copy(data.begin(), data.end(), bytes.begin() + 4);
 
-        std::string outData(bytes.begin(), bytes.end());
-
-        client.sendData(outData);
+        client.sendData(bytes);
     }
 } // namespace sabre::ipc
