@@ -1,5 +1,6 @@
 #include "wuphf_message.hpp"
 #include "wuphf_message_visitor.hpp"
+#include <algorithm>
 #include <iostream> // TODO: Remove
 #include <vector>
 
