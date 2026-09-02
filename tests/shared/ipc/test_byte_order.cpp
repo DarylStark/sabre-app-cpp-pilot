@@ -78,33 +78,33 @@ TEST(IpcByteOrder, SerializeString)
 
 TEST(IpcByteOrder, DeserializeUnsignedInteger)
 {
-    uint32_t result = deserialize<uint32_t>(
-        {std::byte{0xff}, std::byte{0x12}, std::byte{0x34}, std::byte{0x56}});
+    uint32_t result = deserialize<uint32_t>(std::vector{
+        std::byte{0xff}, std::byte{0x12}, std::byte{0x34}, std::byte{0x56}});
 
     ASSERT_EQ(result, 0xff123456);
 }
 
 TEST(IpcByteOrder, DeserializeSignedInteger)
 {
-    int32_t result = deserialize<int32_t>(
-        {std::byte{0xff}, std::byte{0xff}, std::byte{0xfe}, std::byte{0x0c}});
+    int32_t result = deserialize<int32_t>(std::vector{
+        std::byte{0xff}, std::byte{0xff}, std::byte{0xfe}, std::byte{0x0c}});
 
     ASSERT_EQ(result, -500);
 }
 
 TEST(IpcByteOrder, DeserializeFloat)
 {
-    float result = deserialize<float>(
-        {std::byte{0x41}, std::byte{0xa0}, std::byte{0x18}, std::byte{0x9f}});
+    float result = deserialize<float>(std::vector{
+        std::byte{0x41}, std::byte{0xa0}, std::byte{0x18}, std::byte{0x9f}});
 
     ASSERT_NEAR(result, 20.012022, 0.0000001);
 }
 
 TEST(IpcByteOrder, DeserializeDouble)
 {
-    double result = deserialize<double>(
-        {std::byte{0x40}, std::byte{0x34}, std::byte{0x03}, std::byte{0x013},
-         std::byte{0xdf}, std::byte{0xe4}, std::byte{0x77}, std::byte{0x77}});
+    double result = deserialize<double>(std::vector{
+        std::byte{0x40}, std::byte{0x34}, std::byte{0x03}, std::byte{0x013},
+        std::byte{0xdf}, std::byte{0xe4}, std::byte{0x77}, std::byte{0x77}});
 
     ASSERT_EQ(result, 20.012022012022012);
 }
@@ -115,4 +115,34 @@ TEST(IpcByteOrder, DeserializeString)
         deserializeString({std::byte{'G'}, std::byte{'r'}, std::byte{'a'},
                            std::byte{'c'}, std::byte{'e'}});
     ASSERT_EQ(result, "Grace");
+}
+
+TEST(IpcByteOrder, SerializeAndDeserializeUnsignedInteger)
+{
+    uint32_t nr = deserialize<uint32_t>(serialize<uint32_t>(2610));
+    ASSERT_EQ(nr, 2610);
+}
+
+TEST(IpcByteOrder, SerializeAndDeserializeSignedInteger)
+{
+    int32_t nr = deserialize<int32_t>(serialize<int32_t>(-2512));
+    ASSERT_EQ(nr, -2512);
+}
+
+TEST(IpcByteOrder, SerializeAndDeserializeFloat)
+{
+    float nr = deserialize<float>(serialize<float>(33.01f));
+    ASSERT_EQ(nr, 33.01f);
+}
+
+TEST(IpcByteOrder, SerializeAndDeserializeDouble)
+{
+    double nr = deserialize<double>(serialize<double>(33.01));
+    ASSERT_EQ(nr, 33.01);
+}
+
+TEST(IpcByteOrder, SerializeAndDeserializeString)
+{
+    std::string str = deserializeString(serialize(std::string("Brachypelma")));
+    ASSERT_EQ(str, "Brachypelma");
 }
