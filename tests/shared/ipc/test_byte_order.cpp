@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 #include <ipc/byte_order.hpp>
+#include <string>
 
 using namespace ipc::byte_order;
 
@@ -55,6 +56,26 @@ TEST(IpcByteOrder, SerializeDouble)
     ASSERT_EQ(result[7], std::byte{0x77});
 }
 
+TEST(IpcByteOrder, SerializeString)
+{
+    std::string input = "Grace Hopper";
+    auto result = serialize(input);
+    ASSERT_EQ(result.size(), input.size());
+
+    ASSERT_EQ(result[0], std::byte{'G'});
+    ASSERT_EQ(result[1], std::byte{'r'});
+    ASSERT_EQ(result[2], std::byte{'a'});
+    ASSERT_EQ(result[3], std::byte{'c'});
+    ASSERT_EQ(result[4], std::byte{'e'});
+    ASSERT_EQ(result[5], std::byte{' '});
+    ASSERT_EQ(result[6], std::byte{'H'});
+    ASSERT_EQ(result[7], std::byte{'o'});
+    ASSERT_EQ(result[8], std::byte{'p'});
+    ASSERT_EQ(result[9], std::byte{'p'});
+    ASSERT_EQ(result[10], std::byte{'e'});
+    ASSERT_EQ(result[11], std::byte{'r'});
+}
+
 TEST(IpcByteOrder, DeserializeUnsignedInteger)
 {
     uint32_t result = deserialize<uint32_t>(
@@ -86,4 +107,12 @@ TEST(IpcByteOrder, DeserializeDouble)
          std::byte{0xdf}, std::byte{0xe4}, std::byte{0x77}, std::byte{0x77}});
 
     ASSERT_EQ(result, 20.012022012022012);
+}
+
+TEST(IpcByteOrder, DeserializeString)
+{
+    std::string result =
+        deserializeString({std::byte{'G'}, std::byte{'r'}, std::byte{'a'},
+                           std::byte{'c'}, std::byte{'e'}});
+    ASSERT_EQ(result, "Grace");
 }

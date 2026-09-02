@@ -1,8 +1,12 @@
 #pragma once
 
+#include <algorithm>
 #include <array>
 #include <bit>
 #include <cstddef>
+#include <cstdint>
+#include <string>
+#include <vector>
 
 namespace ipc::byte_order
 {
@@ -46,6 +50,14 @@ namespace ipc::byte_order
         return out;
     }
 
+    constexpr std::vector<std::byte> serialize(const std::string &data)
+    {
+        std::vector<std::byte> out(data.size());
+        std::ranges::transform(data, out.begin(),
+                               [](unsigned char c) { return std::byte(c); });
+        return out;
+    }
+
     template <typename T>
         requires std::is_integral_v<T> && std::is_trivially_copyable_v<T>
     constexpr T deserialize(const std::array<std::byte, sizeof(T)> &data)
@@ -82,5 +94,13 @@ namespace ipc::byte_order
         }
 
         return std::bit_cast<T>(bits);
+    }
+
+    constexpr std::string deserializeString(const std::vector<std::byte> &data)
+    {
+        std::string out(data.size(), ' ');
+        std::ranges::transform(data, out.begin(), [](std::byte b)
+                               { return static_cast<char>(b); });
+        return out;
     }
 } // namespace ipc::byte_order
