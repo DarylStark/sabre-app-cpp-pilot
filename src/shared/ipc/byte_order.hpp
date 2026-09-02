@@ -12,9 +12,9 @@ namespace ipc::byte_order
 {
     template <typename T>
         requires std::is_integral_v<T> && std::is_trivially_copyable_v<T>
-    constexpr std::array<std::byte, sizeof(T)> serialize(T value)
+    constexpr std::vector<std::byte> serialize(T value)
     {
-        std::array<std::byte, sizeof(T)> out{};
+        std::vector<std::byte> out{sizeof(T)};
 
         using U = std::make_unsigned_t<T>;
         U u = static_cast<U>(value);
@@ -29,9 +29,9 @@ namespace ipc::byte_order
 
     template <typename T>
         requires std::is_floating_point_v<T>
-    constexpr std::array<std::byte, sizeof(T)> serialize(T value)
+    constexpr std::vector<std::byte> serialize(T value)
     {
-        std::array<std::byte, sizeof(T)> out{};
+        std::vector<std::byte> out{sizeof(T)};
 
         using U = std::conditional_t<
             sizeof(T) == 4, std::uint32_t,
@@ -58,9 +58,9 @@ namespace ipc::byte_order
         return out;
     }
 
-    template <typename T>
+    template <typename T, std::ranges::range R>
         requires std::is_integral_v<T> && std::is_trivially_copyable_v<T>
-    constexpr T deserialize(const std::array<std::byte, sizeof(T)> &data)
+    constexpr T deserialize(const R &&data)
     {
         using U = std::make_unsigned_t<T>;
         U u = 0;
@@ -74,9 +74,9 @@ namespace ipc::byte_order
         return static_cast<T>(u);
     }
 
-    template <typename T>
+    template <typename T, std::ranges::range R>
         requires std::is_floating_point_v<T>
-    constexpr T deserialize(const std::array<std::byte, sizeof(T)> &data)
+    constexpr T deserialize(const R &&data)
     {
         using U = std::conditional_t<
             sizeof(T) == 4, std::uint32_t,
