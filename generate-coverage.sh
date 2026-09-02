@@ -22,9 +22,8 @@ gcovr \
     --exclude '.*tests/.*' \
     --exclude '.*build/.*' \
     --exclude '.*_deps/.*' \
-    --exclude '.*\.hpp$' \
     --exclude '.*googletest.*' \
+    --exclude '.*/app/.*' \
     --html="${COVERAGE_HTML_INDEX}" --html-details -o "$COVERAGE_HTML_DETAILS" \
     --xml -o "$COVERAGE_XML" \
-    --print-summary \
-    --verbose
+    --print-summary
