@@ -73,7 +73,11 @@ namespace sabre::ipc
         }
 
         uint16_t uartId = _readU16_be(4);
-        std::string data(_buffer.begin() + 6, _buffer.begin() + 6 + dataLength);
+        std::string data;
+        data.reserve(dataLength);
+        std::transform(_buffer.begin() + 6, _buffer.begin() + 6 + dataLength,
+                       std::back_inserter(data),
+                       [](std::byte b) { return static_cast<char>(b); });
 
         return std::make_unique<UartAppend>(_mcuId, uartId, data);
     }
