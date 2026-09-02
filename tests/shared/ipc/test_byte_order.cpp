@@ -70,3 +70,20 @@ TEST(IpcByteOrder, DeserializeSignedInteger)
 
     ASSERT_EQ(result, -500);
 }
+
+TEST(IpcByteOrder, DeserializeFloat)
+{
+    float result = deserialize<float>(
+        {std::byte{0x41}, std::byte{0xa0}, std::byte{0x18}, std::byte{0x9f}});
+
+    ASSERT_NEAR(result, 20.012022, 0.0000001);
+}
+
+TEST(IpcByteOrder, DeserializeDouble)
+{
+    double result = deserialize<double>(
+        {std::byte{0x40}, std::byte{0x34}, std::byte{0x03}, std::byte{0x013},
+         std::byte{0xdf}, std::byte{0xe4}, std::byte{0x77}, std::byte{0x77}});
+
+    ASSERT_EQ(result, 20.012022012022012);
+}
