@@ -56,7 +56,7 @@ namespace ipc::byte_order
         std::ranges::transform(data, out.begin(),
                                [](unsigned char c) { return std::byte(c); });
         return out;
-    }
+    } // LCOV_EXCL_LINE
 
     template <typename T, std::ranges::range R>
         requires std::is_integral_v<T> && std::is_trivially_copyable_v<T>
@@ -102,5 +102,5 @@ namespace ipc::byte_order
         std::ranges::transform(data, out.begin(), [](std::byte b)
                                { return static_cast<char>(b); });
         return out;
-    }
+    } // LCOV_EXCL_LINE
 } // namespace ipc::byte_order
