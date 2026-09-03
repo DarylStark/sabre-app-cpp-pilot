@@ -2,6 +2,7 @@
 #include "wuphf_message_visitor.hpp"
 #include <algorithm>
 #include <iostream> // TODO: Remove
+#include <ipc/byte_order.hpp>
 #include <vector>
 
 namespace sabre::ipc
@@ -30,11 +31,8 @@ namespace sabre::ipc
 
     const ::ipc::BufferType ClientHello::getRawBytes() const noexcept
     {
-        // TODO: Make sure this ID is correct since it is wrong now
-        uint8_t lastoctet = static_cast<uint8_t>(_dstMcu & 0x000000ff);
-        return {static_cast<std::byte>(0x00), static_cast<std::byte>(0x00),
-                static_cast<std::byte>(0x00),
-                static_cast<std::byte>(lastoctet)};
+        using namespace ::ipc::byte_order;
+        return serialize(_dstMcu);
     }
 
     const uint16_t ClientHello::getOpCode() const noexcept
@@ -70,14 +68,10 @@ namespace sabre::ipc
 
     const ::ipc::BufferType UartAppend::getRawBytes() const noexcept
     {
-        // TODO: Make sure this works the way it is supposed to work.
+        using namespace ::ipc::byte_order;
         ::ipc::BufferType output(_data.size() + 2);
-        output[0] = static_cast<std::byte>((_uartIdx & 0xff00) >> 8);
-        output[1] = static_cast<std::byte>((_uartIdx & 0x00ff) >> 8);
-        // std::copy(_data.begin(), _data.end(), output.begin() + 2);
-        std::transform(
-            _data.begin(), _data.end(), output.begin() + 2, [](char c)
-            { return static_cast<std::byte>(static_cast<uint8_t>(c)); });
+        std::ranges::copy(serialize(_uartIdx), output.begin());
+        std::ranges::copy(serialize(_data), output.begin() + 2);
         return output;
     }
 
