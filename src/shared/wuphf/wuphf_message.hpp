@@ -29,11 +29,9 @@ namespace sabre::ipc
         void setDestionationMcuId(uint32_t mcuId);
         uint32_t getDestinationMcuId() const;
 
-        virtual const ::ipc::BufferType getRawBytes() const noexcept = 0;
-
-        virtual const uint16_t getOpCode() const noexcept = 0;
-
+        virtual const ::ipc::BufferType serializeObj() const noexcept = 0;
         virtual void accept(WuphfMessageVisitor &visitor) = 0;
+        virtual constexpr uint16_t getOpCode() const noexcept = 0;
     };
 
     class ClientHello : public WuphfMessage
@@ -42,7 +40,8 @@ namespace sabre::ipc
         ClientHello(uint32_t destinationMcuId);
 
         template <std::ranges::range R>
-        static std::optional<std::unique_ptr<ClientHello>> decode(const R &data)
+        static std::optional<std::unique_ptr<ClientHello>>
+        deserializeObj(const R &data)
         {
             if (data.size() != 4)
             {
@@ -54,8 +53,11 @@ namespace sabre::ipc
                 std::make_unique<ClientHello>(id));
         }
 
-        const ::ipc::BufferType getRawBytes() const noexcept override;
-        const uint16_t getOpCode() const noexcept override;
+        const ::ipc::BufferType serializeObj() const noexcept override;
+        constexpr uint16_t getOpCode() const noexcept
+        {
+            return static_cast<uint16_t>(0x0001);
+        }
         void accept(WuphfMessageVisitor &visitor);
     };
 
@@ -70,8 +72,8 @@ namespace sabre::ipc
                    const std::string &data);
 
         template <std::ranges::range R>
-        static std::optional<std::unique_ptr<UartAppend>> decode(uint32_t id,
-                                                                 const R &data)
+        static std::optional<std::unique_ptr<UartAppend>>
+        deserializeObj(uint32_t id, const R &data)
         {
             if (data.size() < 3)
             {
@@ -88,9 +90,11 @@ namespace sabre::ipc
         }
 
         void accept(WuphfMessageVisitor &visitor);
-        const ::ipc::BufferType getRawBytes() const noexcept override;
-        const uint16_t getOpCode() const noexcept override;
-
+        const ::ipc::BufferType serializeObj() const noexcept override;
+        constexpr uint16_t getOpCode() const noexcept
+        {
+            return static_cast<uint16_t>(0x0101);
+        }
         const uint16_t getUartIdx() const;
         const std::string getData() const;
     };

@@ -47,8 +47,8 @@ namespace sabre::ipc
 
     std::optional<WuphfMessage::UniquePtr> Wuphf::_parseClientHello()
     {
-        auto rv = ClientHello::decode(_buffer | std::views::drop(4) |
-                                      std::views::take(4));
+        auto rv = ClientHello::deserializeObj(_buffer | std::views::drop(4) |
+                                              std::views::take(4));
         if (rv != std::nullopt)
         {
             _mcuId = (*rv)->getDestinationMcuId();
@@ -59,27 +59,28 @@ namespace sabre::ipc
     std::optional<WuphfMessage::UniquePtr> Wuphf::_parseUartAppend()
     {
         uint16_t length = _deserialize<uint16_t>(2);
-        return UartAppend::decode(_mcuId, _buffer | std::views::drop(4) |
-                                              std::views::take(length));
+        return UartAppend::deserializeObj(
+            _mcuId, _buffer | std::views::drop(4) | std::views::take(length));
     }
 
     void sendWuphfMessage(::ipc::IpcClient &client, const WuphfMessage &message)
     {
         const uint16_t opcode = message.getOpCode();
-        const auto data = message.getRawBytes();
+        const auto data = message.serializeObj();
 
-        ::ipc::BufferType bytes(2 + 2 + data.size());
+        ::ipc::BufferType bytes(4 + data.size());
         size_t length = data.size();
 
-        bytes[0] = static_cast<std::byte>((opcode >> 8) & 0xFF);
-        bytes[1] = static_cast<std::byte>(opcode & 0xFF);
+        // Copy the opcode
+        std::ranges::copy(::ipc::byte_order::serialize<uint16_t>(opcode),
+                          bytes.begin());
 
-        // TODO: check if length is smaller then 2^16
+        // Copy the size
+        std::ranges::copy(::ipc::byte_order::serialize<uint16_t>(length),
+                          bytes.begin() + 2);
 
-        bytes[2] = static_cast<std::byte>((length & 0xff00) >> 8);
-        bytes[3] = static_cast<std::byte>(length & 0x00ff);
-
-        std::copy(data.begin(), data.end(), bytes.begin() + 4);
+        // Copy the data
+        std::ranges::copy(data, bytes.begin() + 4);
 
         client.sendData(bytes);
     }

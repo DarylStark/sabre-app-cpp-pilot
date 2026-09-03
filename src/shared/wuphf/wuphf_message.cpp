@@ -29,15 +29,10 @@ namespace sabre::ipc
     {
     }
 
-    const ::ipc::BufferType ClientHello::getRawBytes() const noexcept
+    const ::ipc::BufferType ClientHello::serializeObj() const noexcept
     {
         using namespace ::ipc::byte_order;
         return serialize(_dstMcu);
-    }
-
-    const uint16_t ClientHello::getOpCode() const noexcept
-    {
-        return 0x0001;
     }
 
     void ClientHello::accept(WuphfMessageVisitor &visitor)
@@ -66,17 +61,12 @@ namespace sabre::ipc
         return _data;
     }
 
-    const ::ipc::BufferType UartAppend::getRawBytes() const noexcept
+    const ::ipc::BufferType UartAppend::serializeObj() const noexcept
     {
         using namespace ::ipc::byte_order;
         ::ipc::BufferType output(_data.size() + 2);
         std::ranges::copy(serialize(_uartIdx), output.begin());
         std::ranges::copy(serialize(_data), output.begin() + 2);
         return output;
-    }
-
-    const uint16_t UartAppend::getOpCode() const noexcept
-    {
-        return 0x0101;
     }
 } // namespace sabre::ipc
