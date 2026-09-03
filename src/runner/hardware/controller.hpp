@@ -21,7 +21,7 @@ namespace sabre_runner::hardware
         ipc::IpcClient::SharedPtr _ipcClient{};
         std::vector<UartController> _uartControllers;
 
-        void _uartFlushCallback(size_t uartIndex, char byte);
+        void _uartFlushCallback(size_t uartIndex, const std::string &data);
 
     public:
         Controller(sabre_runner::core::HardwareConfig config,

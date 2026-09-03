@@ -15,15 +15,17 @@ namespace sabre_runner::hardware
         for (size_t uartIdx = 0; uartIdx < _uartControllers.size(); uartIdx++)
         {
             _uartControllers[uartIdx].setOutputBufferCallback(
-                [this, uartIdx](char c) { _uartFlushCallback(uartIdx, c); });
+                [this, uartIdx](const std::string &data)
+                { _uartFlushCallback(uartIdx, data); });
         }
     }
 
-    void Controller::_uartFlushCallback(size_t uartIndex, char byte)
+    void Controller::_uartFlushCallback(size_t uartIndex,
+                                        const std::string &data)
     {
         // std::this_thread::sleep_for(std::chrono::seconds(1));
-        std::cout << uartIndex << " --> " << byte << '\n' << std::flush;
-        sabre::ipc::UartAppend append(0, uartIndex, std::string(1, byte));
+        std::cout << uartIndex << " --> " << data << '\n' << std::flush;
+        sabre::ipc::UartAppend append(0, uartIndex, data);
         sabre::ipc::sendWuphfMessage(*_ipcClient, append);
     }
 

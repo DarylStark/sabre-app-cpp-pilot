@@ -5,7 +5,8 @@
 
 namespace sabre_runner::hardware
 {
-    using UartControllerBufferCallback = std::function<void(char)>;
+    using UartControllerBufferCallback =
+        std::function<void(const std::string &)>;
 
     class UartController
     {

@@ -57,8 +57,7 @@ namespace sabre_runner::hardware
     {
         if (!_outputBufferCallback)
             return;
-        for (char &c : _outputBuffer)
-            _outputBufferCallback(c);
+        _outputBufferCallback(_outputBuffer);
     }
 
     void UartController::_raiseOnUnitialized() const
