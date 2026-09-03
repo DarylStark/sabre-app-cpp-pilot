@@ -60,7 +60,7 @@ namespace ipc::byte_order
 
     template <typename T, std::ranges::range R>
         requires std::is_integral_v<T> && std::is_trivially_copyable_v<T>
-    constexpr T deserialize(const R &&data)
+    constexpr T deserialize(const R &data)
     {
         using U = std::make_unsigned_t<T>;
         U u = 0;
@@ -76,7 +76,7 @@ namespace ipc::byte_order
 
     template <typename T, std::ranges::range R>
         requires std::is_floating_point_v<T>
-    constexpr T deserialize(const R &&data)
+    constexpr T deserialize(const R &data)
     {
         using U = std::conditional_t<
             sizeof(T) == 4, std::uint32_t,
@@ -96,7 +96,8 @@ namespace ipc::byte_order
         return std::bit_cast<T>(bits);
     }
 
-    constexpr std::string deserializeString(const std::vector<std::byte> &data)
+    template <std::ranges::range R>
+    constexpr std::string deserializeString(const R &data)
     {
         std::string out(data.size(), ' ');
         std::ranges::transform(data, out.begin(), [](std::byte b)

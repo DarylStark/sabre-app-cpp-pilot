@@ -111,9 +111,9 @@ TEST(IpcByteOrder, DeserializeDouble)
 
 TEST(IpcByteOrder, DeserializeString)
 {
-    std::string result =
-        deserializeString({std::byte{'G'}, std::byte{'r'}, std::byte{'a'},
-                           std::byte{'c'}, std::byte{'e'}});
+    std::string result = deserializeString(
+        std::vector{std::byte{'G'}, std::byte{'r'}, std::byte{'a'},
+                    std::byte{'c'}, std::byte{'e'}});
     ASSERT_EQ(result, "Grace");
 }
 

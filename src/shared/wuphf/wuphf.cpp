@@ -47,44 +47,20 @@ namespace sabre::ipc
 
     std::optional<WuphfMessage::UniquePtr> Wuphf::_parseClientHello()
     {
-        using namespace ::ipc::byte_order;
-
-        uint16_t length = _deserialize<uint16_t>(2);
-
-        if (length != 4)
+        auto rv = ClientHello::decode(_buffer | std::views::drop(4) |
+                                      std::views::take(4));
+        if (rv != std::nullopt)
         {
-            return std::nullopt;
+            _mcuId = (*rv)->getDestinationMcuId();
         }
-
-        uint32_t id = _deserialize<uint32_t>(4);
-        _mcuId = id;
-
-        return std::make_unique<ClientHello>(id);
+        return rv;
     }
 
     std::optional<WuphfMessage::UniquePtr> Wuphf::_parseUartAppend()
     {
-        using namespace ::ipc::byte_order;
-
-        if (!_mcuId)
-            return std::nullopt;
-
         uint16_t length = _deserialize<uint16_t>(2);
-        uint16_t dataLength = length - 2;
-
-        if (_buffer.size() < 4 + length)
-        {
-            return std::nullopt;
-        }
-
-        uint16_t uartId = _deserialize<uint16_t>(4);
-        std::string data;
-        data.reserve(dataLength);
-        std::transform(_buffer.begin() + 6, _buffer.begin() + 6 + dataLength,
-                       std::back_inserter(data),
-                       [](std::byte b) { return static_cast<char>(b); });
-
-        return std::make_unique<UartAppend>(_mcuId, uartId, data);
+        return UartAppend::decode(_mcuId, _buffer | std::views::drop(4) |
+                                              std::views::take(length));
     }
 
     void sendWuphfMessage(::ipc::IpcClient &client, const WuphfMessage &message)

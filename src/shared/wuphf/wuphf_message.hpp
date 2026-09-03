@@ -1,8 +1,10 @@
 #pragma once
 
 #include <cstdint>
+#include <ipc/byte_order.hpp>
 #include <ipc/types.hpp>
 #include <memory>
+#include <ranges>
 #include <vector>
 
 namespace sabre::ipc
@@ -28,6 +30,7 @@ namespace sabre::ipc
         uint32_t getDestinationMcuId() const;
 
         virtual const ::ipc::BufferType getRawBytes() const noexcept = 0;
+
         virtual const uint16_t getOpCode() const noexcept = 0;
 
         virtual void accept(WuphfMessageVisitor &visitor) = 0;
@@ -37,6 +40,20 @@ namespace sabre::ipc
     {
     public:
         ClientHello(uint32_t destinationMcuId);
+
+        template <std::ranges::range R>
+        static std::optional<std::unique_ptr<ClientHello>> decode(const R &data)
+        {
+            if (data.size() != 4)
+            {
+                return nullptr;
+            }
+
+            uint32_t id = ::ipc::byte_order::deserialize<uint32_t>(data);
+            return std::optional<std::unique_ptr<ClientHello>>(
+                std::make_unique<ClientHello>(id));
+        }
+
         const ::ipc::BufferType getRawBytes() const noexcept override;
         const uint16_t getOpCode() const noexcept override;
         void accept(WuphfMessageVisitor &visitor);
@@ -51,6 +68,24 @@ namespace sabre::ipc
     public:
         UartAppend(uint32_t destinationMcuId, uint16_t uartIdx,
                    const std::string &data);
+
+        template <std::ranges::range R>
+        static std::optional<std::unique_ptr<UartAppend>> decode(uint32_t id,
+                                                                 const R &data)
+        {
+            if (data.size() < 3)
+            {
+                return nullptr;
+            }
+
+            uint16_t uartIndex = ::ipc::byte_order::deserialize<uint16_t>(
+                data | std::views::take(2));
+            std::string uartData = ::ipc::byte_order::deserializeString(
+                data | std::views::drop(2));
+
+            return std::optional<std::unique_ptr<UartAppend>>(
+                std::make_unique<UartAppend>(id, uartIndex, uartData));
+        }
 
         void accept(WuphfMessageVisitor &visitor);
         const ::ipc::BufferType getRawBytes() const noexcept override;
