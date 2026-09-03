@@ -1,6 +1,7 @@
 #include "wuphf.hpp"
 #include <algorithm>
 #include <iostream>
+#include <ipc/byte_order.hpp>
 
 namespace sabre::ipc
 {
@@ -21,8 +22,8 @@ namespace sabre::ipc
         }
 
         // Get the fields
-        uint16_t type = _readU16_be(0);
-        uint16_t length = _readU16_be(2);
+        uint16_t type = _deserialize<uint16_t>(0);
+        uint16_t length = _deserialize<uint16_t>(2);
 
         // If this is not a full packet, we have to abort
         if (_buffer.size() < 4 + length)
@@ -46,14 +47,16 @@ namespace sabre::ipc
 
     std::optional<WuphfMessage::UniquePtr> Wuphf::_parseClientHello()
     {
-        uint16_t length = _readU16_be(2);
+        using namespace ::ipc::byte_order;
+
+        uint16_t length = _deserialize<uint16_t>(2);
 
         if (length != 4)
         {
             return std::nullopt;
         }
 
-        uint32_t id = _readU32_be(4);
+        uint32_t id = _deserialize<uint32_t>(4);
         _mcuId = id;
 
         return std::make_unique<ClientHello>(id);
@@ -61,10 +64,12 @@ namespace sabre::ipc
 
     std::optional<WuphfMessage::UniquePtr> Wuphf::_parseUartAppend()
     {
+        using namespace ::ipc::byte_order;
+
         if (!_mcuId)
             return std::nullopt;
 
-        uint16_t length = _readU16_be(2);
+        uint16_t length = _deserialize<uint16_t>(2);
         uint16_t dataLength = length - 2;
 
         if (_buffer.size() < 4 + length)
@@ -72,7 +77,7 @@ namespace sabre::ipc
             return std::nullopt;
         }
 
-        uint16_t uartId = _readU16_be(4);
+        uint16_t uartId = _deserialize<uint16_t>(4);
         std::string data;
         data.reserve(dataLength);
         std::transform(_buffer.begin() + 6, _buffer.begin() + 6 + dataLength,

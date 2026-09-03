@@ -3,6 +3,7 @@
 #include "queue.hpp"
 #include "types.hpp"
 #include <cstdint>
+#include <ipc/byte_order.hpp>
 #include <memory>
 #include <optional>
 #include <span>
@@ -19,10 +20,15 @@ namespace ipc
         virtual std::size_t _parseOnePacket() = 0;
 
     protected:
-        std::uint16_t _readU16_be(std::size_t offset) const;
-        std::uint32_t _readU32_be(std::size_t offset) const;
-
         BufferType _buffer;
+
+        template <typename T>
+        constexpr T _deserialize(std::size_t startIndex)
+        {
+            return ::ipc::byte_order::deserialize<T>(
+                _buffer | std::views::drop(startIndex) |
+                std::views::take(sizeof(T)));
+        }
 
     public:
         IpcProtocol(std::size_t bufferSize);
