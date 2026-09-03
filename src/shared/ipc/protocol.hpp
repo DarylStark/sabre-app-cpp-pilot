@@ -6,6 +6,7 @@
 #include <ipc/byte_order.hpp>
 #include <memory>
 #include <optional>
+#include <ranges>
 #include <span>
 #include <vector>
 
