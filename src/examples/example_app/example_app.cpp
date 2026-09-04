@@ -65,9 +65,10 @@ namespace sabre_pilot::examples
         //     _uart0 << _name << " - Still running :)\n" << std::flush;
         //     std::this_thread::sleep_for(std::chrono::milliseconds(2500));
         // }
+        auto u0 = getResourceManager().serial().getOutputStreamForUart(0);
         while (true)
         {
-            std::cout << _name << '\n';
+            u0 << _name << '\n';
             std::flush(std::cout);
             std::this_thread::sleep_for(500ms);
         }
