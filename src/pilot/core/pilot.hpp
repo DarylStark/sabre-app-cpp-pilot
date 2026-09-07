@@ -8,6 +8,7 @@
 #include <queue>
 #include <thread>
 #include <unordered_map>
+#include <wuphf/wuphf.hpp>
 #include <wuphf/wuphf_message.hpp>
 
 namespace sabre_pilot::core
@@ -28,7 +29,7 @@ namespace sabre_pilot::core
         std::unique_ptr<std::thread> _processMonitorThread = nullptr;
         std::unique_ptr<std::thread> _ipcServerThread = nullptr;
 
-        ::ipc::Queue<std::unique_ptr<sabre::ipc::WuphfMessage>> _ipcQueue;
+        ::ipc::Queue<std::unique_ptr<sabre::ipc::IncomingMessage>> _ipcQueue;
 
         void _processMonitorThreadFn();
 

@@ -6,6 +6,7 @@
 #include <ipc/protocol.hpp>
 #include <ipc/queue.hpp>
 #include <ipc/server.hpp>
+#include <ipc/session.hpp>
 #include <memory>
 #include <vector>
 
@@ -20,10 +21,10 @@ namespace ipc::tcp
         uint16_t _port;
         asio::io_context _io_context;
         asio::ip::tcp::acceptor _acceptor;
-        std::vector<std::shared_ptr<Session>> _sessions;
+        std::vector<std::shared_ptr<::ipc::IpcSession>> _sessions;
 
         void _configureAcceptCallback();
-        void _removeSession(const std::shared_ptr<Session> &session);
+        void _removeSession(const std::shared_ptr<::ipc::IpcSession> &session);
         void _callbackAsyncAccept(const std::error_code &ec,
                                   asio::ip::tcp::socket socket);
 

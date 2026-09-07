@@ -2,10 +2,11 @@
 #include <algorithm>
 #include <iostream>
 #include <ipc/byte_order.hpp>
+#include <ipc/session.hpp>
 
 namespace sabre::ipc
 {
-    Wuphf::Wuphf(::ipc::Queue<WuphfMessage::UniquePtr> &queue,
+    Wuphf::Wuphf(::ipc::Queue<std::unique_ptr<IncomingMessage>> &queue,
                  std::size_t bufferSize)
         : IpcProtocol(bufferSize), _queue(queue)
     {
@@ -38,7 +39,11 @@ namespace sabre::ipc
             message = method->second();
             if (message)
             {
-                _queue.push(std::move(*message));
+                std::unique_ptr<IncomingMessage> msg =
+                    std::make_unique<IncomingMessage>();
+                msg->message = std::move(*message);
+                msg->session = _session;
+                _queue.push(std::move(msg));
                 return length + 4;
             }
         }

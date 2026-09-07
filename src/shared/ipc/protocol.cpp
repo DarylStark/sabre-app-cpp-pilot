@@ -29,4 +29,14 @@ namespace ipc
             break;
         }
     }
+
+    void IpcProtocol::setSession(std::shared_ptr<IpcSession> session)
+    {
+        if (_session != nullptr)
+        {
+            // TODO: Exception
+            return;
+        }
+        _session = std::move(session);
+    }
 } // namespace ipc

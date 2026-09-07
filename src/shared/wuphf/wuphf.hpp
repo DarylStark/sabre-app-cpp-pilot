@@ -12,6 +12,12 @@ namespace sabre::ipc
 {
     using ParseMethod = std::function<std::optional<WuphfMessage::UniquePtr>()>;
 
+    struct IncomingMessage
+    {
+        std::shared_ptr<::ipc::IpcSession> session;
+        WuphfMessage::UniquePtr message;
+    };
+
     class Wuphf : public ::ipc::IpcProtocol
     {
     public:
@@ -21,7 +27,7 @@ namespace sabre::ipc
 
     private:
         uint32_t _mcuId = 0;
-        ::ipc::Queue<WuphfMessage::UniquePtr> &_queue;
+        ::ipc::Queue<std::unique_ptr<IncomingMessage>> &_queue;
 
         std::size_t _parseOnePacket() override;
 
@@ -31,7 +37,7 @@ namespace sabre::ipc
         std::unordered_map<uint32_t, ParseMethod> _parseMethods;
 
     public:
-        Wuphf(::ipc::Queue<WuphfMessage::UniquePtr> &queue,
+        Wuphf(::ipc::Queue<std::unique_ptr<IncomingMessage>> &queue,
               std::size_t bufferSize);
     };
 

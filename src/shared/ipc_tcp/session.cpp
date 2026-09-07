@@ -12,6 +12,7 @@ namespace ipc::tcp
 
     void TcpIpcSession::start()
     {
+        _protocol->setSession(shared_from_this());
         std::cout << "SESSION: Session started: " << _socket.remote_endpoint()
                   << '\n';
         _readSome();
@@ -47,7 +48,8 @@ namespace ipc::tcp
         send(std::vector<std::uint8_t>(text.begin(), text.end()));
     }
 
-    void TcpIpcSession::setDisconnectHandler(DisconnectHandler handler)
+    void TcpIpcSession::setDisconnectHandler(
+        ::ipc::IpcSession::DisconnectHandler handler)
     {
         _disconnectHandler = std::move(handler);
     }

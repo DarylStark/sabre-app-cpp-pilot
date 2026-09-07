@@ -1,6 +1,7 @@
 #pragma once
 
 #include "queue.hpp"
+#include "session.hpp"
 #include "types.hpp"
 #include <cstdint>
 #include <ipc/byte_order.hpp>
@@ -18,10 +19,12 @@ namespace ipc
         using Ptr = IpcProtocol *;
         using SharedPtr = std::shared_ptr<IpcProtocol>;
         using UniquePtr = std::unique_ptr<IpcProtocol>;
-        virtual std::size_t _parseOnePacket() = 0;
 
     protected:
+        std::shared_ptr<IpcSession> _session{};
         BufferType _buffer;
+
+        virtual std::size_t _parseOnePacket() = 0;
 
         template <typename T>
         constexpr T _deserialize(std::size_t startIndex)
@@ -37,5 +40,7 @@ namespace ipc
 
         void pushBytes(std::span<const std::byte> bytes);
         void parseBuffer();
+
+        void setSession(std::shared_ptr<IpcSession> session);
     };
 } // namespace ipc

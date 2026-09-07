@@ -11,7 +11,8 @@ namespace ipc::tcp
     {
     }
 
-    void TcpIpcServer::_removeSession(const std::shared_ptr<Session> &session)
+    void TcpIpcServer::_removeSession(
+        const std::shared_ptr<::ipc::IpcSession> &session)
     {
         std::erase(_sessions, session);
         std::cout << "SERVER: Session removed. Active sessions: "
@@ -37,7 +38,8 @@ namespace ipc::tcp
                                                      this->_protocolFactory());
 
             session->setDisconnectHandler(
-                [this](const std::shared_ptr<Session> &sessionToRemove)
+                [this](
+                    const std::shared_ptr<::ipc::IpcSession> &sessionToRemove)
                 { _removeSession(sessionToRemove); });
 
             _sessions.push_back(session);

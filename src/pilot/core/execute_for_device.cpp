@@ -12,6 +12,7 @@ namespace sabre_pilot::core
     {
         std::cout << "Hello from visitor for " << message.getDestinationMcuId()
                   << '\n';
+        _device->sendServerHello();
     }
 
     void ExecuteForDevice::visitUartAppend(sabre::ipc::UartAppend &message)

@@ -5,26 +5,25 @@
 #include <deque>
 #include <functional>
 #include <ipc/protocol.hpp>
+#include <ipc/session.hpp>
 #include <memory>
 #include <string>
 #include <vector>
 
 namespace ipc::tcp
 {
-    class TcpIpcSession : public std::enable_shared_from_this<TcpIpcSession>
+    class TcpIpcSession : public ::ipc::IpcSession,
+                          public std::enable_shared_from_this<TcpIpcSession>
     {
         using Protocol = IpcProtocol;
         using std::enable_shared_from_this<TcpIpcSession>::shared_from_this;
 
     private:
-        using DisconnectHandler =
-            std::function<void(std::shared_ptr<TcpIpcSession>)>;
-
         asio::ip::tcp::socket _socket;
         std::array<std::byte, 4096> _readBuffer{};
         std::deque<std::vector<std::uint8_t>> _writeQueue;
 
-        DisconnectHandler _disconnectHandler;
+        ::ipc::IpcSession::DisconnectHandler _disconnectHandler;
 
         std::unique_ptr<Protocol> _protocol;
 
@@ -50,6 +49,6 @@ namespace ipc::tcp
         void send(const std::vector<std::uint8_t> &data);
         void send(std::string_view text);
 
-        void setDisconnectHandler(DisconnectHandler handler);
+        void setDisconnectHandler(::ipc::IpcSession::DisconnectHandler handler);
     };
 } // namespace ipc::tcp

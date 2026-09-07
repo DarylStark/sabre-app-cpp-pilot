@@ -2,6 +2,7 @@
 
 #include "protocol.hpp"
 #include "queue.hpp"
+#include "session.hpp"
 #include <functional>
 #include <memory>
 
