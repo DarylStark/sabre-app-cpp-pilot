@@ -43,11 +43,6 @@ namespace ipc::tcp
         }
     }
 
-    void TcpIpcSession::send(std::string_view text)
-    {
-        send(std::vector<std::uint8_t>(text.begin(), text.end()));
-    }
-
     void TcpIpcSession::setDisconnectHandler(
         ::ipc::IpcSession::DisconnectHandler handler)
     {

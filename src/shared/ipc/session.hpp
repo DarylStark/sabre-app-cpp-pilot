@@ -17,8 +17,8 @@ namespace ipc
         virtual void start() = 0;
         virtual void stop() = 0;
 
+        // TODO: Make this accept a range instead of a vector
         virtual void send(const std::vector<std::uint8_t> &data) = 0;
-        virtual void send(std::string_view text) = 0;
 
         virtual void setDisconnectHandler(DisconnectHandler handler) = 0;
     };

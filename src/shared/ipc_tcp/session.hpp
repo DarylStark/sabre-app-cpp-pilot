@@ -47,7 +47,6 @@ namespace ipc::tcp
         void stop();
 
         void send(const std::vector<std::uint8_t> &data);
-        void send(std::string_view text);
 
         void setDisconnectHandler(::ipc::IpcSession::DisconnectHandler handler);
     };
