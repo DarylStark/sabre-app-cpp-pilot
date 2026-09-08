@@ -103,8 +103,10 @@ namespace sabre_pilot::core
         }
     }
 
-    void Device::sendServerHello()
+    void Device::processClientHello(std::shared_ptr<::ipc::IpcSession> session)
     {
-        _session->stop();
+        setIpcSession(std::move(session));
+        std::cout << "Hello received from device " << _id << "!\n"
+                  << std::flush;
     }
 } // namespace sabre_pilot::core

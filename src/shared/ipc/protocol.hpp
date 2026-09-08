@@ -1,7 +1,6 @@
 #pragma once
 
 #include "queue.hpp"
-#include "session.hpp"
 #include "types.hpp"
 #include <cstdint>
 #include <ipc/byte_order.hpp>
@@ -13,6 +12,8 @@
 
 namespace ipc
 {
+    class IpcSession;
+
     class IpcProtocol
     {
     public:

@@ -35,9 +35,10 @@ namespace sabre::ipc
         return serialize(_dstMcu);
     }
 
-    void ClientHello::accept(WuphfMessageVisitor &visitor)
+    void ClientHello::accept(std::shared_ptr<::ipc::IpcSession> session,
+                             WuphfMessageVisitor &visitor)
     {
-        visitor.visitClientHello(*this);
+        visitor.visitClientHello(session, *this);
     }
 
     UartAppend::UartAppend(uint32_t destinationMcuId, uint16_t uartIdx,
@@ -46,9 +47,10 @@ namespace sabre::ipc
     {
     }
 
-    void UartAppend::accept(WuphfMessageVisitor &visitor)
+    void UartAppend::accept(std::shared_ptr<::ipc::IpcSession> session,
+                            WuphfMessageVisitor &visitor)
     {
-        visitor.visitUartAppend(*this);
+        visitor.visitUartAppend(session, *this);
     }
 
     const uint16_t UartAppend::getUartIdx() const

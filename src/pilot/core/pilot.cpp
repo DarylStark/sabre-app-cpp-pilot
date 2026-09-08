@@ -149,9 +149,10 @@ namespace sabre_pilot::core
                             getDevice(message->message->getDestinationMcuId());
                         if (device)
                         {
-                            (*device)->setIpcSession(message->session);
+                            // (*device)->setIpcSession(message->session);
                             executor.setDevice(*device);
-                            message->message->accept(executor);
+                            message->message->accept(message->session,
+                                                     executor);
                         }
                     }
                     else
@@ -164,8 +165,13 @@ namespace sabre_pilot::core
 
         // TODO: Make the specific concrete IPC server configurable
         _ipcServer = std::make_unique<TcpIpcServer>(
-            [this]() { return std::make_unique<Wuphf>(_ipcQueue, 4096); },
-            8998);
+            [this](std::shared_ptr<::ipc::IpcSession> session)
+            {
+                auto sess = std::make_unique<Wuphf>(_ipcQueue, 4096);
+                sess->setSession(std::move(session));
+                return sess;
+            },
+            8998); // TODO: Make this configurable.
 
         _ipcServer->setup();
         _ipcServerThread = std::make_unique<std::thread>(

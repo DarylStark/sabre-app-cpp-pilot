@@ -8,14 +8,18 @@ namespace sabre_pilot::core
         _device = std::move(device);
     }
 
-    void ExecuteForDevice::visitClientHello(sabre::ipc::ClientHello &message)
+    void ExecuteForDevice::visitClientHello(
+        std::shared_ptr<::ipc::IpcSession> session,
+        sabre::ipc::ClientHello &message)
     {
         std::cout << "Hello from visitor for " << message.getDestinationMcuId()
                   << '\n';
-        _device->sendServerHello();
+        _device->processClientHello(std::move(session));
     }
 
-    void ExecuteForDevice::visitUartAppend(sabre::ipc::UartAppend &message)
+    void ExecuteForDevice::visitUartAppend(
+        std::shared_ptr<::ipc::IpcSession> session,
+        sabre::ipc::UartAppend &message)
     {
         // TODO: Implement for real; before doing that, the `UartAppend` has
         // to get methods to retrieve the data (uart index and text).

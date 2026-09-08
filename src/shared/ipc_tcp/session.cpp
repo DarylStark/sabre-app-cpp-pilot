@@ -4,15 +4,13 @@
 
 namespace ipc::tcp
 {
-    TcpIpcSession::TcpIpcSession(asio::ip::tcp::socket socket,
-                                 std::unique_ptr<Protocol> protocol)
-        : _socket(std::move(socket)), _protocol(std::move(protocol))
+    TcpIpcSession::TcpIpcSession(asio::ip::tcp::socket socket)
+        : _socket(std::move(socket))
     {
     }
 
     void TcpIpcSession::start()
     {
-        _protocol->setSession(shared_from_this());
         std::cout << "SESSION: Session started: " << _socket.remote_endpoint()
                   << '\n';
         _readSome();

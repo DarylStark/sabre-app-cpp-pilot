@@ -25,8 +25,6 @@ namespace ipc::tcp
 
         ::ipc::IpcSession::DisconnectHandler _disconnectHandler;
 
-        std::unique_ptr<Protocol> _protocol;
-
         bool _stopped = false;
 
         void _readSome();
@@ -40,8 +38,7 @@ namespace ipc::tcp
         void _callbackAsyncWrite(const std::error_code &ec, std::size_t size);
 
     public:
-        TcpIpcSession(asio::ip::tcp::socket socket,
-                      std::unique_ptr<Protocol> protocol);
+        TcpIpcSession(asio::ip::tcp::socket socket);
 
         void start();
         void stop();

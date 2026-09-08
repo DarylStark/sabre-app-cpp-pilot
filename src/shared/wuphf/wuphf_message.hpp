@@ -2,6 +2,7 @@
 
 #include <cstdint>
 #include <ipc/byte_order.hpp>
+#include <ipc/session.hpp>
 #include <ipc/types.hpp>
 #include <memory>
 #include <ranges>
@@ -30,7 +31,8 @@ namespace sabre::ipc
         uint32_t getDestinationMcuId() const;
 
         virtual const ::ipc::BufferType serializeObj() const noexcept = 0;
-        virtual void accept(WuphfMessageVisitor &visitor) = 0;
+        virtual void accept(std::shared_ptr<::ipc::IpcSession> session,
+                            WuphfMessageVisitor &visitor) = 0;
         virtual constexpr uint16_t getOpCode() const noexcept = 0;
     };
 
@@ -58,7 +60,8 @@ namespace sabre::ipc
         {
             return static_cast<uint16_t>(0x0001);
         }
-        void accept(WuphfMessageVisitor &visitor);
+        void accept(std::shared_ptr<::ipc::IpcSession> session,
+                    WuphfMessageVisitor &visitor);
     };
 
     class UartAppend : public WuphfMessage
@@ -89,7 +92,8 @@ namespace sabre::ipc
                 std::make_unique<UartAppend>(id, uartIndex, uartData));
         }
 
-        void accept(WuphfMessageVisitor &visitor);
+        void accept(std::shared_ptr<::ipc::IpcSession> session,
+                    WuphfMessageVisitor &visitor);
         const ::ipc::BufferType serializeObj() const noexcept override;
         constexpr uint16_t getOpCode() const noexcept
         {
