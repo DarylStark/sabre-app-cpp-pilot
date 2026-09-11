@@ -51,8 +51,7 @@ namespace sabre::ipc
             }
 
             uint32_t id = ::ipc::byte_order::deserialize<uint32_t>(data);
-            return std::optional<std::unique_ptr<ClientHello>>(
-                std::make_unique<ClientHello>(id));
+            return std::make_unique<ClientHello>(id);
         }
 
         const ::ipc::BufferType serializeObj() const noexcept override;
@@ -88,8 +87,7 @@ namespace sabre::ipc
             std::string uartData = ::ipc::byte_order::deserializeString(
                 data | std::views::drop(2));
 
-            return std::optional<std::unique_ptr<UartAppend>>(
-                std::make_unique<UartAppend>(id, uartIndex, uartData));
+            return std::make_unique<UartAppend>(id, uartIndex, uartData);
         }
 
         void accept(std::shared_ptr<::ipc::IpcSession> session,
@@ -101,5 +99,58 @@ namespace sabre::ipc
         }
         const uint16_t getUartIdx() const;
         const std::string getData() const;
+    };
+
+    class ServerHello : public WuphfMessage
+    {
+    public:
+        ServerHello(uint32_t destinationMcuId);
+
+        template <std::ranges::range R>
+        static std::optional<std::unique_ptr<ServerHello>>
+        deserializeObj(const R &data)
+        {
+            if (data.size() != 4)
+            {
+                return nullptr;
+            }
+
+            uint32_t id = ::ipc::byte_order::deserialize<uint32_t>(data);
+            return std::make_unique<ServerHello>(id);
+        }
+
+        const ::ipc::BufferType serializeObj() const noexcept override;
+        constexpr uint16_t getOpCode() const noexcept
+        {
+            return static_cast<uint16_t>(0x0002);
+        }
+
+        // TODO: We don't need that message here?
+        void accept(std::shared_ptr<::ipc::IpcSession> session,
+                    WuphfMessageVisitor &visitor);
+    };
+
+    class BindSession : public WuphfMessage
+    {
+    public:
+        BindSession(uint32_t destinationMcuId);
+
+        template <std::ranges::range R>
+        static std::optional<std::unique_ptr<BindSession>>
+        deserializeObj(const R &data)
+        {
+            // TODO: Custom exception
+            throw std::runtime_error("This message shouldn't be deserialized!");
+            return std::nullopt;
+        }
+
+        const ::ipc::BufferType serializeObj() const noexcept override;
+        constexpr uint16_t getOpCode() const noexcept
+        {
+            return static_cast<uint16_t>(0x0002);
+        }
+
+        void accept(std::shared_ptr<::ipc::IpcSession> session,
+                    WuphfMessageVisitor &visitor);
     };
 } // namespace sabre::ipc

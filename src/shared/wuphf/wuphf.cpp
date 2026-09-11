@@ -10,11 +10,18 @@ namespace sabre::ipc
                  std::size_t bufferSize)
         : IpcProtocol(bufferSize), _queue(queue)
     {
+    }
+
+    WuphfServer::WuphfServer(
+        ::ipc::Queue<std::unique_ptr<IncomingMessage>> &queue,
+        std::size_t bufferSize)
+        : Wuphf(queue, bufferSize)
+    {
         _parseMethods[0x0001] = [this]() { return _parseClientHello(); };
         _parseMethods[0x0101] = [this]() { return _parseUartAppend(); };
     }
 
-    std::size_t Wuphf::_parseOnePacket()
+    std::size_t WuphfServer::_parseOnePacket()
     {
         // Buffer should be at least 4 bytes to process
         if (_buffer.size() < 4)
@@ -50,18 +57,36 @@ namespace sabre::ipc
         return 0;
     }
 
-    std::optional<WuphfMessage::UniquePtr> Wuphf::_parseClientHello()
+    std::optional<WuphfMessage::UniquePtr> WuphfServer::_parseClientHello()
     {
         auto rv = ClientHello::deserializeObj(_buffer | std::views::drop(4) |
                                               std::views::take(4));
+
         if (rv != std::nullopt)
         {
+            if (_state != WuphfServerState::Pending)
+            {
+                // TODO: Custom exception
+                throw std::runtime_error(
+                    "Server received ClientHello when not in pending state");
+            }
+
             _mcuId = (*rv)->getDestinationMcuId();
+            _state = WuphfServerState::Done;
+
+            if (_session)
+            {
+                ServerHello server_hello(_mcuId);
+                sendWuphfMessage(*_session, server_hello);
+            }
+
+            return std::make_unique<BindSession>(_mcuId);
         }
-        return rv;
+
+        return std::nullopt;
     }
 
-    std::optional<WuphfMessage::UniquePtr> Wuphf::_parseUartAppend()
+    std::optional<WuphfMessage::UniquePtr> WuphfServer::_parseUartAppend()
     {
         uint16_t length = _deserialize<uint16_t>(2);
         return UartAppend::deserializeObj(
@@ -88,5 +113,28 @@ namespace sabre::ipc
         std::ranges::copy(data, bytes.begin() + 4);
 
         client.sendData(bytes);
+    }
+
+    void sendWuphfMessage(::ipc::IpcSession &client,
+                          const WuphfMessage &message)
+    {
+        const uint16_t opcode = message.getOpCode();
+        const auto data = message.serializeObj();
+
+        ::ipc::BufferType bytes(4 + data.size());
+        size_t length = data.size();
+
+        // Copy the opcode
+        std::ranges::copy(::ipc::byte_order::serialize<uint16_t>(opcode),
+                          bytes.begin());
+
+        // Copy the size
+        std::ranges::copy(::ipc::byte_order::serialize<uint16_t>(length),
+                          bytes.begin() + 2);
+
+        // Copy the data
+        std::ranges::copy(data, bytes.begin() + 4);
+
+        client.send(bytes);
     }
 } // namespace sabre::ipc

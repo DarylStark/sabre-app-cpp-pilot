@@ -71,4 +71,38 @@ namespace sabre::ipc
         std::ranges::copy(serialize(_data), output.begin() + 2);
         return output;
     }
+
+    ServerHello::ServerHello(uint32_t destinationMcuId)
+        : WuphfMessage(destinationMcuId)
+    {
+    }
+
+    const ::ipc::BufferType ServerHello::serializeObj() const noexcept
+    {
+        using namespace ::ipc::byte_order;
+        return serialize(_dstMcu);
+    }
+
+    void ServerHello::accept(std::shared_ptr<::ipc::IpcSession> session,
+                             WuphfMessageVisitor &visitor)
+    {
+        // TODO: Implement
+    }
+
+    BindSession::BindSession(uint32_t destinationMcuId)
+        : WuphfMessage(destinationMcuId)
+    {
+    }
+
+    const ::ipc::BufferType BindSession::serializeObj() const noexcept
+    {
+        // TODO: Custom exception
+        return {};
+    }
+
+    void BindSession::accept(std::shared_ptr<::ipc::IpcSession> session,
+                             WuphfMessageVisitor &visitor)
+    {
+        visitor.visitBindSession(session, *this);
+    }
 } // namespace sabre::ipc

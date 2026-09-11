@@ -31,7 +31,7 @@ namespace ipc::tcp
         _handleDisconnect();
     }
 
-    void TcpIpcSession::send(const std::vector<std::uint8_t> &data)
+    void TcpIpcSession::send(const std::vector<std::byte> &data)
     {
         bool write_in_progress = !_writeQueue.empty();
         _writeQueue.push_back(data);

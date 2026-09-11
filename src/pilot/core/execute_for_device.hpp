@@ -17,5 +17,7 @@ namespace sabre_pilot::core
                               sabre::ipc::ClientHello &message) override;
         void visitUartAppend(std::shared_ptr<::ipc::IpcSession> session,
                              sabre::ipc::UartAppend &message) override;
+        void visitBindSession(std::shared_ptr<::ipc::IpcSession> session,
+                              sabre::ipc::BindSession &message) override;
     };
 } // namespace sabre_pilot::core

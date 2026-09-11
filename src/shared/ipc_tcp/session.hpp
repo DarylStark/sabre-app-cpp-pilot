@@ -21,7 +21,7 @@ namespace ipc::tcp
     private:
         asio::ip::tcp::socket _socket;
         std::array<std::byte, 4096> _readBuffer{};
-        std::deque<std::vector<std::uint8_t>> _writeQueue;
+        std::deque<std::vector<std::byte>> _writeQueue;
 
         ::ipc::IpcSession::DisconnectHandler _disconnectHandler;
 
@@ -43,7 +43,7 @@ namespace ipc::tcp
         void start();
         void stop();
 
-        void send(const std::vector<std::uint8_t> &data);
+        void send(const std::vector<std::byte> &data);
 
         void setDisconnectHandler(::ipc::IpcSession::DisconnectHandler handler);
     };

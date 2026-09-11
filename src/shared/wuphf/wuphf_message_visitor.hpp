@@ -15,6 +15,9 @@ namespace sabre::ipc
                          ClientHello &message) = 0;
         virtual void visitUartAppend(std::shared_ptr<::ipc::IpcSession> session,
                                      UartAppend &message) = 0;
+        virtual void
+        visitBindSession(std::shared_ptr<::ipc::IpcSession> session,
+                         BindSession &message) = 0;
     };
 
     class WuphfMessageVisitorAdapter : public WuphfMessageVisitor
@@ -28,6 +31,12 @@ namespace sabre::ipc
         }
         virtual void visitUartAppend(std::shared_ptr<::ipc::IpcSession> session,
                                      UartAppend &message) override
+        {
+        }
+
+        virtual void
+        visitBindSession(std::shared_ptr<::ipc::IpcSession> session,
+                         BindSession &message)
         {
         }
     };

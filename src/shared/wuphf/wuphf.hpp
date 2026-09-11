@@ -20,14 +20,34 @@ namespace sabre::ipc
 
     class Wuphf : public ::ipc::IpcProtocol
     {
+    protected:
+        ::ipc::Queue<std::unique_ptr<IncomingMessage>> &_queue;
+
     public:
         using Ptr = Wuphf *;
         using SharedPtr = std::shared_ptr<Wuphf>;
         using UniquePtr = std::unique_ptr<Wuphf>;
 
+    public:
+        Wuphf(::ipc::Queue<std::unique_ptr<IncomingMessage>> &queue,
+              std::size_t bufferSize);
+    };
+
+    enum class WuphfServerState
+    {
+        Pending,
+        Done
+    };
+
+    class WuphfServer : public Wuphf
+    {
+    public:
+        using Ptr = WuphfServer *;
+        using SharedPtr = std::shared_ptr<WuphfServer>;
+        using UniquePtr = std::unique_ptr<WuphfServer>;
+
     private:
         uint32_t _mcuId = 0;
-        ::ipc::Queue<std::unique_ptr<IncomingMessage>> &_queue;
 
         std::size_t _parseOnePacket() override;
 
@@ -36,11 +56,15 @@ namespace sabre::ipc
 
         std::unordered_map<uint32_t, ParseMethod> _parseMethods;
 
+        WuphfServerState _state = WuphfServerState::Pending;
+
     public:
-        Wuphf(::ipc::Queue<std::unique_ptr<IncomingMessage>> &queue,
-              std::size_t bufferSize);
+        WuphfServer(::ipc::Queue<std::unique_ptr<IncomingMessage>> &queue,
+                    std::size_t bufferSize);
     };
 
     void sendWuphfMessage(::ipc::IpcClient &client,
+                          const WuphfMessage &message);
+    void sendWuphfMessage(::ipc::IpcSession &client,
                           const WuphfMessage &message);
 } // namespace sabre::ipc

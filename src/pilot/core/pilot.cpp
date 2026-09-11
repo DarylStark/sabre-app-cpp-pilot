@@ -118,8 +118,8 @@ namespace sabre_pilot::core
     void Pilot::start()
     {
         using ::ipc::tcp::TcpIpcServer;
-        using sabre::ipc::Wuphf;
         using sabre::ipc::WuphfMessage;
+        using sabre::ipc::WuphfServer;
 
         // Start process monitor
         auto threadLambda = [this]() { this->_processMonitorThreadFn(); };
@@ -141,6 +141,8 @@ namespace sabre_pilot::core
                         std::unique_ptr<sabre::ipc::IncomingMessage> message =
                             std::move(*item);
                         if (message == nullptr)
+                            continue;
+                        if (message->message == nullptr)
                             continue;
                         std::cout << "Message for "
                                   << message->message->getDestinationMcuId()
@@ -167,7 +169,7 @@ namespace sabre_pilot::core
         _ipcServer = std::make_unique<TcpIpcServer>(
             [this](std::shared_ptr<::ipc::IpcSession> session)
             {
-                auto sess = std::make_unique<Wuphf>(_ipcQueue, 4096);
+                auto sess = std::make_unique<WuphfServer>(_ipcQueue, 4096);
                 sess->setSession(std::move(session));
                 return sess;
             },

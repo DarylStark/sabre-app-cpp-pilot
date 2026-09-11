@@ -26,4 +26,12 @@ namespace sabre_pilot::core
         std::cout << "HERE\n";
         _device->appendToUArt(message.getUartIdx(), message.getData());
     }
+
+    void ExecuteForDevice::visitBindSession(
+        std::shared_ptr<::ipc::IpcSession> session,
+        sabre::ipc::BindSession &message)
+    {
+        std::cout << "Binding session\n" << std::flush;
+        _device->setIpcSession(session);
+    }
 } // namespace sabre_pilot::core
