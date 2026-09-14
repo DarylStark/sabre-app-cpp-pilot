@@ -29,7 +29,7 @@ namespace sabre_runner::core
     Runner::Runner(CoreConfig config)
         : _config(std::move(config)),
           _ipcProtocol(
-              std::make_shared<sabre::ipc::WuphfServer>(_ipcQueue, 2048)),
+              std::make_shared<sabre::ipc::WuphfClient>(_ipcQueue, 2048)),
           _library(std::make_unique<LinuxDynamicLibrary>(
               _config.software.firmwareFile))
     {
