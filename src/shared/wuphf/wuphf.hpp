@@ -22,6 +22,9 @@ namespace sabre::ipc
     {
     protected:
         ::ipc::Queue<std::unique_ptr<IncomingMessage>> &_queue;
+        std::unordered_map<uint32_t, ParseMethod> _parseMethods;
+
+        std::size_t _parseOnePacket() override;
 
     public:
         using Ptr = Wuphf *;
@@ -49,17 +52,25 @@ namespace sabre::ipc
     private:
         uint32_t _mcuId = 0;
 
-        std::size_t _parseOnePacket() override;
-
         std::optional<WuphfMessage::UniquePtr> _parseClientHello();
         std::optional<WuphfMessage::UniquePtr> _parseUartAppend();
-
-        std::unordered_map<uint32_t, ParseMethod> _parseMethods;
 
         WuphfServerState _state = WuphfServerState::Pending;
 
     public:
         WuphfServer(::ipc::Queue<std::unique_ptr<IncomingMessage>> &queue,
+                    std::size_t bufferSize);
+    };
+
+    class WuphfClient : public Wuphf
+    {
+    public:
+        using Ptr = WuphfClient *;
+        using SharedPtr = std::shared_ptr<WuphfClient>;
+        using UniquePtr = std::unique_ptr<WuphfClient>;
+
+    public:
+        WuphfClient(::ipc::Queue<std::unique_ptr<IncomingMessage>> &queue,
                     std::size_t bufferSize);
     };
 

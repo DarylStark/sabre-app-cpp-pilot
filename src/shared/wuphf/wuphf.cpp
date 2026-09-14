@@ -12,16 +12,7 @@ namespace sabre::ipc
     {
     }
 
-    WuphfServer::WuphfServer(
-        ::ipc::Queue<std::unique_ptr<IncomingMessage>> &queue,
-        std::size_t bufferSize)
-        : Wuphf(queue, bufferSize)
-    {
-        _parseMethods[0x0001] = [this]() { return _parseClientHello(); };
-        _parseMethods[0x0101] = [this]() { return _parseUartAppend(); };
-    }
-
-    std::size_t WuphfServer::_parseOnePacket()
+    std::size_t Wuphf::_parseOnePacket()
     {
         // Buffer should be at least 4 bytes to process
         if (_buffer.size() < 4)
@@ -55,6 +46,15 @@ namespace sabre::ipc
             }
         }
         return 0;
+    }
+
+    WuphfServer::WuphfServer(
+        ::ipc::Queue<std::unique_ptr<IncomingMessage>> &queue,
+        std::size_t bufferSize)
+        : Wuphf(queue, bufferSize)
+    {
+        _parseMethods[0x0001] = [this]() { return _parseClientHello(); };
+        _parseMethods[0x0101] = [this]() { return _parseUartAppend(); };
     }
 
     std::optional<WuphfMessage::UniquePtr> WuphfServer::_parseClientHello()
@@ -136,5 +136,12 @@ namespace sabre::ipc
         std::ranges::copy(data, bytes.begin() + 4);
 
         client.send(bytes);
+    }
+
+    WuphfClient::WuphfClient(
+        ::ipc::Queue<std::unique_ptr<IncomingMessage>> &queue,
+        std::size_t bufferSize)
+        : Wuphf(queue, bufferSize)
+    {
     }
 } // namespace sabre::ipc
