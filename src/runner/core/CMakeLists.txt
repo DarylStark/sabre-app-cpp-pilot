@@ -5,8 +5,10 @@ target_link_libraries(
     sabre_pilot_runner_core
     PUBLIC
         sabre
-        sabre_pilot_impl
+        sabre_pilot_hardware
         sabre_ipc_tcp
+        sabre_pilot_impl
+        sabre_wuphf
 )
 
 set_target_properties(

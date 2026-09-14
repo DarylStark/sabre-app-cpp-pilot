@@ -159,9 +159,9 @@ namespace ipc::tcp
         return _isConnected;
     }
 
-    void TcpIpcClient::sendData(const std::string &data)
+    void TcpIpcClient::sendData(const BufferType &data)
     {
-        std::vector<uint8_t> bytesData(data.begin(), data.end());
+        ::ipc::BufferType bytesData(data.begin(), data.end());
         bool writeInProgress = !_writeQueue.empty();
         _writeQueue.push_back(bytesData);
 

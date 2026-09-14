@@ -1,7 +1,7 @@
 #include "uart_controller.hpp"
 #include "exceptions.hpp"
 
-namespace sabre::impl::pilot
+namespace sabre_runner::hardware
 {
     void UartController::initialize(size_t inputBufferSize,
                                     size_t outputBufferSize)
@@ -57,8 +57,7 @@ namespace sabre::impl::pilot
     {
         if (!_outputBufferCallback)
             return;
-        for (char &c : _outputBuffer)
-            _outputBufferCallback(c);
+        _outputBufferCallback(_outputBuffer);
     }
 
     void UartController::_raiseOnUnitialized() const
@@ -70,4 +69,4 @@ namespace sabre::impl::pilot
         }
     }
 
-} // namespace sabre::impl::pilot
+} // namespace sabre_runner::hardware

@@ -3,32 +3,23 @@
 
 namespace sabre::impl::pilot
 {
-    Uart::Uart(Mcu *device, size_t uartIndex)
-        : _device(device), _uartIndex(uartIndex)
+    Uart::Uart(sabre_runner::hardware::Controller::SharedPtr hardware,
+               sabre::hal::UartNumber uartIndex, size_t bufferSize)
+        : _uartIndex(uartIndex), _hardware(std::move(hardware)),
+          _bufferSize(bufferSize)
     {
-        if (!_device)
-            throw DeviceNotConfiguredException(
-                "A valid pointer to a device is required!");
-
-        try
-        {
-            _device->getUartController(uartIndex);
-        }
-        catch (DeviceUartNotConfiguredException &e)
-        {
-            throw InvalidUartIndex("Invalid Uart index.");
-        }
     }
 
     void Uart::initialize()
     {
-        _getUartController().initialize(
-            100, 100); // TODO: Make the buffers configurable
+        _hardware->getUartController(_uartIndex)
+            .initialize(_bufferSize, _bufferSize);
     }
 
     int Uart::writeByte(char data) const
     {
-        return _getUartController().write(data);
+        _hardware->getUartController(_uartIndex).write(data);
+        return 0;
     }
 
     std::string Uart::readBytes(size_t maxytes, sabre::types::MsTime timeout)
@@ -38,31 +29,17 @@ namespace sabre::impl::pilot
 
     void Uart::flush()
     {
-        _getUartController().flush();
+        _hardware->getUartController(_uartIndex).flush();
     }
 
-    void Uart::deinitialize()
-    {
-        _getUartController().deinitialize();
-    }
+    void Uart::deinitialize() {}
 
     bool Uart::isInitialized() const noexcept
     {
-        return _getUartController().isInitialized();
+        return _hardware->getUartController(_uartIndex).isInitialized();
     }
 
-    UartController &Uart::_getUartController() const
-    {
-        return _device->getUartController(_uartIndex);
-    }
-
-    Gpio::Gpio(Mcu *device, sabre::hal::PinNumber pinNumber)
-        : sabre::hal::Gpio(pinNumber), _device(device)
-    {
-        if (!_device)
-            throw DeviceNotConfiguredException(
-                "A valid pointer to a device is required!");
-    }
+    Gpio::Gpio(sabre::hal::PinNumber pinNumber) : sabre::hal::Gpio(pinNumber) {}
 
     void Gpio::reset() {}
 } // namespace sabre::impl::pilot

@@ -94,4 +94,19 @@ namespace sabre_pilot::core
             _state = DeviceState::Stopped;
         }
     }
+
+    void Device::setIpcSession(std::shared_ptr<::ipc::IpcSession> session)
+    {
+        if (_session == nullptr)
+        {
+            _session = std::move(session);
+        }
+    }
+
+    void Device::processClientHello(std::shared_ptr<::ipc::IpcSession> session)
+    {
+        setIpcSession(std::move(session));
+        std::cout << "Hello received from device " << _id << "!\n"
+                  << std::flush;
+    }
 } // namespace sabre_pilot::core
