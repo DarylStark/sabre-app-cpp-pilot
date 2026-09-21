@@ -5,6 +5,7 @@
 #include <functional>
 #include <ipc/client.hpp>
 #include <ipc/protocol.hpp>
+#include <optional>
 #include <unordered_map>
 #include <vector>
 
@@ -34,55 +35,6 @@ namespace sabre::ipc
     public:
         Wuphf(::ipc::Queue<std::unique_ptr<IncomingMessage>> &queue,
               std::size_t bufferSize);
-    };
-
-    enum class WuphfServerState
-    {
-        Pending,
-        Done
-    };
-
-    class WuphfServer : public Wuphf
-    {
-    public:
-        using Ptr = WuphfServer *;
-        using SharedPtr = std::shared_ptr<WuphfServer>;
-        using UniquePtr = std::unique_ptr<WuphfServer>;
-
-    private:
-        uint32_t _mcuId = 0;
-
-        std::optional<WuphfMessage::UniquePtr> _parseClientHello();
-        std::optional<WuphfMessage::UniquePtr> _parseUartAppend();
-
-        WuphfServerState _state = WuphfServerState::Pending;
-
-    public:
-        WuphfServer(::ipc::Queue<std::unique_ptr<IncomingMessage>> &queue,
-                    std::size_t bufferSize);
-    };
-
-    enum class WuphfClientState
-    {
-        Pending,
-        Done
-    };
-
-    class WuphfClient : public Wuphf
-    {
-    public:
-        using Ptr = WuphfClient *;
-        using SharedPtr = std::shared_ptr<WuphfClient>;
-        using UniquePtr = std::unique_ptr<WuphfClient>;
-
-    private:
-        WuphfClientState _state = WuphfClientState::Pending;
-
-        std::optional<WuphfMessage::UniquePtr> _parseServerHello();
-
-    public:
-        WuphfClient(::ipc::Queue<std::unique_ptr<IncomingMessage>> &queue,
-                    std::size_t bufferSize);
     };
 
     void sendWuphfMessage(::ipc::IpcClient &client,

@@ -9,6 +9,7 @@
 #include <sabre/runtime/run_app.hpp>
 #include <thread>
 #include <wuphf/wuphf.hpp>
+#include <wuphf/wuphf_server.hpp>
 
 namespace sabre_pilot::core
 {

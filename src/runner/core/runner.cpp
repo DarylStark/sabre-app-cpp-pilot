@@ -6,6 +6,7 @@
 #include <sabre_impl/core.hpp>
 #include <thread>
 #include <wuphf/wuphf.hpp>
+#include <wuphf/wuphf_client.hpp>
 #include <wuphf/wuphf_message.hpp>
 
 namespace sabre_runner::core
