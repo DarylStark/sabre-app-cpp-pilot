@@ -23,7 +23,7 @@ namespace ipc::tcp
         asio::ip::tcp::resolver _resolver;
         asio::ip::tcp::socket _socket;
 
-        std::array<std::uint8_t, 4096> _readBuffer{};
+        std::array<std::byte, 4096> _readBuffer{};
         std::deque<std::vector<std::byte>> _writeQueue;
 
         std::mutex _connectionMutex;
