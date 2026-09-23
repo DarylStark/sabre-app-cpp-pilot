@@ -50,13 +50,18 @@ namespace sabre_runner::core
         ipc::Queue<std::unique_ptr<sabre::ipc::IncomingMessage>> _ipcQueue;
         ipc::IpcProtocol::SharedPtr _ipcProtocol;
         ipc::IpcClient::SharedPtr _ipcClient{};
-        std::unique_ptr<std::thread> _ipcThread{};
+        std::unique_ptr<std::thread> _ipcClientThread{};
+        std::unique_ptr<std::thread> _ipcReceiverThread{};
 
+        // Starting the application
         void _loadEntryPoint();
         void _configureIpc();
         void _configureHardware();
         void _startIpc();
         void _startFirmware();
+
+        // Threads
+        void _ipcReceiverThreadFn();
 
     public:
         Runner(CoreConfig config);

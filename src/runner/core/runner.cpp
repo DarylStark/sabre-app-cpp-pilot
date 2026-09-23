@@ -36,6 +36,30 @@ namespace sabre_runner::core
     {
     }
 
+    void Runner::_ipcReceiverThreadFn()
+    {
+        bool keepRunning = true;
+        while (keepRunning)
+        {
+            std::optional<std::unique_ptr<sabre::ipc::IncomingMessage>> item =
+                _ipcQueue.pop();
+            if (item)
+            {
+                std::unique_ptr<sabre::ipc::IncomingMessage> message =
+                    std::move(*item);
+                if (message == nullptr)
+                    continue;
+                if (message->message == nullptr)
+                    continue;
+                std::cout << "Message received!\n";
+            }
+            else
+            {
+                keepRunning = false;
+            }
+        }
+    }
+
     void Runner::_loadEntryPoint()
     {
         _entryPointFn = _library->getEntryPoint(_config.software.entryPoint);
@@ -47,17 +71,22 @@ namespace sabre_runner::core
             return;
 
         _ipcClient->setup();
-        _ipcThread =
+        _ipcClientThread =
             std::make_unique<std::thread>([this]() { _ipcClient->run(); });
 
         if (!_ipcClient->waitForConnection())
         {
             _ipcClient->stop();
-            _ipcThread->join();
+            _ipcClientThread->join();
             throw IpcException("Error connecting to IPC server");
         }
 
-        _ipcThread->detach();
+        _ipcClientThread->detach();
+
+        // Run a thread checking the IPC queue
+        _ipcReceiverThread =
+            std::make_unique<std::thread>([this]() { _ipcReceiverThreadFn(); });
+        _ipcReceiverThread->detach();
 
         // Create a Hello Command
         sabre::ipc::ClientHello hello(_config.deviceId);
