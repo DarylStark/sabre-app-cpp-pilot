@@ -13,11 +13,7 @@ namespace sabre_pilot::core
 
     public:
         void setDevice(std::shared_ptr<Device> device);
-        void visitClientHello(std::shared_ptr<::ipc::IpcSession> session,
-                              sabre::ipc::ClientHello &message) override;
-        void visitUartAppend(std::shared_ptr<::ipc::IpcSession> session,
-                             sabre::ipc::UartAppend &message) override;
-        void visitBindSession(std::shared_ptr<::ipc::IpcSession> session,
-                              sabre::ipc::BindSession &message) override;
+        void visitUartAppend(sabre::ipc::UartAppend &message) override;
+        void visitBindSession(sabre::ipc::BindSession &message) override;
     };
 } // namespace sabre_pilot::core

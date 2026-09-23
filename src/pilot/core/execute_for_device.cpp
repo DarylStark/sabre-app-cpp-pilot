@@ -8,18 +8,7 @@ namespace sabre_pilot::core
         _device = std::move(device);
     }
 
-    void ExecuteForDevice::visitClientHello(
-        std::shared_ptr<::ipc::IpcSession> session,
-        sabre::ipc::ClientHello &message)
-    {
-        std::cout << "Hello from visitor for " << message.getDestinationMcuId()
-                  << '\n';
-        _device->processClientHello(std::move(session));
-    }
-
-    void ExecuteForDevice::visitUartAppend(
-        std::shared_ptr<::ipc::IpcSession> session,
-        sabre::ipc::UartAppend &message)
+    void ExecuteForDevice::visitUartAppend(sabre::ipc::UartAppend &message)
     {
         // TODO: Implement for real; before doing that, the `UartAppend` has
         // to get methods to retrieve the data (uart index and text).
@@ -27,9 +16,7 @@ namespace sabre_pilot::core
         _device->appendToUArt(message.getUartIdx(), message.getData());
     }
 
-    void ExecuteForDevice::visitBindSession(
-        std::shared_ptr<::ipc::IpcSession> session,
-        sabre::ipc::BindSession &message)
+    void ExecuteForDevice::visitBindSession(sabre::ipc::BindSession &message)
     {
         std::cout << "Binding session\n" << std::flush;
         _device->setIpcSession(message.getSession());

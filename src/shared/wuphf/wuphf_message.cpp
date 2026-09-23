@@ -38,7 +38,7 @@ namespace sabre::ipc
     void ClientHello::accept(std::shared_ptr<::ipc::IpcSession> session,
                              WuphfMessageVisitor &visitor)
     {
-        visitor.visitClientHello(session, *this);
+        // Do nothing, no visitor for this class.
     }
 
     UartAppend::UartAppend(uint32_t destinationMcuId, uint16_t uartIdx,
@@ -50,7 +50,7 @@ namespace sabre::ipc
     void UartAppend::accept(std::shared_ptr<::ipc::IpcSession> session,
                             WuphfMessageVisitor &visitor)
     {
-        visitor.visitUartAppend(session, *this);
+        visitor.visitUartAppend(*this);
     }
 
     const uint16_t UartAppend::getUartIdx() const
@@ -104,7 +104,7 @@ namespace sabre::ipc
     void BindSession::accept(std::shared_ptr<::ipc::IpcSession> session,
                              WuphfMessageVisitor &visitor)
     {
-        visitor.visitBindSession(session, *this);
+        visitor.visitBindSession(*this);
     }
 
     std::shared_ptr<::ipc::IpcSession> BindSession::getSession() const

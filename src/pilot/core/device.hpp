@@ -61,6 +61,5 @@ namespace sabre_pilot::core
         void updateState();
 
         void setIpcSession(std::shared_ptr<::ipc::IpcSession> session);
-        void processClientHello(std::shared_ptr<::ipc::IpcSession> session);
     };
 } // namespace sabre_pilot::core
