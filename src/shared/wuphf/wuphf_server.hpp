@@ -29,7 +29,7 @@ namespace sabre::ipc
         WuphfServerState _state = WuphfServerState::Pending;
 
     public:
-        WuphfServer(::ipc::Queue<std::unique_ptr<IncomingMessage>> &queue,
+        WuphfServer(::ipc::Queue<WuphfMessage::UniquePtr> &queue,
                     std::size_t bufferSize);
     };
 } // namespace sabre::ipc

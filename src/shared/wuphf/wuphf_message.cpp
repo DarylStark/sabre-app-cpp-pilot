@@ -35,8 +35,7 @@ namespace sabre::ipc
         return serialize(_dstMcu);
     }
 
-    void ClientHello::accept(std::shared_ptr<::ipc::IpcSession> session,
-                             WuphfMessageVisitor &visitor)
+    void ClientHello::accept(WuphfMessageVisitor &visitor)
     {
         // Do nothing, no visitor for this class.
     }
@@ -47,8 +46,7 @@ namespace sabre::ipc
     {
     }
 
-    void UartAppend::accept(std::shared_ptr<::ipc::IpcSession> session,
-                            WuphfMessageVisitor &visitor)
+    void UartAppend::accept(WuphfMessageVisitor &visitor)
     {
         visitor.visitUartAppend(*this);
     }
@@ -83,8 +81,7 @@ namespace sabre::ipc
         return serialize(_dstMcu);
     }
 
-    void ServerHello::accept(std::shared_ptr<::ipc::IpcSession> session,
-                             WuphfMessageVisitor &visitor)
+    void ServerHello::accept(WuphfMessageVisitor &visitor)
     {
         // TODO: Implement
     }
@@ -101,8 +98,7 @@ namespace sabre::ipc
         return {};
     }
 
-    void BindSession::accept(std::shared_ptr<::ipc::IpcSession> session,
-                             WuphfMessageVisitor &visitor)
+    void BindSession::accept(WuphfMessageVisitor &visitor)
     {
         visitor.visitBindSession(*this);
     }

@@ -47,7 +47,7 @@ namespace sabre_runner::core
         sabre_runner::hardware::Controller::SharedPtr _hardware;
 
         // IPC
-        ipc::Queue<std::unique_ptr<sabre::ipc::IncomingMessage>> _ipcQueue;
+        ipc::Queue<sabre::ipc::WuphfMessage::UniquePtr> _ipcQueue;
         ipc::IpcProtocol::SharedPtr _ipcProtocol;
         ipc::IpcClient::SharedPtr _ipcClient{};
         std::unique_ptr<std::thread> _ipcClientThread{};

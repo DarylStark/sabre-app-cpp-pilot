@@ -4,9 +4,8 @@
 
 namespace sabre::ipc
 {
-    WuphfServer::WuphfServer(
-        ::ipc::Queue<std::unique_ptr<IncomingMessage>> &queue,
-        std::size_t bufferSize)
+    WuphfServer::WuphfServer(::ipc::Queue<WuphfMessage::UniquePtr> &queue,
+                             std::size_t bufferSize)
         : Wuphf(queue, bufferSize)
     {
         _parseMethods[0x0001] = [this]() { return _parseClientHello(); };

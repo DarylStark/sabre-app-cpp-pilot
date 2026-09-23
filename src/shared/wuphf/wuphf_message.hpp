@@ -31,8 +31,7 @@ namespace sabre::ipc
         uint32_t getDestinationMcuId() const;
 
         virtual const ::ipc::BufferType serializeObj() const noexcept = 0;
-        virtual void accept(std::shared_ptr<::ipc::IpcSession> session,
-                            WuphfMessageVisitor &visitor) = 0;
+        virtual void accept(WuphfMessageVisitor &visitor) = 0;
         virtual constexpr uint16_t getOpCode() const noexcept = 0;
     };
 
@@ -59,8 +58,7 @@ namespace sabre::ipc
         {
             return static_cast<uint16_t>(0x0001);
         }
-        void accept(std::shared_ptr<::ipc::IpcSession> session,
-                    WuphfMessageVisitor &visitor);
+        void accept(WuphfMessageVisitor &visitor) override;
     };
 
     class UartAppend : public WuphfMessage
@@ -90,8 +88,7 @@ namespace sabre::ipc
             return std::make_unique<UartAppend>(id, uartIndex, uartData);
         }
 
-        void accept(std::shared_ptr<::ipc::IpcSession> session,
-                    WuphfMessageVisitor &visitor);
+        void accept(WuphfMessageVisitor &visitor) override;
         const ::ipc::BufferType serializeObj() const noexcept override;
         constexpr uint16_t getOpCode() const noexcept
         {
@@ -125,9 +122,7 @@ namespace sabre::ipc
             return static_cast<uint16_t>(0x0002);
         }
 
-        // TODO: We don't need that message here?
-        void accept(std::shared_ptr<::ipc::IpcSession> session,
-                    WuphfMessageVisitor &visitor);
+        void accept(WuphfMessageVisitor &visitor) override;
     };
 
     class BindSession : public WuphfMessage
@@ -154,8 +149,7 @@ namespace sabre::ipc
             return static_cast<uint16_t>(0x0002);
         }
 
-        void accept(std::shared_ptr<::ipc::IpcSession> session,
-                    WuphfMessageVisitor &visitor);
+        void accept(WuphfMessageVisitor &visitor) override;
 
         std::shared_ptr<::ipc::IpcSession> getSession() const;
     };

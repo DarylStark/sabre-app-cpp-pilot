@@ -27,7 +27,7 @@ namespace sabre::ipc
         std::optional<WuphfMessage::UniquePtr> _parseServerHello();
 
     public:
-        WuphfClient(::ipc::Queue<std::unique_ptr<IncomingMessage>> &queue,
+        WuphfClient(::ipc::Queue<WuphfMessage::UniquePtr> &queue,
                     std::size_t bufferSize);
     };
 

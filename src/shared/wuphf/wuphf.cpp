@@ -6,7 +6,7 @@
 
 namespace sabre::ipc
 {
-    Wuphf::Wuphf(::ipc::Queue<std::unique_ptr<IncomingMessage>> &queue,
+    Wuphf::Wuphf(::ipc::Queue<WuphfMessage::UniquePtr> &queue,
                  std::size_t bufferSize)
         : IpcProtocol(bufferSize), _queue(queue)
     {
@@ -37,11 +37,7 @@ namespace sabre::ipc
             message = method->second();
             if (message)
             {
-                std::unique_ptr<IncomingMessage> msg =
-                    std::make_unique<IncomingMessage>();
-                msg->message = std::move(*message);
-                msg->session = _session;
-                _queue.push(std::move(msg));
+                _queue.push(std::move(*message));
                 return length + 4;
             }
         }

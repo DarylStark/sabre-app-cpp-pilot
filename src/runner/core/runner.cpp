@@ -41,15 +41,12 @@ namespace sabre_runner::core
         bool keepRunning = true;
         while (keepRunning)
         {
-            std::optional<std::unique_ptr<sabre::ipc::IncomingMessage>> item =
+            std::optional<sabre::ipc::WuphfMessage::UniquePtr> item =
                 _ipcQueue.pop();
             if (item)
             {
-                std::unique_ptr<sabre::ipc::IncomingMessage> message =
-                    std::move(*item);
+                sabre::ipc::WuphfMessage::UniquePtr message = std::move(*item);
                 if (message == nullptr)
-                    continue;
-                if (message->message == nullptr)
                     continue;
                 std::cout << "Message received!\n";
             }

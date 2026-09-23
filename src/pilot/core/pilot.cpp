@@ -135,27 +135,21 @@ namespace sabre_pilot::core
                 bool keepRunning = true;
                 while (keepRunning)
                 {
-                    std::optional<std::unique_ptr<sabre::ipc::IncomingMessage>>
-                        item = _ipcQueue.pop();
+                    std::optional<WuphfMessage::UniquePtr> item =
+                        _ipcQueue.pop();
                     if (item)
                     {
-                        std::unique_ptr<sabre::ipc::IncomingMessage> message =
-                            std::move(*item);
+                        WuphfMessage::UniquePtr message = std::move(*item);
                         if (message == nullptr)
                             continue;
-                        if (message->message == nullptr)
-                            continue;
                         std::cout << "Message for "
-                                  << message->message->getDestinationMcuId()
-                                  << '\n';
-                        auto device =
-                            getDevice(message->message->getDestinationMcuId());
+                                  << message->getDestinationMcuId() << '\n';
+                        auto device = getDevice(message->getDestinationMcuId());
                         if (device)
                         {
                             // (*device)->setIpcSession(message->session);
                             executor.setDevice(*device);
-                            message->message->accept(message->session,
-                                                     executor);
+                            message->accept(executor);
                         }
                     }
                     else
