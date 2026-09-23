@@ -10,6 +10,14 @@ namespace sabre_pilot::examples
                  std::string name)
         : sabre::runtime::App<void>(resourceManager), _name(std::move(name))
     {
+        auto &txPin = getResourceManager().gpio().getGpio(0);
+        auto &rxPin = getResourceManager().gpio().getGpio(1);
+        getResourceManager().serial().configureUart(0, 9600, txPin, rxPin, 100);
+        auto &uart = getResourceManager().serial().getUart(0);
+        uart.initialize();
+        auto u0 = getResourceManager().serial().getOutputStreamForUart(0);
+        u0 << "Hallo vanuit de applicatie\n" << std::flush;
+        // uart.flush();
     }
 
     // MyApp::MyApp(sabre::core::ResourceManager &resourceManager, std::string
@@ -57,11 +65,12 @@ namespace sabre_pilot::examples
         //     _uart0 << _name << " - Still running :)\n" << std::flush;
         //     std::this_thread::sleep_for(std::chrono::milliseconds(2500));
         // }
+        auto u0 = getResourceManager().serial().getOutputStreamForUart(0);
         while (true)
         {
-            std::cout << _name << '\n';
+            u0 << _name << '\n';
             std::flush(std::cout);
-            std::this_thread::sleep_for(2s);
+            std::this_thread::sleep_for(500ms);
         }
     }
 } // namespace sabre_pilot::examples

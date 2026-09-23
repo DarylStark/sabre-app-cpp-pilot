@@ -2,6 +2,7 @@
 
 #include "subprocess_strategy.hpp"
 #include <functional>
+#include <ipc/session.hpp>
 #include <memory>
 #include <sabre/core/resource_manager.hpp>
 
@@ -37,6 +38,8 @@ namespace sabre_pilot::core
         uint32_t _firmwarePid = 0;
         DeviceState _state = DeviceState::Stopped;
 
+        std::shared_ptr<::ipc::IpcSession> _session{};
+
     public:
         Device(DeviceId id, DeviceConfig config,
                const SubprocessStrategy &subprocessStrategy,
@@ -56,5 +59,7 @@ namespace sabre_pilot::core
         const uint32_t getPid() const;
 
         void updateState();
+
+        void setIpcSession(std::shared_ptr<::ipc::IpcSession> session);
     };
 } // namespace sabre_pilot::core

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "protocol.hpp"
+#include "types.hpp"
 #include <memory>
 
 namespace ipc
@@ -24,7 +25,6 @@ namespace ipc
         virtual void stop() = 0;
 
         virtual bool waitForConnection() = 0;
-        virtual void sendData(const std::string &data) = 0;
+        virtual void sendData(const BufferType &data) = 0;
     };
-
 } // namespace ipc

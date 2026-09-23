@@ -7,3 +7,5 @@ endif()
 if(SABRE_PILOT_BUILD_RUNNER)
     add_subdirectory(runner)
 endif()
+
+add_subdirectory(shared)

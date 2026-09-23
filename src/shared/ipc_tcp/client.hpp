@@ -23,8 +23,8 @@ namespace ipc::tcp
         asio::ip::tcp::resolver _resolver;
         asio::ip::tcp::socket _socket;
 
-        std::array<std::uint8_t, 4096> _readBuffer{};
-        std::deque<std::vector<std::uint8_t>> _writeQueue;
+        std::array<std::byte, 4096> _readBuffer{};
+        std::deque<std::vector<std::byte>> _writeQueue;
 
         std::mutex _connectionMutex;
         std::condition_variable _connectionCv;
@@ -48,7 +48,7 @@ namespace ipc::tcp
         void stop() override;
 
         bool waitForConnection() override;
-        void sendData(const std::string &data) override;
+        void sendData(const ::ipc::BufferType &data) override;
     };
 
 } // namespace ipc::tcp

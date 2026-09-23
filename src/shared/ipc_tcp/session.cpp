@@ -1,11 +1,11 @@
 #include "session.hpp"
 #include <iostream>
+#include <ipc/types.hpp>
 
 namespace ipc::tcp
 {
-    TcpIpcSession::TcpIpcSession(asio::ip::tcp::socket socket,
-                                 std::unique_ptr<Protocol> protocol)
-        : _socket(std::move(socket)), _protocol(std::move(protocol))
+    TcpIpcSession::TcpIpcSession(asio::ip::tcp::socket socket)
+        : _socket(std::move(socket))
     {
     }
 
@@ -31,7 +31,7 @@ namespace ipc::tcp
         _handleDisconnect();
     }
 
-    void TcpIpcSession::send(const std::vector<std::uint8_t> &data)
+    void TcpIpcSession::send(const std::vector<std::byte> &data)
     {
         bool write_in_progress = !_writeQueue.empty();
         _writeQueue.push_back(data);
@@ -41,12 +41,8 @@ namespace ipc::tcp
         }
     }
 
-    void TcpIpcSession::send(std::string_view text)
-    {
-        send(std::vector<std::uint8_t>(text.begin(), text.end()));
-    }
-
-    void TcpIpcSession::setDisconnectHandler(DisconnectHandler handler)
+    void TcpIpcSession::setDisconnectHandler(
+        ::ipc::IpcSession::DisconnectHandler handler)
     {
         _disconnectHandler = std::move(handler);
     }
@@ -76,7 +72,7 @@ namespace ipc::tcp
                                      "buffer size");
         }
 
-        std::vector<std::uint8_t> data(
+        ::ipc::BufferType data(
             _readBuffer.begin(),
             _readBuffer.begin() +
                 static_cast<std::ptrdiff_t>(bytesTransferred));
