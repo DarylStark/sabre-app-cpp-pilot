@@ -89,8 +89,9 @@ namespace sabre::ipc
         // TODO: Implement
     }
 
-    BindSession::BindSession(uint32_t destinationMcuId)
-        : WuphfMessage(destinationMcuId)
+    BindSession::BindSession(std::shared_ptr<::ipc::IpcSession> session,
+                             uint32_t destinationMcuId)
+        : WuphfMessage(destinationMcuId), _session(std::move(session))
     {
     }
 
@@ -104,5 +105,10 @@ namespace sabre::ipc
                              WuphfMessageVisitor &visitor)
     {
         visitor.visitBindSession(session, *this);
+    }
+
+    std::shared_ptr<::ipc::IpcSession> BindSession::getSession() const
+    {
+        return _session;
     }
 } // namespace sabre::ipc

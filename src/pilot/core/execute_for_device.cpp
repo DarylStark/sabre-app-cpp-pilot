@@ -32,6 +32,6 @@ namespace sabre_pilot::core
         sabre::ipc::BindSession &message)
     {
         std::cout << "Binding session\n" << std::flush;
-        _device->setIpcSession(session);
+        _device->setIpcSession(message.getSession());
     }
 } // namespace sabre_pilot::core

@@ -132,8 +132,12 @@ namespace sabre::ipc
 
     class BindSession : public WuphfMessage
     {
+    private:
+        std::shared_ptr<::ipc::IpcSession> _session;
+
     public:
-        BindSession(uint32_t destinationMcuId);
+        BindSession(std::shared_ptr<::ipc::IpcSession> session,
+                    uint32_t destinationMcuId);
 
         template <std::ranges::range R>
         static std::optional<std::unique_ptr<BindSession>>
@@ -152,5 +156,7 @@ namespace sabre::ipc
 
         void accept(std::shared_ptr<::ipc::IpcSession> session,
                     WuphfMessageVisitor &visitor);
+
+        std::shared_ptr<::ipc::IpcSession> getSession() const;
     };
 } // namespace sabre::ipc

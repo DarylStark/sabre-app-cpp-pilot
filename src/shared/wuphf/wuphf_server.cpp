@@ -36,7 +36,7 @@ namespace sabre::ipc
                 sendWuphfMessage(*_session, server_hello);
             }
 
-            return std::make_unique<BindSession>(_mcuId);
+            return std::make_unique<BindSession>(_session, _mcuId);
         }
 
         return std::nullopt;
