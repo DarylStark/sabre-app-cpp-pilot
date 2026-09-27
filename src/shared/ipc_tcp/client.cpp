@@ -59,12 +59,11 @@ namespace ipc::tcp
             return;
         }
 
-        std::vector<std::uint8_t> data(_readBuffer.begin(),
-                                       _readBuffer.begin() + bytesTransferred);
-        std::string strData(data.begin(), data.end());
+        std::vector<std::byte> data(_readBuffer.begin(),
+                                    _readBuffer.begin() + bytesTransferred);
+        std::cout << "CLIENT: Received " << data.size() << " bytes\n";
 
-        std::cout << "CLIENT: Received: " << strData;
-        std::cout << "CLIENT: This was " << data.size() << " bytes\n";
+        _protocol->pushBytes(data);
 
         _startRead();
     }
@@ -159,9 +158,9 @@ namespace ipc::tcp
         return _isConnected;
     }
 
-    void TcpIpcClient::sendData(const std::string &data)
+    void TcpIpcClient::sendData(const BufferType &data)
     {
-        std::vector<uint8_t> bytesData(data.begin(), data.end());
+        ::ipc::BufferType bytesData(data.begin(), data.end());
         bool writeInProgress = !_writeQueue.empty();
         _writeQueue.push_back(bytesData);
 

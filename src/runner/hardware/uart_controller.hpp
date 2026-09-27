@@ -3,9 +3,10 @@
 #include <functional>
 #include <string>
 
-namespace sabre::impl::pilot
+namespace sabre_runner::hardware
 {
-    using UartControllerBufferCallback = std::function<void(char)>;
+    using UartControllerBufferCallback =
+        std::function<void(const std::string &)>;
 
     class UartController
     {
@@ -33,4 +34,4 @@ namespace sabre::impl::pilot
         void _sendOutputBufferToCallback();
         void _raiseOnUnitialized() const;
     };
-} // namespace sabre::impl::pilot
+} // namespace sabre_runner::hardware

@@ -8,4 +8,5 @@ endif()
 
 if(SABRE_PILOT_BUILD_RUNNER_SABRE_IMPL)
     add_subdirectory(sabre_impl)
+    add_subdirectory(hardware)
 endif()

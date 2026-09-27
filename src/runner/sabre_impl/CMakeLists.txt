@@ -5,6 +5,7 @@ target_link_libraries(
     sabre_pilot_impl
     PUBLIC
         sabre
+        sabre_pilot_hardware
 )
 
 set_target_properties(
