@@ -26,6 +26,11 @@ namespace sabre::ipc
 
         std::optional<WuphfMessage::UniquePtr> _parseServerHello();
 
+        void _raiseWhenInWrongState(WuphfClientState expectedState,
+                                    std::string_view error) const;
+        void _raiseWhenNotPending() const;
+        void _raiseWhenNotDone() const;
+
     public:
         WuphfClient(::ipc::Queue<WuphfMessage::UniquePtr> &queue,
                     std::size_t bufferSize);

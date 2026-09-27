@@ -12,6 +12,29 @@ namespace sabre::ipc
         _parseMethods[0x0101] = [this]() { return _parseUartAppend(); };
     }
 
+    void WuphfServer::_raiseWhenInWrongState(WuphfServerState expectedState,
+                                             std::string_view error) const
+    {
+        if (_state != expectedState)
+        {
+            // TODO: Custom exception
+            throw std::runtime_error(
+                std::string("The server is the wrong state: ") +
+                std::string(error));
+        }
+    }
+
+    void WuphfServer::_raiseWhenNotPending() const
+    {
+        _raiseWhenInWrongState(WuphfServerState::Pending,
+                               "Server should be in pending state.");
+    }
+    void WuphfServer::_raiseWhenNotDone() const
+    {
+        _raiseWhenInWrongState(WuphfServerState::Done,
+                               "Server should be in done state.");
+    }
+
     std::optional<WuphfMessage::UniquePtr> WuphfServer::_parseClientHello()
     {
         auto rv = ClientHello::deserializeObj(_buffer | std::views::drop(4) |
@@ -19,12 +42,7 @@ namespace sabre::ipc
 
         if (rv != std::nullopt)
         {
-            if (_state != WuphfServerState::Pending)
-            {
-                // TODO: Custom exception
-                throw std::runtime_error(
-                    "Server received ClientHello when not in pending state");
-            }
+            _raiseWhenNotPending();
 
             _mcuId = (*rv)->getDestinationMcuId();
             _state = WuphfServerState::Done;
@@ -43,6 +61,8 @@ namespace sabre::ipc
 
     std::optional<WuphfMessage::UniquePtr> WuphfServer::_parseUartAppend()
     {
+        _raiseWhenNotDone();
+
         uint16_t length = _deserialize<uint16_t>(2);
         return UartAppend::deserializeObj(
             _mcuId, _buffer | std::views::drop(4) | std::views::take(length));

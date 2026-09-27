@@ -28,6 +28,11 @@ namespace sabre::ipc
 
         WuphfServerState _state = WuphfServerState::Pending;
 
+        void _raiseWhenInWrongState(WuphfServerState expectedState,
+                                    std::string_view error) const;
+        void _raiseWhenNotPending() const;
+        void _raiseWhenNotDone() const;
+
     public:
         WuphfServer(::ipc::Queue<WuphfMessage::UniquePtr> &queue,
                     std::size_t bufferSize);
