@@ -12,6 +12,7 @@ namespace sabre::ipc
         virtual ~WuphfMessageVisitor() = default;
         virtual void visitUartAppend(UartAppend &message) = 0;
         virtual void visitBindSession(BindSession &message) = 0;
+        virtual void visitClientConnected(ClientConnected &message) = 0;
     };
 
     class WuphfMessageVisitorAdapter : public WuphfMessageVisitor
@@ -19,6 +20,7 @@ namespace sabre::ipc
     public:
         virtual ~WuphfMessageVisitorAdapter() = default;
         virtual void visitUartAppend(UartAppend &message) override {}
-        virtual void visitBindSession(BindSession &message) {}
+        virtual void visitBindSession(BindSession &message) override {}
+        virtual void visitClientConnected(ClientConnected &message) override {};
     };
 } // namespace sabre::ipc

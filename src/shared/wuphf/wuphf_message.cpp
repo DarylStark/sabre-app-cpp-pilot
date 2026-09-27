@@ -107,4 +107,17 @@ namespace sabre::ipc
     {
         return _session;
     }
+
+    ClientConnected::ClientConnected() : WuphfMessage(0) {}
+
+    const ::ipc::BufferType ClientConnected::serializeObj() const noexcept
+    {
+        // TODO: Custom exception
+        return {};
+    }
+
+    void ClientConnected::accept(WuphfMessageVisitor &visitor)
+    {
+        visitor.visitClientConnected(*this);
+    }
 } // namespace sabre::ipc

@@ -146,11 +146,34 @@ namespace sabre::ipc
         const ::ipc::BufferType serializeObj() const noexcept override;
         constexpr uint16_t getOpCode() const noexcept
         {
-            return static_cast<uint16_t>(0x0002);
+            return static_cast<uint16_t>(0xffff);
         }
 
         void accept(WuphfMessageVisitor &visitor) override;
 
         std::shared_ptr<::ipc::IpcSession> getSession() const;
+    };
+
+    class ClientConnected : public WuphfMessage
+    {
+    public:
+        ClientConnected();
+
+        template <std::ranges::range R>
+        static std::optional<std::unique_ptr<ClientConnected>>
+        deserializeObj(const R &data)
+        {
+            // TODO: Custom exception
+            throw std::runtime_error("This message shouldn't be deserialized!");
+            return std::nullopt;
+        }
+
+        const ::ipc::BufferType serializeObj() const noexcept override;
+        constexpr uint16_t getOpCode() const noexcept
+        {
+            return static_cast<uint16_t>(0xffff);
+        }
+
+        void accept(WuphfMessageVisitor &visitor) override;
     };
 } // namespace sabre::ipc

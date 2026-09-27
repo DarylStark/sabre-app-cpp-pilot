@@ -1,5 +1,6 @@
 #include "runner.hpp"
 #include "exceptions.hpp"
+#include "ipc_command_visitor.hpp"
 #include "linux_dynamic_library.hpp"
 #include <iostream> // TODO: Remove
 #include <ipc_tcp/client.hpp>
@@ -39,6 +40,9 @@ namespace sabre_runner::core
     void Runner::_ipcReceiverThreadFn()
     {
         bool keepRunning = true;
+
+        IpcCommandVisitor visitor;
+
         while (keepRunning)
         {
             std::optional<sabre::ipc::WuphfMessage::UniquePtr> item =
@@ -48,7 +52,7 @@ namespace sabre_runner::core
                 sabre::ipc::WuphfMessage::UniquePtr message = std::move(*item);
                 if (message == nullptr)
                     continue;
-                std::cout << "Message received!\n";
+                message->accept(visitor);
             }
             else
             {

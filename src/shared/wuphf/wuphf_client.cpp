@@ -43,8 +43,7 @@ namespace sabre::ipc
             _raiseWhenNotPending();
 
             _state = WuphfClientState::Done;
-            return std::nullopt; // TODO: Something like a IsReadyState or
-                                 // something.
+            return std::make_unique<ClientConnected>();
         }
 
         return std::nullopt;
