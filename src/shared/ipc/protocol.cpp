@@ -9,7 +9,7 @@ namespace ipc
         _buffer.reserve(bufferSize);
     }
 
-    void IpcProtocol::pushBytes(std::span<const uint8_t> bytes)
+    void IpcProtocol::pushBytes(std::span<const std::byte> bytes)
     {
         _buffer.insert(_buffer.end(), bytes.begin(), bytes.end());
         parseBuffer();
@@ -30,29 +30,13 @@ namespace ipc
         }
     }
 
-    std::uint16_t IpcProtocol::_readU16_be(std::size_t offset) const
+    void IpcProtocol::setSession(std::shared_ptr<IpcSession> session)
     {
-        if (offset + 2 > _buffer.size())
+        if (_session != nullptr)
         {
-            // TODO: custom exception
-            throw std::out_of_range("Not enough bytes to read uint16_t");
+            // TODO: Exception
+            return;
         }
-
-        return (static_cast<std::uint16_t>(_buffer[offset]) << 8) |
-               (static_cast<std::uint16_t>(_buffer[offset + 1]));
-    }
-
-    std::uint32_t IpcProtocol::_readU32_be(std::size_t offset) const
-    {
-        if (offset + 4 > _buffer.size())
-        {
-            // TODO: custom exception
-            throw std::out_of_range("Not enough bytes to read uint32_t");
-        }
-
-        return (static_cast<uint32_t>(_buffer[offset]) << 24) |
-               (static_cast<uint32_t>(_buffer[offset + 1]) << 16) |
-               (static_cast<uint32_t>(_buffer[offset + 2]) << 8) |
-               static_cast<uint32_t>(_buffer[offset + 3]);
+        _session = std::move(session);
     }
 } // namespace ipc

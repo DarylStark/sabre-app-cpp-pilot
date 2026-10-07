@@ -18,4 +18,19 @@ namespace sabre_runner::core
         : SabrePilotRunnerException(message)
     {
     }
+
+    UnknownIpcMode::UnknownIpcMode(const char *message)
+        : SabrePilotRunnerException(message)
+    {
+    }
+
+    IpcException::IpcException(const char *message)
+        : SabrePilotRunnerException(message)
+    {
+    }
+
+    NotConfigureException::NotConfigureException(const char *message)
+        : SabrePilotRunnerException(message)
+    {
+    }
 } // namespace sabre_runner::core

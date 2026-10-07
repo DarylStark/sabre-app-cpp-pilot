@@ -1,5 +1,6 @@
 #include "pilot.hpp"
 #include "device.hpp"
+#include "execute_for_device.hpp"
 #include "subprocess_strategy.hpp"
 #include <iostream>
 #include <ipc_tcp/server.hpp>
@@ -8,6 +9,7 @@
 #include <sabre/runtime/run_app.hpp>
 #include <thread>
 #include <wuphf/wuphf.hpp>
+#include <wuphf/wuphf_server.hpp>
 
 namespace sabre_pilot::core
 {
@@ -117,8 +119,8 @@ namespace sabre_pilot::core
     void Pilot::start()
     {
         using ::ipc::tcp::TcpIpcServer;
-        using sabre::ipc::Wuphf;
-        using sabre::ipc::WuphfCommand;
+        using sabre::ipc::WuphfMessage;
+        using sabre::ipc::WuphfServer;
 
         // Start process monitor
         auto threadLambda = [this]() { this->_processMonitorThreadFn(); };
@@ -129,18 +131,25 @@ namespace sabre_pilot::core
         std::thread ipcThread(
             [this]()
             {
+                ExecuteForDevice executor;
                 bool keepRunning = true;
                 while (keepRunning)
                 {
-                    std::optional<WuphfCommand::UniquePtr> item =
+                    std::optional<WuphfMessage::UniquePtr> item =
                         _ipcQueue.pop();
                     if (item)
                     {
-                        WuphfCommand::UniquePtr command = std::move(*item);
-                        auto device = getDevice(command->getDestinationMcuId());
+                        WuphfMessage::UniquePtr message = std::move(*item);
+                        if (message == nullptr)
+                            continue;
+                        std::cout << "Message for "
+                                  << message->getDestinationMcuId() << '\n';
+                        auto device = getDevice(message->getDestinationMcuId());
                         if (device)
                         {
-                            command->executeForDevice(*(*device));
+                            // (*device)->setIpcSession(message->session);
+                            executor.setDevice(*device);
+                            message->accept(executor);
                         }
                     }
                     else
@@ -153,8 +162,13 @@ namespace sabre_pilot::core
 
         // TODO: Make the specific concrete IPC server configurable
         _ipcServer = std::make_unique<TcpIpcServer>(
-            [this]() { return std::make_unique<Wuphf>(_ipcQueue, 4096); },
-            8998);
+            [this](std::shared_ptr<::ipc::IpcSession> session)
+            {
+                auto sess = std::make_unique<WuphfServer>(_ipcQueue, 4096);
+                sess->setSession(std::move(session));
+                return sess;
+            },
+            8998); // TODO: Make this configurable.
 
         _ipcServer->setup();
         _ipcServerThread = std::make_unique<std::thread>(

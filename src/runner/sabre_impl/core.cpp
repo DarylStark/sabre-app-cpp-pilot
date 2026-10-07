@@ -1,10 +1,12 @@
 #include "core.hpp"
 #include "hal.hpp"
-#include <iostream>
 
 namespace sabre::impl::pilot
 {
-    Factory::Factory(Mcu *device) : _device(device) {}
+    Factory::Factory(sabre_runner::hardware::Controller::SharedPtr hardware)
+        : _hardware(std::move(hardware))
+    {
+    }
 
     Factory::~Factory() {}
 
@@ -13,7 +15,8 @@ namespace sabre::impl::pilot
         sabre::hal::PinNumber txPin, sabre::hal::PinNumber rxPin,
         size_t bufferSize) const
     {
-        return std::make_unique<sabre::impl::pilot::Uart>(_device, uartNumber);
+        return std::make_unique<sabre::impl::pilot::Uart>(_hardware, uartNumber,
+                                                          bufferSize);
     }
 
     sabre::hal::Serial::UniquePtr Factory::createUsbCdc(uint32_t index,
@@ -37,7 +40,7 @@ namespace sabre::impl::pilot
     sabre::hal::Gpio::UniquePtr
     Factory::createGpio(sabre::hal::PinNumber pin) const
     {
-        return std::make_unique<sabre::impl::pilot::Gpio>(_device, pin);
+        return std::make_unique<sabre::impl::pilot::Gpio>(pin);
     }
 
     sabre::net::WifiStation::UniquePtr Factory::createWifiStation() const

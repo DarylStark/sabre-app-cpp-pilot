@@ -58,9 +58,13 @@
             "args": [
                 "${workspaceFolder}/build/dbg-all-with_tests/src/examples/example_app/libexample_app.so",
                 "--ipc-id",
-                "9999",
+                "1",
                 "--ipc-mode",
-                "none"
+                "none",
+                "--sw-firmware-entry-point",
+                "startDev1",
+                "--hw-upperbound-uart",
+                "3"
             ],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}/build/dbg-all-with_tests/src/runner/app/",
@@ -84,9 +88,13 @@
             "args": [
                 "${workspaceFolder}/build/dbg-all-with_tests/src/examples/example_app/libexample_app.so",
                 "--ipc-id",
-                "9999",
+                "1",
                 "--ipc-mode",
-                "tcp"
+                "tcp",
+                "--sw-firmware-entry-point",
+                "startDev1",
+                "--hw-upperbound-uart",
+                "3"
             ],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}/build/dbg-all-with_tests/src/runner/app/",

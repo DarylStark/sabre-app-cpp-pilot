@@ -1,6 +1,7 @@
 #include "runner_starter.hpp"
 #include <CLI/CLI.hpp>
 #include <core/runner.hpp>
+#include <logger_factory/logger_factory.hpp>
 
 namespace sabre_pilot::runner
 {
@@ -112,7 +113,8 @@ namespace sabre_pilot::runner
     }
     void RunnerStarter::_startRunner()
     {
-        sabre_runner::core::Runner runner(_config);
+        sabre_logger_factory::LoggerFactory loggerFactory;
+        sabre_runner::core::Runner runner(_config, loggerFactory);
         runner.start();
     }
 

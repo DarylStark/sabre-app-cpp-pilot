@@ -20,7 +20,8 @@ class SabreAppPilotConan(ConanFile):
             "gtest/1.17.0",
             "tomlplusplus/3.4.0",
             "cli11/2.6.2",
-            "asio/1.38.0"
+            "asio/1.38.0",
+            "spdlog/1.17.0"
         )
         
         for requirement in requires:

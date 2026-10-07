@@ -1,33 +1,47 @@
 #pragma once
 
 #include "queue.hpp"
+#include "types.hpp"
 #include <cstdint>
+#include <ipc/byte_order.hpp>
 #include <memory>
 #include <optional>
+#include <ranges>
 #include <span>
 #include <vector>
 
 namespace ipc
 {
+    class IpcSession;
+
     class IpcProtocol
     {
     public:
         using Ptr = IpcProtocol *;
         using SharedPtr = std::shared_ptr<IpcProtocol>;
         using UniquePtr = std::unique_ptr<IpcProtocol>;
-        virtual std::size_t _parseOnePacket() = 0;
 
     protected:
-        std::uint16_t _readU16_be(std::size_t offset) const;
-        std::uint32_t _readU32_be(std::size_t offset) const;
+        std::shared_ptr<IpcSession> _session{};
+        BufferType _buffer;
 
-        std::vector<uint8_t> _buffer;
+        virtual std::size_t _parseOnePacket() = 0;
+
+        template <typename T>
+        constexpr T _deserialize(std::size_t startIndex)
+        {
+            return ::ipc::byte_order::deserialize<T>(
+                _buffer | std::views::drop(startIndex) |
+                std::views::take(sizeof(T)));
+        }
 
     public:
         IpcProtocol(std::size_t bufferSize);
         virtual ~IpcProtocol() = default;
 
-        void pushBytes(std::span<const uint8_t> bytes);
+        void pushBytes(std::span<const std::byte> bytes);
         void parseBuffer();
+
+        void setSession(std::shared_ptr<IpcSession> session);
     };
 } // namespace ipc
