@@ -112,8 +112,6 @@ namespace ipc::tcp
                     std::cerr << "Connect failed: " << ec.message() << '\n';
                     return;
                 }
-
-                std::cout << "CLIENT: Connected to server\n";
                 _startRead();
             });
     }

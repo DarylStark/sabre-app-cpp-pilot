@@ -41,7 +41,7 @@ namespace sabre_runner::core
     {
         bool keepRunning = true;
 
-        IpcCommandVisitor visitor;
+        IpcCommandVisitor visitor(*this);
 
         while (keepRunning)
         {
@@ -128,6 +128,23 @@ namespace sabre_runner::core
         _configureIpc();
         _configureHardware();
         _startIpc();
+
+        std::cout << "Waiting on confirmation from server.\n";
+        // TODO: Wait till connected to server
+        std::unique_lock<std::mutex> lock(_ipcReadyMutex);
+        _ipcReadyCv.wait(lock);
+        std::cout << "Server connection is confirmed, we can continue with "
+                     "starting the software\n";
+
         _startFirmware();
+    }
+
+    void Runner::markIpcReady()
+    {
+        {
+            std::lock_guard<std::mutex> lock(_ipcReadyMutex);
+            _ipcReady = true;
+        }
+        _ipcReadyCv.notify_one();
     }
 } // namespace sabre_runner::core

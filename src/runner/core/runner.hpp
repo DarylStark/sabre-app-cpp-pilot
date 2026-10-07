@@ -3,6 +3,7 @@
 #include "config.hpp"
 #include "dynamic_library.hpp"
 #include "exceptions.hpp"
+#include <condition_variable>
 #include <cstdint>
 #include <hardware/controller.hpp>
 #include <ipc/client.hpp>
@@ -53,6 +54,11 @@ namespace sabre_runner::core
         std::unique_ptr<std::thread> _ipcClientThread{};
         std::unique_ptr<std::thread> _ipcReceiverThread{};
 
+        // IPC ready flag
+        std::condition_variable _ipcReadyCv;
+        std::mutex _ipcReadyMutex;
+        bool _ipcReady{false};
+
         // Starting the application
         void _loadEntryPoint();
         void _configureIpc();
@@ -67,5 +73,6 @@ namespace sabre_runner::core
         Runner(CoreConfig config);
 
         void start();
+        void markIpcReady();
     };
 } // namespace sabre_runner::core
