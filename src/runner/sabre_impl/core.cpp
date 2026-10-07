@@ -1,6 +1,5 @@
 #include "core.hpp"
 #include "hal.hpp"
-#include <iostream>
 
 namespace sabre::impl::pilot
 {

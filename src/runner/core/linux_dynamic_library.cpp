@@ -1,7 +1,6 @@
 #include "linux_dynamic_library.hpp"
 #include "exceptions.hpp"
 #include <dlfcn.h>
-#include <iostream>
 
 namespace sabre_runner::core
 {

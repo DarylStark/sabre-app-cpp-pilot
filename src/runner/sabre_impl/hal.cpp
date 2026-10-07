@@ -24,7 +24,7 @@ namespace sabre::impl::pilot
 
     std::string Uart::readBytes(size_t maxytes, sabre::types::MsTime timeout)
     {
-        return "test"; // TODO: Make something good
+        return "test"; // TODO: Implement
     }
 
     void Uart::flush()

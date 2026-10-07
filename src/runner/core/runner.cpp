@@ -2,7 +2,6 @@
 #include "exceptions.hpp"
 #include "ipc_command_visitor.hpp"
 #include "linux_dynamic_library.hpp"
-#include <iostream> // TODO: Remove
 #include <ipc_tcp/client.hpp>
 #include <sabre_impl/core.hpp>
 #include <thread>
@@ -129,12 +128,8 @@ namespace sabre_runner::core
         _configureHardware();
         _startIpc();
 
-        std::cout << "Waiting on confirmation from server.\n";
-        // TODO: Wait till connected to server
         std::unique_lock<std::mutex> lock(_ipcReadyMutex);
         _ipcReadyCv.wait(lock);
-        std::cout << "Server connection is confirmed, we can continue with "
-                     "starting the software\n";
 
         _startFirmware();
     }
