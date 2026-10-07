@@ -62,8 +62,9 @@ namespace sabre_runner::core
         // Starting the application
         void _loadEntryPoint();
         void _configureIpc();
-        void _configureHardware();
         void _startIpc();
+        void _waitForIpcDone();
+        void _configureHardware();
         void _startFirmware();
 
         // Threads

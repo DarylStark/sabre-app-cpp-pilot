@@ -121,16 +121,27 @@ namespace sabre_runner::core
         _entryPointFn(rm);
     }
 
+    /*
+        std::unique_lock<std::mutex> lock(_ipcReadyMutex);
+        _ipcReadyCv.wait(lock);
+    */
+
+    void Runner::_waitForIpcDone()
+    {
+        std::unique_lock<std::mutex> lock(_ipcReadyMutex);
+        _ipcReadyCv.wait(lock);
+    }
+
     void Runner::start()
     {
         _loadEntryPoint();
+
         _configureIpc();
-        _configureHardware();
         _startIpc();
 
-        std::unique_lock<std::mutex> lock(_ipcReadyMutex);
-        _ipcReadyCv.wait(lock);
+        _waitForIpcDone();
 
+        _configureHardware();
         _startFirmware();
     }
 
