@@ -7,6 +7,7 @@ target_link_libraries(
     sabre_pilot_runner
     PRIVATE
         sabre_pilot_runner_core
+        sabre_logger_factory
         CLI11::CLI11
 )
 

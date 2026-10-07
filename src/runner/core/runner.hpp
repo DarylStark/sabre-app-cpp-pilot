@@ -9,7 +9,9 @@
 #include <ipc/client.hpp>
 #include <ipc/protocol.hpp>
 #include <ipc/queue.hpp>
+#include <logger_factory/logger_factory.hpp>
 #include <memory>
+#include <spdlog/spdlog.h>
 #include <string>
 #include <thread>
 #include <variant>
@@ -39,6 +41,10 @@ namespace sabre_runner::core
     {
     private:
         CoreConfig _config;
+
+        // Logging
+        sabre_logger_factory::LoggerFactory &_loggerFactory;
+        std::shared_ptr<spdlog::logger> _logger;
 
         // Software
         DynamicLibrary::UniquePtr _library{};
@@ -71,7 +77,8 @@ namespace sabre_runner::core
         void _ipcReceiverThreadFn();
 
     public:
-        Runner(CoreConfig config);
+        Runner(CoreConfig config,
+               sabre_logger_factory::LoggerFactory &loggerFactory);
 
         void start();
         void markIpcReady();

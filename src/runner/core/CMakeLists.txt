@@ -7,6 +7,7 @@ target_link_libraries(
         sabre
         sabre_pilot_hardware
         sabre_ipc_tcp
+        sabre_logger_factory
         sabre_pilot_impl
         sabre_wuphf
 )
